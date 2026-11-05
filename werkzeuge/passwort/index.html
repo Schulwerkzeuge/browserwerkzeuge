@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<!-- Passwort-Generator · Version 1.3.3 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<!-- pwa --><script src="pwa.js?v=a013112ce7" data-tool="passwort" data-name="Passwort-Generator" data-daten="nein" data-schluessel=""></script><!-- /pwa -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passwort-Generator</title>
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<style>
+:root{--auf-akzent:#fff;--hinter:#f3f5f8;--flaeche:#fff;--text:#1f2933;--dezent:#5f6b7a;--rand:#d6dae0;--rand-feld:#858f9b;--akzent:#1f5f99;--akzent-hell:#e8f0f8;--sonder:#b45309;--warn-bg:#fff4e5;--warn-rand:#e8a23a;--warn-text:#6b3d00}
+[data-design="dunkel"]{--auf-akzent:#0e131c;--hinter:#14181d;--flaeche:#1e242b;--text:#e6e9ed;--dezent:#9aa4b1;--rand:#343c46;--rand-feld:#7d8794;--akzent:#5aa0e6;--akzent-hell:#243447;--sonder:#f59e0b;--warn-bg:#3a2a12;--warn-rand:#c9861f;--warn-text:#ffd9a3}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--hinter);color:var(--text);line-height:1.5}
+header{background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf{max-width:1000px;margin:0 auto;padding:10px 20px;display:flex;gap:10px;align-items:center}
+.kopf h1{font-size:1.15rem;margin:0;flex:1}
+.kopf a{color:var(--akzent);text-decoration:none;font-size:.9rem}
+main{max-width:1000px;margin:16px auto;padding:0 20px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+section{background:var(--flaeche);border:1px solid var(--rand);border-radius:8px;padding:16px 20px}
+h2{font-size:1.05rem;margin:0 0 8px}
+button,select,input{font:inherit;color:var(--text)}
+button{padding:6px 12px;border:1px solid var(--rand-feld);background:var(--flaeche);border-radius:6px;cursor:pointer}
+button:hover{background:var(--akzent-hell)}
+button.primaer{background:var(--akzent);border-color:var(--akzent);color:var(--auf-akzent)}
+select{padding:6px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche)}
+label{display:inline-flex;gap:6px;align-items:center;max-width:100%;flex-wrap:wrap}
+input,select,textarea{max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;margin:3px}
+input[type=range]{min-height:24px}
+.zeile{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:10px 0}
+.dezent{color:var(--dezent)}.klein{font-size:.88rem}
+[hidden]{display:none!important}
+.reiter{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.reiter button.aktiv{background:var(--akzent-hell);border-color:var(--akzent);font-weight:600}
+.hauptreiter{display:flex;flex-wrap:wrap;gap:6px}
+.hauptreiter button{font-size:1rem;padding:8px 16px}
+.hauptreiter button.aktiv{background:var(--akzent);border-color:var(--akzent);color:var(--auf-akzent);font-weight:600}
+input[type=range]{width:180px}
+.ergebnis{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ergebnis li{display:flex;align-items:center;gap:10px;background:var(--hinter);border:1px solid var(--rand);border-radius:8px;padding:10px 12px}
+.pw{flex:1;font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:1.3rem;letter-spacing:.04em;word-break:break-all}
+.einzeln .pw{font-size:clamp(1.4rem,4vw,2.3rem)}
+.pw .ziffer{color:var(--akzent);font-weight:600}
+.pw .sonder{color:var(--sonder);font-weight:600}
+.staerke{height:10px;border-radius:5px;background:var(--rand);overflow:hidden;margin:6px 0}
+.staerke div{height:100%;width:0;transition:width .3s}
+.rechnung{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:.88rem}
+ul.tipps{margin:6px 0 0;padding-left:20px}
+ul.tipps li{margin:4px 0}
+/* Prüfer */
+.warnung{background:var(--warn-bg);border:2px solid var(--warn-rand);color:var(--warn-text);border-radius:8px;padding:12px 16px}
+.warnung strong{font-size:1.05rem}
+.warnung p{margin:6px 0 0}
+.pruef-eingabe{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 6px}
+#pruef-feld{flex:1;min-width:220px;font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:1.3rem;padding:8px 10px;border:2px solid var(--rand);border-radius:8px;background:var(--flaeche)}
+#pruef-feld:focus{outline:none;border-color:var(--akzent)}
+.zeitwerte{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:12px 0}
+.zeitwert{background:var(--hinter);border:1px solid var(--rand);border-radius:8px;padding:10px 12px}
+.zeitwert .wert{font-size:1.25rem;font-weight:700}
+.muster{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0;font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}
+.muster span{display:inline-flex;flex-direction:column;align-items:center;border-radius:6px;padding:3px 7px;border:1px solid var(--rand)}
+.muster small{font-family:system-ui,sans-serif;font-size:.72rem;color:var(--dezent)}
+.muster .m-wort,.muster .m-haeufig{background:#fde2e2;border-color:#f3a5a5;color:#7a1d1d}
+.muster .m-folge,.muster .m-tastatur,.muster .m-wiederholung{background:#fff0d6;border-color:#f0c27a;color:#6b4300}
+.muster .m-datum{background:#efe3fb;border-color:#c9a8ef;color:#4b2477}
+.muster .m-trenner{background:var(--hinter);color:var(--dezent)}
+.muster .m-zufall{background:#dff3e7;border-color:#9fd6b4;color:#14532d}
+[data-design="dunkel"] .muster span{filter:brightness(.85)}
+ul.hinweise{margin:6px 0 0;padding-left:20px}
+ul.hinweise li{margin:4px 0}
+details summary{cursor:pointer;color:var(--akzent)}
+footer{max-width:1000px;margin:0 auto 24px;padding:0 20px;color:var(--dezent);font-size:.85rem;text-align:center}
+footer a{color:inherit}
+#meldung{position:fixed;right:16px;bottom:16px;background:#1f2933;color:#fff;padding:10px 14px;border-radius:6px;max-width:380px;z-index:10}
+@media (prefers-reduced-motion:reduce){.staerke div{transition:none}}
+</style>
+<!-- pwa -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181d" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Passwort">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- /pwa -->
+</head>
+<body>
+<header>
+  <div class="kopf">
+    <h1>Passwort-Generator</h1>
+    <a id="ruecklink" href="../" hidden>← Übersicht</a>
+    <button type="button" id="btn-design">Dunkel</button>
+  </div>
+</header>
+
+<main>
+  <div class="hauptreiter" role="tablist" aria-label="Bereiche">
+    <button type="button" role="tab" id="reiter-erzeugen" aria-controls="bereich-erzeugen" aria-selected="true" data-bereich="erzeugen" class="aktiv">Passwort erzeugen</button>
+    <button type="button" role="tab" id="reiter-pruefen" aria-controls="bereich-pruefen" aria-selected="false" tabindex="-1" data-bereich="pruefen">Passwort prüfen</button>
+  </div>
+
+  <!-- ============================================== Erzeugen -->
+  <div id="bereich-erzeugen" role="tabpanel" aria-labelledby="reiter-erzeugen" style="display:grid;gap:16px">
+    <section>
+      <div class="reiter">
+        <button type="button" data-modus="zeichen" class="aktiv">Zufällige Zeichen</button>
+        <button type="button" data-modus="woerter">Merkbare Wortkette</button>
+      </div>
+
+      <div id="opt-zeichen">
+        <div class="zeile">
+          <label>Länge <input type="range" id="laenge" min="8" max="40" value="16"> <strong id="laenge-wert">16</strong></label>
+        </div>
+        <div class="zeile">
+          <label><input type="checkbox" id="klein" checked> a–z</label>
+          <label><input type="checkbox" id="gross" checked> A–Z</label>
+          <label><input type="checkbox" id="ziffern" checked> 0–9</label>
+          <label><input type="checkbox" id="sonder" checked> Sonderzeichen (!#$%&amp;*+-=?@_.)</label>
+          <label><input type="checkbox" id="eindeutig" checked> verwechselbare Zeichen weglassen (l, I, 1, O, o, 0)</label>
+        </div>
+      </div>
+
+      <div id="opt-woerter" hidden>
+        <div class="zeile">
+          <label>Wörter <input type="range" id="wortzahl" min="3" max="8" value="5"> <strong id="wortzahl-wert">5</strong></label>
+          <label>Trennzeichen
+            <select id="trenner">
+              <option value="-">Bindestrich (-)</option>
+              <option value=".">Punkt (.)</option>
+              <option value="_">Unterstrich (_)</option>
+              <option value="">keines</option>
+            </select>
+          </label>
+        </div>
+        <div class="zeile">
+          <label><input type="checkbox" id="wort-gross" checked> Wörter großschreiben</label>
+          <label><input type="checkbox" id="wort-zahl" checked> Zahl anhängen</label>
+        </div>
+      </div>
+
+      <div class="zeile">
+        <label>Anzahl
+          <select id="anzahl">
+            <option value="1">1 Passwort</option>
+            <option value="5">5 Passwörter</option>
+            <option value="10">10 Passwörter</option>
+            <option value="20">20 Passwörter</option>
+            <option value="30">30 Passwörter</option>
+          </select>
+        </label>
+        <button type="button" class="primaer" id="btn-neu">Neu erzeugen</button>
+        <button type="button" id="btn-alle">Alle kopieren</button>
+      </div>
+    </section>
+
+    <section>
+      <ul class="ergebnis" id="ergebnis" aria-live="polite"></ul>
+      <div class="staerke" aria-hidden="true"><div id="staerke-balken"></div></div>
+      <p class="klein"><strong id="staerke-text"></strong> <span class="dezent rechnung" id="rechnung"></span></p>
+    </section>
+  </div>
+
+  <!-- ============================================== Prüfen -->
+  <section id="bereich-pruefen" role="tabpanel" aria-labelledby="reiter-pruefen" hidden>
+    <div class="warnung" role="note">
+      <strong>⚠️ Bitte niemals ein echtes Passwort eingeben!</strong>
+      <p>Auch kein altes und keines, das einem echten nur ähnelt. Denk dir zum Ausprobieren ein Beispiel aus. Diese Seite schickt zwar nichts weg – aber bei fremden Webseiten kannst du das nie sicher wissen. Deshalb gilt die Regel überall: <strong>Echte Passwörter gehören nur in das Anmeldefeld des richtigen Dienstes und in deinen Passwortmanager.</strong></p>
+    </div>
+
+    <div class="pruef-eingabe">
+      <!-- bewusst ohne <form>, ohne name und mit autocomplete="off": kein Speichern durch Browser oder Passwortmanager -->
+      <input type="password" id="pruef-feld" placeholder="Ausgedachtes Beispiel eingeben …"
+             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+             data-lpignore="true" data-1p-ignore data-bwignore data-form-type="other"
+             aria-label="Ausgedachtes Beispiel-Passwort" maxlength="128">
+      <button type="button" id="btn-zeigen" aria-pressed="false">Anzeigen</button>
+      <button type="button" id="btn-loeschen">Löschen</button>
+    </div>
+    <p class="klein dezent" id="pruef-hinweis">Die Prüfung läuft nur hier im Browser. Nichts wird gespeichert oder übertragen. Die Eingabe wird automatisch gelöscht, wenn du 60 Sekunden nichts tippst, den Tab wechselst oder die Seite verlässt.</p>
+
+    <div id="pruef-ergebnis" hidden>
+      <div class="staerke" aria-hidden="true"><div id="pruef-balken"></div></div>
+      <p><strong id="pruef-stufe"></strong> <span class="dezent klein" id="pruef-bits"></span></p>
+
+      <div class="zeitwerte">
+        <div class="zeitwert">
+          <div class="klein dezent">Angriff übers Internet auf ein Konto<br>(ca. 10 Versuche pro Sekunde)</div>
+          <div class="wert" id="zeit-online"></div>
+        </div>
+        <div class="zeitwert">
+          <div class="klein dezent">Angriff auf eine gestohlene, schlecht gesicherte Passwortliste<br>(ca. 10 Milliarden Versuche pro Sekunde)</div>
+          <div class="wert" id="zeit-offline"></div>
+        </div>
+      </div>
+
+      <h2>Was dem Prüfer auffällt</h2>
+      <div class="muster" id="pruef-muster" role="group" aria-label="Erkannte Bestandteile"></div>
+      <p class="klein dezent" id="muster-hinweis"></p>
+      <ul class="hinweise" id="pruef-hinweise"></ul>
+    </div>
+
+    <details class="klein" style="margin-top:14px">
+      <summary>Wie schätzt der Prüfer? (für Neugierige und den Informatikunterricht)</summary>
+      <p>Angreifer probieren nicht einfach alle Zeichenkombinationen durch, sondern zuerst das Wahrscheinliche: Listen häufiger Passwörter, Wörter aus Wörterbüchern, Namen, Jahreszahlen, Tastaturreihen wie „qwertz“, Folgen wie „1234“ und Tricks wie „@“ statt „a“. Der Prüfer zerlegt das Beispiel deshalb in solche Bausteine, schätzt für jeden, wie viele Versuche ein Angreifer bräuchte, und sucht die Zerlegung, mit der ein Angreifer am schnellsten wäre. Nur was zu keinem Muster passt, zählt als „zufällig“. Die Idee folgt dem Verfahren zxcvbn von Dan Wheeler, ist hier aber stark vereinfacht und mit einem kleinen eingebauten Wörterbuch umgesetzt – echte Angreifer haben viel größere Listen. Die Zeiten sind deshalb grobe Schätzungen, keine Garantie.</p>
+      <p>Gibst du eine Wortkette aus dem Generator ein, zeigt der Prüfer meist mehr Bit an als der Generator. Beides stimmt: Der Generator rechnet bewusst streng und nimmt an, dass ein Angreifer sogar seine Wortliste kennt. Der Prüfer nimmt einen Angreifer mit allgemeinem Wörterbuch an.</p>
+    </details>
+  </section>
+
+  <section class="klein">
+    <h2>Gute Passwörter</h2>
+    <ul class="tipps">
+      <li><strong>Länge schlägt Sonderzeichen:</strong> Eine Kette aus fünf oder sechs zufälligen Wörtern ist leichter zu merken und oft sicherer als ein kurzes, kompliziertes Passwort.</li>
+      <li><strong>Zufällig statt persönlich:</strong> Namen, Geburtstage, Haustiere und Lieblingsvereine lassen sich erraten – zufällig gewählte Wörter nicht.</li>
+      <li><strong>Für jedes Konto ein eigenes Passwort:</strong> Wird eines bekannt, bleiben die anderen Konten sicher.</li>
+      <li><strong>Passwortmanager nutzen:</strong> Er merkt sich viele starke Passwörter – dann muss man sich nur noch eines merken.</li>
+      <li><strong>Nicht weitergeben</strong> – auch nicht an Freundinnen und Freunde – und wo möglich die Zwei-Faktor-Anmeldung einschalten.</li>
+    </ul>
+    <p class="dezent">Erzeugte Passwörter entstehen im Browser mit dem Zufallsgenerator des Betriebssystems und werden nicht gespeichert oder übertragen. Kopierte Passwörter können allerdings im Zwischenablage-Verlauf des Geräts landen.</p>
+  </section>
+</main>
+
+<footer>
+  Passwort-Generator · Version 1.3.3 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+</footer>
+
+<div id="meldung" role="status" hidden></div>
+
+<script>
+"use strict";
+// SPDX-License-Identifier: Apache-2.0
+
+const DESIGN = "browserwerkzeuge-theme";                            // gemeinsam mit allen Tools: "dark" / "light"
+const EINSTELLUNGEN = "browserwerkzeuge-passwort-einstellungen";    // nur Einstellungen des Generators – niemals Passwörter
+const LOESCHEN_NACH_MS = 60000;
+
+const GRUPPEN = {
+  klein: "abcdefghijklmnopqrstuvwxyz",
+  gross: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  ziffern: "0123456789",
+  sonder: "!#$%&*+-=?@_."
+};
+const VERWECHSELBAR = /[lI1O0o]/g;
+
+// Einfache deutsche Wörter ohne Umlaute und ß (funktionieren auf jeder Tastatur)
+const WOERTER = [...new Set(`
+adler affe ameise biene dachs delfin elch ente esel eule falke fisch floh frosch fuchs gans gecko geier giraffe hai
+hamster hase hirsch hummel hund igel jaguar kamel katze koala kobra krake kranich krebs kuh lachs lama luchs marder
+maus meise motte mops nashorn otter panda papagei pferd pinguin pony puma rabe ratte reh rind robbe schaf schwan
+specht spinne storch taube tiger uhu wal wespe wiesel wolf wurm zebra ziege biber dohle forelle hering hummer kolibri
+lemming molch muschel qualle seehund sperling tukan waran wels yak zander dingo gepard ozelot faultier lemur alpaka
+bison elefant krokodil leopard gorilla panther pelikan pirol schakal walross zikade
+apfel banane birne brot butter dattel erbse feige gurke honig joghurt kakao keks kiwi kirsche kuchen limette linse
+mais mango melone milch mohn nudel nuss olive orange paprika pfirsich pflaume pilz pizza quark reis rosine salat salz
+senf suppe tee tomate torte traube waffel zimt zitrone zucker bohne karotte kokos lauch mandel spinat walnuss beere
+brezel ananas avocado curry essig hafer ingwer kaffee kohl kresse lakritz nektar pudding quitte sellerie sirup
+vanille wasser wurst zwiebel krapfen popcorn nougat muffin kompott
+berg blatt blume bach baum busch dorn eiche erde fels feld fluss garten gras hagel himmel insel kiesel klee kraut lava
+laub meer mond moos nebel ozean palme quelle regen rose sand see sonne stern sturm tal tanne tulpe ufer vulkan wald
+welle wiese wind wolke wurzel zweig blitz donner eis flocke glut komet planet schnee strand tropfen birke ahorn efeu
+lilie kaktus moor bucht klippe gipfel lagune oase quarz kristall steppe tau linde buche kastanie eichel zapfen farn
+nelke veilchen krokus dahlie orchidee
+anker ball bank becher besen bett bild boot brille brief brunnen buch burg dach decke dose drache eimer fahne feder
+fenster flasche gabel geige gitarre glas glocke hammer helm hose hut jacke kamm kanne kerze kiste koffer kompass kran
+krone kugel lampe leiter magnet mantel messer nadel netz ofen paket pinsel puppe rad rakete ring rucksack sack schal
+schere schild schirm schloss schrank schuh seil sessel sieb socke spiegel stuhl tasche tasse teller tisch topf
+trommel tuba turm uhr vase wagen waage zelt ziegel zug harfe laterne radio roller schlitten trompete kamera lupe
+globus atlas tablett zange schraube hebel kette knopf kissen korb pfeife sofa teppich wanne wecker zettel rahmen
+banjo cello flagge gong horn klavier orgel ukulele xylofon kalender karte lineal mappe ordner schwamm spitzer tafel
+kreide heft stempel tacker drucker monitor tastatur kabel akku antenne batterie
+arzt bauer clown detektiv fee hexe koch kobold maler pilot pirat prinz ritter riese zauberer zwerg roboter gespenst
+magier matrose sheriff wikinger
+tennis golf hockey judo tanz lied musik farbe form kreis punkt linie zahl spiel witz traum freude idee mut ruhe zeit
+welt weg reise pause party sommer winter herbst morgen abend woche monat jahr montag freitag samstag sonntag dienstag
+mittwoch januar februar april juni juli august oktober november dezember rhythmus melodie takt chor konzert theater
+zirkus magie schatz puzzle domino schach karate rugby
+auto bahn bus dorf fabrik farm flugzeug hafen haus hotel kirche kino markt museum park platz rathaus schule stadt
+tunnel zoo fahrrad taxi traktor bagger kutsche schiff segel garage keller balkon treppe mauer palast tempel villa iglu
+kanal allee zeppelin ballon gondel kajak kanu floss jacht motorrad ufo
+galaxie mars venus saturn jupiter orbit sonde meteor krater satellit
+`.split(/\s+/).filter(w => /^[a-z]{3,10}$/.test(w)))];
+
+const $ = id => document.getElementById(id);
+
+// ================================================================== Erzeugen
+
+// Gleichverteilte Zufallszahl 0 … max-1 aus dem kryptografischen Zufallsgenerator
+function zufallInt(max) {
+  const grenze = Math.floor(0x100000000 / max) * max;
+  const wert = new Uint32Array(1);
+  do { crypto.getRandomValues(wert); } while (wert[0] >= grenze);
+  return wert[0] % max;
+}
+
+// Zufällige Zeichen; jede gewählte Gruppe kommt mindestens einmal vor
+function erzeugeZeichen(laenge, gruppen) {
+  const vorrat = gruppen.join("");
+  let passwort = "";
+  for (let versuch = 0; versuch < 200; versuch++) {
+    passwort = "";
+    for (let i = 0; i < laenge; i++) passwort += vorrat[zufallInt(vorrat.length)];
+    if (gruppen.every(g => [...passwort].some(c => g.includes(c)))) break;
+  }
+  return passwort;
+}
+
+function erzeugeWortkette(anzahl, trenner, gross, zahl) {
+  const teile = Array.from({ length: anzahl }, () => {
+    const wort = WOERTER[zufallInt(WOERTER.length)];
+    return gross ? wort[0].toUpperCase() + wort.slice(1) : wort;
+  });
+  if (zahl) teile.push(String(10 + zufallInt(90)));
+  return teile.join(trenner);
+}
+
+function hochzahl(n) {
+  const ziffern = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+  return String(n).split("").map(z => ziffern[Number(z)]).join("");
+}
+
+// Stärkestufen – gemeinsam für Generator und Prüfer (Bit = log2 der Anzahl nötiger Versuche)
+const STUFEN = [
+  { ab: 70, text: "sehr stark", farbe: "#15803d" },
+  { ab: 50, text: "stark", farbe: "#1e7b45" },
+  { ab: 35, text: "mittel", farbe: "#d97706" },
+  { ab: 20, text: "schwach", farbe: "#dc2626" },
+  { ab: 0, text: "sehr schwach", farbe: "#991b1b" }
+];
+const stufeFuer = bits => STUFEN.find(s => bits >= s.ab);
+
+// ================================================================== Prüfen
+// Vereinfachte Musteranalyse nach der Idee von zxcvbn: Das Passwort wird so in Bausteine
+// zerlegt, dass ein Angreifer mit möglichst wenigen Versuchen auskommt.
+
+const HAEUFIG = `
+123456 123456789 12345678 1234567 12345 1234567890 123123 111111 000000 654321 987654321 666666 777777 121212 112233
+101010 123321 159753 147258 147852 1q2w3e4r 1q2w3e 1q2w3e4r5t q1w2e3r4 zaq12wsx qwertz qwerty qwertzuiop asdfgh asdf
+yxcvbnm passwort passwort1 passwort123 password password1 password123 hallo hallo123 hallo1 geheim geheim123 test
+test123 abc123 123abc a1b2c3 abcdef iloveyou ichliebedich liebe schatz schatzi mausi hase baerchen teddy engel
+prinzessin princess sunshine sonnenschein sonne sommer winter herbst freedom welcome willkommen whatever trustno1
+master admin administrator login letmein killer dragon monkey shadow superman batman pokemon minecraft fortnite
+starwars gaming nintendo playstation xbox youtube tiktok instagram snapchat google apple samsung iphone handy
+computer internet fussball fußball football baseball soccer schalke schalke04 bvb bvb09 borussia dortmund bayern
+fcbayern hamburg berlin koeln köln schule schule123 lehrer schueler schüler familie family mama papa oma opa
+hund katze pferd blume stern sternchen herz michael daniel thomas andreas stefan alexander christian sabine nicole
+julia anna lena laura sarah lisa lukas leon paul jonas felix max tim tom mia emma hannah
+`.split(/\s+/).filter(Boolean);
+
+const NAMEN = `
+alex alexander andrea andreas anja anna anton ben benjamin carina christian christina daniel david elias elena emil
+emilia emma erik eva felix finn florian frank hannah hans jan jana jannik jasmin johanna jonas julia julian justus
+karl katharina kevin klaus lara laura lea lena leon lina linus lisa louis luca lukas luis maja marie mario markus
+martin max maximilian mia michael milan moritz nele niklas noah nora oliver paul peter philipp sabine sandra sarah
+simon sophia sophie stefan sven thomas tim tobias tom ute vanessa yannick
+`.split(/\s+/).filter(Boolean);
+
+const WEITERE_WOERTER = `
+hallo liebe herz glueck glück frieden freund freundin schatz engel teufel drache prinz koenig könig koenigin königin
+blau rot gruen grün gelb schwarz weiss weiß lila pink super cool geil mega hello love dragon star moon sun happy
+lucky magic power secret summer winter monkey tiger lion bear angel princess master gamer player hero ninja zombie
+eins zwei drei vier fuenf fünf sechs sieben acht neun zehn null gott jesus himmel hoelle hölle frei freiheit
+ich du er sie es wir ihr mag mein meine dein deine sein bin bist ist sind und oder der die das den dem ein eine
+nicht auch gern gerne mit ohne fuer für mag habe hast hat viel sehr immer alles nie heute morgen
+`.split(/\s+/).filter(Boolean);
+
+// Wörterbuch: Wort → Rang (je kleiner, desto eher probiert ein Angreifer es aus)
+const WOERTERBUCH = new Map();
+HAEUFIG.forEach((w, i) => { if (!WOERTERBUCH.has(w)) WOERTERBUCH.set(w, { rang: i + 1, art: "haeufig" }); });
+NAMEN.forEach(w => { if (!WOERTERBUCH.has(w)) WOERTERBUCH.set(w, { rang: 400, art: "wort", name: true }); });
+WEITERE_WOERTER.forEach(w => { if (!WOERTERBUCH.has(w)) WOERTERBUCH.set(w, { rang: [...w].length <= 4 ? 300 : 1500, art: "wort" }); });
+WOERTER.forEach(w => { if (!WOERTERBUCH.has(w)) WOERTERBUCH.set(w, { rang: 3000, art: "wort" }); });
+const MAX_WORTLAENGE = Math.max(...[...WOERTERBUCH.keys()].map(w => [...w].length));
+
+const LEET = { "4": "a", "@": "a", "8": "b", "(": "c", "3": "e", "6": "g", "1": "i", "!": "i", "|": "i", "0": "o", "5": "s", "$": "s", "7": "t", "+": "t", "2": "z" };
+const TASTATUR = ["1234567890ß", "qwertzuiopü", "asdfghjklöä", "yxcvbnm", "qwertyuiop", "zxcvbnm"];
+
+function zeichenklasse(c) {
+  if (/[0-9]/.test(c)) return 10;
+  if (/[a-zäöüß]/.test(c)) return 26;
+  if (/[A-ZÄÖÜ]/.test(c)) return 26;
+  return 33;
+}
+
+function binom(n, k) {
+  let r = 1;
+  for (let i = 1; i <= k; i++) r = r * (n - k + i) / i;
+  return r;
+}
+
+// Faktor für Groß-/Kleinschreibung eines erkannten Wortes
+function grossFaktor(teil) {
+  const gross = teil.filter(c => c !== c.toLowerCase()).length;
+  const klein = teil.filter(c => c !== c.toUpperCase()).length;
+  if (gross === 0) return 1;
+  const s = teil.join("");
+  if (/^\p{Lu}[^\p{Lu}]*$/u.test(s) || klein === 0) return 2;   // nur Anfang groß oder alles groß
+  let summe = 0;
+  for (let k = 1; k <= Math.min(gross, klein); k++) summe += binom(gross + klein, k);
+  return Math.max(2, summe);
+}
+
+// Alle erkennbaren Bausteine finden: { von, bis (exklusiv), versuche, art, info }
+function findeMuster(z) {
+  const n = z.length;
+  const klein = z.map(c => { const l = c.toLowerCase(); return [...l].length === 1 ? l : c; });
+  const leet = klein.map(c => LEET[c] || c);
+  const treffer = [];
+
+  // 1. Wörterbuch (normal und mit Leet-Ersetzungen)
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 3; j <= Math.min(n, i + MAX_WORTLAENGE); j++) {
+      const wortKlein = klein.slice(i, j).join("");
+      const wortLeet = leet.slice(i, j).join("");
+      for (const [wort, mitLeet] of [[wortKlein, false], [wortLeet, true]]) {
+        if (mitLeet && wortLeet === wortKlein) continue;
+        const eintrag = WOERTERBUCH.get(wort);
+        if (!eintrag) continue;
+        let versuche = eintrag.rang * grossFaktor(z.slice(i, j));
+        if (mitLeet) {
+          const ersetzt = klein.slice(i, j).filter((c, k) => c !== leet[i + k]).length;
+          versuche *= Math.min(64, 2 ** ersetzt);
+        }
+        treffer.push({ von: i, bis: j, versuche, art: eintrag.art, leet: mitLeet, name: !!eintrag.name });
+      }
+    }
+  }
+
+  // 2. Folgen wie abcd, 1234, 9876
+  for (let i = 0; i < n - 2; i++) {
+    const d = z[i + 1].codePointAt(0) - z[i].codePointAt(0);
+    if (Math.abs(d) !== 1 || zeichenklasse(z[i]) !== zeichenklasse(z[i + 1])) continue;
+    let j = i + 2;
+    while (j < n && z[j].codePointAt(0) - z[j - 1].codePointAt(0) === d && zeichenklasse(z[j]) === zeichenklasse(z[i])) j++;
+    if (j - i >= 3) {
+      const basis = "aAzZ019".includes(z[i]) ? 4 : (/[0-9]/.test(z[i]) ? 10 : 26);
+      treffer.push({ von: i, bis: j, versuche: basis * (j - i) * (d < 0 ? 2 : 1), art: "folge" });
+    }
+  }
+
+  // 3. Tastaturreihen (vorwärts und rückwärts, ab 4 Zeichen)
+  const kleinText = klein.join("");
+  for (const reihe of TASTATUR) {
+    for (const richtung of [reihe, [...reihe].reverse().join("")]) {
+      for (let laenge = Math.min(richtung.length, n); laenge >= 4; laenge--) {
+        for (let s = 0; s + laenge <= richtung.length; s++) {
+          const stueck = richtung.slice(s, s + laenge);
+          let pos = kleinText.indexOf(stueck);
+          while (pos >= 0) {
+            treffer.push({ von: pos, bis: pos + laenge, versuche: 40 * laenge * (richtung === reihe ? 1 : 2), art: "tastatur" });
+            pos = kleinText.indexOf(stueck, pos + 1);
+          }
+        }
+      }
+    }
+  }
+
+  // 4. Wiederholungen: gleiche Zeichen (aaa) und wiederholte Stücke (abcabc)
+  for (let i = 0; i < n; i++) {
+    for (let laenge = 1; laenge <= Math.floor((n - i) / 2); laenge++) {
+      const stueck = klein.slice(i, i + laenge).join("");
+      let j = i + laenge, mal = 1;
+      while (j + laenge <= n && klein.slice(j, j + laenge).join("") === stueck) { j += laenge; mal++; }
+      if (mal >= 2 && (laenge > 1 || mal >= 3)) {
+        const stueckVersuche = z.slice(i, i + laenge).reduce((p, c) => p * zeichenklasse(c), 1);
+        treffer.push({ von: i, bis: i + laenge * mal, versuche: Math.max(stueckVersuche, 10) * mal, art: "wiederholung" });
+      }
+    }
+  }
+
+  // 5. Trennzeichen zwischen Wörtern (Leerzeichen, - . _ / + , ;)
+  z.forEach((c, i) => { if (/[\s\-._\/+,;:]/.test(c)) treffer.push({ von: i, bis: i + 1, versuche: 3, art: "trenner" }); });
+
+  // 6. Jahreszahlen und Daten
+  const text = z.join("");
+  for (const m of text.matchAll(/(?=((19|20)\d\d))/g)) {
+    const jahr = Number(m[1]);
+    if (jahr >= 1900 && jahr <= 2039) treffer.push({ von: m.index, bis: m.index + 4, versuche: 140, art: "datum" });
+  }
+  for (const m of text.matchAll(/(?=(\d{1,2})([.\-/ ]?)(\d{1,2})\2(\d{4}|\d{2}))/g)) {
+    const tag = Number(m[1]), monat = Number(m[3]);
+    const laenge = m[1].length + m[2].length * 2 + m[3].length + m[4].length;
+    if (tag >= 1 && tag <= 31 && monat >= 1 && monat <= 12 && laenge >= 4) {
+      treffer.push({ von: m.index, bis: m.index + laenge, versuche: 365 * 100 * (m[2] ? 4 : 1), art: "datum" });
+    }
+  }
+  return treffer;
+}
+
+function analysiere(passwort) {
+  const z = Array.from(passwort);
+  const n = z.length;
+  if (!n) return null;
+
+  // Zeichenvorrat für den „zufälligen“ Rest
+  let vorrat = 0;
+  if (/[a-zäöüß]/.test(passwort)) vorrat += 26;
+  if (/[A-ZÄÖÜ]/.test(passwort)) vorrat += 26;
+  if (/[0-9]/.test(passwort)) vorrat += 10;
+  if (/[^a-zA-ZäöüßÄÖÜ0-9]/.test(passwort)) vorrat += 33;
+  vorrat = Math.max(vorrat, 10);
+
+  const treffer = findeMuster(z).filter(t => t.versuche < Math.pow(vorrat, t.bis - t.von));
+  // Dynamische Programmierung über log2-Werte: günstigste Zerlegung finden
+  const best = new Array(n + 1).fill(Infinity), weg = new Array(n + 1).fill(null);
+  best[0] = 0;
+  const lz = Math.log2(vorrat);
+  for (let j = 1; j <= n; j++) {
+    if (best[j - 1] + lz < best[j]) { best[j] = best[j - 1] + lz; weg[j] = { von: j - 1, bis: j, art: "zufall" }; }
+    for (const t of treffer) {
+      if (t.bis !== j) continue;
+      const kosten = best[t.von] + Math.log2(t.versuche) + (t.art === "trenner" ? 0 : 1);   // +1 Bit: Wahl des Musters
+      if (kosten < best[j]) { best[j] = kosten; weg[j] = t; }
+    }
+  }
+  // Zerlegung zurückverfolgen, benachbarte Zufallszeichen zusammenfassen
+  const teile = [];
+  for (let j = n; j > 0;) {
+    const t = weg[j];
+    if (t.art === "zufall" && teile.length && teile[0].art === "zufall") teile[0].von = t.von;
+    else teile.unshift({ ...t });
+    j = t.von;
+  }
+  teile.forEach(t => { t.text = z.slice(t.von, t.bis).join(""); });
+
+  // Zufällige Stücke mit dem Zeichenvorrat neu bewerten, der in ihnen tatsächlich vorkommt
+  let summe = best[n];
+  teile.filter(t => t.art === "zufall").forEach(t => {
+    let v = 0;
+    if (/[a-zäöüß]/.test(t.text)) v += 26;
+    if (/[A-ZÄÖÜ]/.test(t.text)) v += 26;
+    if (/[0-9]/.test(t.text)) v += 10;
+    if (/[^a-zA-ZäöüßÄÖÜ0-9]/.test(t.text)) v += 33;
+    summe -= (t.bis - t.von) * (lz - Math.log2(Math.max(v, 10)));
+  });
+  const bits = Math.max(0, Math.min(summe, n * lz));
+  const haeufig = teile.length === 1 && teile[0].art === "haeufig";
+  return { bits: haeufig ? Math.min(bits, 10) : bits, teile, vorrat, laenge: n, haeufig, passwort };
+}
+
+// Dauer in Worten (Versuche ÷ Versuche pro Sekunde; im ungünstigsten Fall)
+function dauer(bits, proSekunde) {
+  const s = Math.pow(2, bits) / proSekunde;
+  const runde = (x, einheit, mehrzahl) => { const r = Math.round(x); return `${r.toLocaleString("de-DE")} ${r === 1 ? einheit : mehrzahl}`; };
+  if (s < 1) return "sofort";
+  if (s < 60) return runde(s, "Sekunde", "Sekunden");
+  if (s < 3600) return runde(s / 60, "Minute", "Minuten");
+  if (s < 86400) return runde(s / 3600, "Stunde", "Stunden");
+  if (s < 86400 * 31) return runde(s / 86400, "Tag", "Tage");
+  if (s < 86400 * 365) return runde(s / 86400 / 30.4, "Monat", "Monate");
+  const jahre = s / 86400 / 365.25;
+  if (jahre < 100) return runde(jahre, "Jahr", "Jahre");
+  if (jahre < 1e6) return runde(jahre / 100, "Jahrhundert", "Jahrhunderte");
+  if (jahre < 1.38e10) return `${(jahre / 1e6).toLocaleString("de-DE", { maximumFractionDigits: 0 })} Millionen Jahre`;
+  return "länger, als das Universum alt ist";
+}
+
+function hinweise(a) {
+  const h = [];
+  const arten = new Set(a.teile.map(t => t.art));
+  const zitat = t => (a.sichtbar ? `„${t.text}“` : `ein Teil`);
+  if (a.haeufig) h.push("Steht auf der Liste der häufigsten Passwörter – Angreifer probieren solche Passwörter als Allererstes.");
+  else if (arten.has("haeufig")) h.push(`Enthält ${a.sichtbar ? "„" + a.teile.find(t => t.art === "haeufig").text + "“, eines" : "eines"} der häufigsten Passwörter.`);
+  const worte = a.teile.filter(t => t.art === "wort");
+  if (worte.some(t => t.name)) h.push("Namen sind leicht zu erraten – besonders die von Familie, Freunden oder Haustieren.");
+  const ohneTrenner = a.teile.filter(t => t.art !== "trenner");
+  if (worte.length && worte.length >= ohneTrenner.length - 1 && worte.length <= 2)
+    h.push("Ein oder zwei bekannte Wörter reichen nicht: Wörterbücher probieren Angreifer zuerst. Besser vier oder mehr zufällig gewählte Wörter.");
+  if (a.teile.some(t => t.leet)) h.push("Ersetzungen wie „@“ für „a“ oder „3“ für „e“ kennen Angreifer – sie machen ein Wort kaum sicherer.");
+  for (const t of a.teile) {
+    if (t.art === "folge") h.push(`${zitat(t)} ist eine einfache Folge – so etwas wird sofort ausprobiert.`);
+    if (t.art === "tastatur") h.push(`${zitat(t)} ist eine Tastaturreihe – steht in jeder Angriffsliste.`);
+    if (t.art === "wiederholung") h.push(`${zitat(t)} wiederholt sich – Wiederholungen machen ein Passwort nur wenig stärker.`);
+  }
+  if (arten.has("datum")) h.push("Jahreszahlen und Daten (zum Beispiel Geburtstage) gehören zu den ersten Dingen, die ausprobiert werden.");
+  if (/^\p{Lu}[^\p{Lu}]*\d+[^\p{L}\d]?$/u.test(a.passwort)) h.push("Großbuchstabe vorne, Zahl hinten ist das häufigste Muster überhaupt – Angreifer rechnen damit.");
+  if (a.laenge < 12) h.push("Länger ist besser: mindestens 12 Zeichen, noch besser eine Kette aus mehreren zufälligen Wörtern.");
+  if (a.vorrat <= 10 && a.laenge < 20) h.push("Nur Ziffern sind schnell durchprobiert.");
+  if (a.bits >= 50) h.push("Gut! Trotzdem gilt: jedes Passwort nur für ein einziges Konto verwenden.");
+  return [...new Set(h)];
+}
+
+const ARTNAMEN = { trenner: "Trenner", haeufig: "häufig", wort: "Wort", folge: "Folge", tastatur: "Tastatur", wiederholung: "Wiederholung", datum: "Datum", zufall: "zufällig" };
+
+// ================================================================== Oberfläche
+
+const App = {
+  modus: "zeichen",
+  passwoerter: [],
+  meldungTimer: null,
+  loeschTimer: null,
+  zaehlTimer: null,
+  loeschZeit: 0,
+
+  init() {
+    this.initDesign();
+    this.ladeEinstellungen();
+    this.binde();
+    this.setzeModus(this.modus);
+    this.zeigeBereich(location.hash === "#pruefen" ? "pruefen" : "erzeugen");
+  },
+
+  initDesign() {
+    let gespeichert = null;
+    try { gespeichert = localStorage.getItem(DESIGN); } catch (e) { /* ohne Speicher */ }
+    const dunkel = gespeichert ? gespeichert === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    this.setzeDesign(dunkel ? "dunkel" : "hell");
+  },
+
+  setzeDesign(design) {
+    document.documentElement.dataset.design = design;
+    $("btn-design").textContent = design === "dunkel" ? "Hell" : "Dunkel";
+  },
+
+  ladeEinstellungen() {
+    try {
+      const e = JSON.parse(localStorage.getItem(EINSTELLUNGEN)) || {};
+      if (e.modus === "woerter") this.modus = "woerter";
+      if (e.laenge) $("laenge").value = e.laenge;
+      ["klein", "gross", "ziffern", "sonder", "eindeutig", "wort-gross", "wort-zahl"].forEach(id => {
+        if (typeof e[id] === "boolean") $(id).checked = e[id];
+      });
+      if (e.wortzahl) $("wortzahl").value = e.wortzahl;
+      if (typeof e.trenner === "string") $("trenner").value = e.trenner;
+      if (e.anzahl) $("anzahl").value = e.anzahl;
+    } catch (e) { /* Standardwerte behalten */ }
+  },
+
+  speichereEinstellungen() {
+    try {
+      const e = { modus: this.modus, laenge: $("laenge").value, wortzahl: $("wortzahl").value, trenner: $("trenner").value, anzahl: $("anzahl").value };
+      ["klein", "gross", "ziffern", "sonder", "eindeutig", "wort-gross", "wort-zahl"].forEach(id => { e[id] = $(id).checked; });
+      localStorage.setItem(EINSTELLUNGEN, JSON.stringify(e));
+    } catch (e) { /* ohne Folgen */ }
+  },
+
+  binde() {
+    const reiter = [...document.querySelectorAll("[data-bereich]")];
+    reiter.forEach((b, i) => {
+      b.addEventListener("click", () => this.zeigeBereich(b.dataset.bereich));
+      b.addEventListener("keydown", e => {       // Pfeiltasten wechseln zwischen den Reitern (Tab-Muster nach WAI-ARIA)
+        const ziel = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: reiter.length - 1 }[e.key];
+        if (ziel === undefined) return;
+        e.preventDefault();
+        const r = reiter[(ziel + reiter.length) % reiter.length];
+        this.zeigeBereich(r.dataset.bereich); r.focus();
+      });
+    });
+    document.querySelectorAll("[data-modus]").forEach(b =>
+      b.addEventListener("click", () => this.setzeModus(b.dataset.modus)));
+    ["laenge", "wortzahl"].forEach(id => $(id).addEventListener("input", () => this.erzeuge()));
+    ["klein", "gross", "ziffern", "sonder", "eindeutig", "wort-gross", "wort-zahl", "trenner", "anzahl"].forEach(id =>
+      $(id).addEventListener("change", () => this.erzeuge()));
+    $("btn-neu").addEventListener("click", () => this.erzeuge());
+    $("btn-alle").addEventListener("click", () => this.kopiere(this.passwoerter.join("\n"), "Alle Passwörter wurden kopiert."));
+    $("btn-design").addEventListener("click", () => {
+      const neu = document.documentElement.dataset.design === "dunkel" ? "hell" : "dunkel";
+      this.setzeDesign(neu);
+      try { localStorage.setItem(DESIGN, neu === "dunkel" ? "dark" : "light"); } catch (e) { /* ohne Folgen */ }
+    });
+
+    // Prüfer
+    $("pruef-feld").addEventListener("input", () => { this.pruefe(); this.planeLoeschen(); });
+    $("btn-loeschen").addEventListener("click", () => { this.leereFeld(); $("pruef-feld").focus(); });
+    $("btn-zeigen").addEventListener("click", () => {
+      const feld = $("pruef-feld");
+      const zeigen = feld.type === "password";
+      feld.type = zeigen ? "text" : "password";
+      $("btn-zeigen").textContent = zeigen ? "Verbergen" : "Anzeigen";
+      $("btn-zeigen").setAttribute("aria-pressed", String(zeigen));
+      this.pruefe();
+    });
+    // Eingabe löschen, sobald die Seite verborgen, verlassen oder aus dem Verlauf wiederhergestellt wird
+    document.addEventListener("visibilitychange", () => { if (document.hidden) this.leereFeld(); });
+    window.addEventListener("pagehide", () => this.leereFeld());
+    window.addEventListener("pageshow", () => this.leereFeld());
+  },
+
+  zeigeBereich(bereich) {
+    document.querySelectorAll("[data-bereich]").forEach(b => {
+      const aktiv = b.dataset.bereich === bereich;
+      b.classList.toggle("aktiv", aktiv);
+      b.setAttribute("aria-selected", aktiv ? "true" : "false");
+      b.tabIndex = aktiv ? 0 : -1;
+    });
+    $("bereich-erzeugen").hidden = bereich !== "erzeugen";
+    $("bereich-pruefen").hidden = bereich !== "pruefen";
+    if (bereich === "pruefen") $("pruef-feld").focus();
+    else this.leereFeld();
+    history.replaceState(null, "", bereich === "pruefen" ? "#pruefen" : location.pathname + location.search);
+  },
+
+  setzeModus(modus) {
+    this.modus = modus;
+    document.querySelectorAll("[data-modus]").forEach(b => b.classList.toggle("aktiv", b.dataset.modus === modus));
+    $("opt-zeichen").hidden = modus !== "zeichen";
+    $("opt-woerter").hidden = modus !== "woerter";
+    this.erzeuge();
+  },
+
+  // ------------------------------------------------ Erzeugen
+
+  zeichengruppen() {
+    const ohne = $("eindeutig").checked;
+    return ["klein", "gross", "ziffern", "sonder"]
+      .filter(id => $(id).checked)
+      .map(id => (ohne ? GRUPPEN[id].replace(VERWECHSELBAR, "") : GRUPPEN[id]));
+  },
+
+  erzeuge() {
+    $("laenge-wert").textContent = $("laenge").value;
+    $("wortzahl-wert").textContent = $("wortzahl").value;
+    const anzahl = Number($("anzahl").value);
+    let bits, rechnung;
+
+    if (this.modus === "zeichen") {
+      let gruppen = this.zeichengruppen();
+      if (!gruppen.length) {
+        $("klein").checked = true;
+        gruppen = this.zeichengruppen();
+        this.meldung("Mindestens eine Zeichengruppe muss ausgewählt sein.");
+      }
+      const laenge = Number($("laenge").value);
+      const vorrat = gruppen.join("").length;
+      this.passwoerter = Array.from({ length: anzahl }, () => erzeugeZeichen(laenge, gruppen));
+      bits = laenge * Math.log2(vorrat);
+      rechnung = `${vorrat} Zeichen hoch ${laenge} Stellen ≈ 2${hochzahl(Math.floor(bits))}`;
+    } else {
+      const wortzahl = Number($("wortzahl").value);
+      const zahl = $("wort-zahl").checked;
+      this.passwoerter = Array.from({ length: anzahl }, () =>
+        erzeugeWortkette(wortzahl, $("trenner").value, $("wort-gross").checked, zahl));
+      bits = wortzahl * Math.log2(WOERTER.length) + (zahl ? Math.log2(90) : 0);
+      rechnung = `${WOERTER.length} Wörter hoch ${wortzahl}${zahl ? " × 90 Zahlen" : ""} ≈ 2${hochzahl(Math.floor(bits))}`;
+    }
+
+    this.zeigePasswoerter();
+    const stufe = stufeFuer(bits);
+    const balken = $("staerke-balken");
+    balken.style.width = Math.min(100, bits / 90 * 100) + "%";
+    balken.style.background = stufe.farbe;
+    $("staerke-text").textContent = `Stärke: ${stufe.text} (etwa ${Math.floor(bits)} Bit)`;
+    $("rechnung").textContent = `– ${rechnung} Möglichkeiten`;
+    this.speichereEinstellungen();
+  },
+
+  zeigePasswoerter() {
+    const liste = $("ergebnis");
+    liste.innerHTML = "";
+    liste.classList.toggle("einzeln", this.passwoerter.length === 1);
+    this.passwoerter.forEach(passwort => {
+      const li = document.createElement("li");
+      const anzeige = document.createElement("span");
+      anzeige.className = "pw";
+      // Ziffern und Sonderzeichen farbig hervorheben – erleichtert das Abtippen
+      [...passwort].forEach(zeichen => {
+        const span = document.createElement("span");
+        if (/[0-9]/.test(zeichen)) span.className = "ziffer";
+        else if (GRUPPEN.sonder.includes(zeichen)) span.className = "sonder";
+        span.textContent = zeichen;
+        anzeige.appendChild(span);
+      });
+      const knopf = document.createElement("button");
+      knopf.type = "button";
+      knopf.textContent = "Kopieren";
+      knopf.addEventListener("click", () => this.kopiere(passwort, "Das Passwort wurde kopiert."));
+      li.append(anzeige, knopf);
+      liste.appendChild(li);
+    });
+  },
+
+  // ------------------------------------------------ Prüfen
+
+  pruefe() {
+    const feld = $("pruef-feld");
+    const a = analysiere(feld.value);
+    $("pruef-ergebnis").hidden = !a;
+    if (!a) return;
+    a.sichtbar = feld.type === "text";
+
+    const stufe = a.haeufig ? STUFEN[STUFEN.length - 1] : stufeFuer(a.bits);
+    const balken = $("pruef-balken");
+    balken.style.width = Math.max(4, Math.min(100, a.bits / 90 * 100)) + "%";
+    balken.style.background = stufe.farbe;
+    $("pruef-stufe").textContent = `Einschätzung: ${stufe.text}`;
+    $("pruef-bits").textContent = `(etwa 2${hochzahl(Math.round(a.bits))} Versuche, also ${Math.round(a.bits)} Bit)`;
+    $("zeit-online").textContent = dauer(a.bits, 10);
+    $("zeit-offline").textContent = dauer(a.bits, 1e10);
+
+    const ziel = $("pruef-muster");
+    ziel.innerHTML = "";
+    a.teile.forEach(t => {
+      const span = document.createElement("span");
+      span.className = "m-" + t.art;
+      const inhalt = document.createElement("b");
+      inhalt.textContent = a.sichtbar ? t.text : "•".repeat([...t.text].length);
+      const art = document.createElement("small");
+      art.textContent = ARTNAMEN[t.art] + (t.leet ? " (verfremdet)" : "");
+      span.append(inhalt, art);
+      ziel.appendChild(span);
+    });
+    $("muster-hinweis").textContent = a.sichtbar ? "" : "Mit „Anzeigen“ siehst du, welche Zeichen zu welchem Baustein gehören.";
+
+    const ul = $("pruef-hinweise");
+    ul.innerHTML = "";
+    hinweise(a).forEach(text => {
+      const li = document.createElement("li");
+      li.textContent = text;
+      ul.appendChild(li);
+    });
+  },
+
+  // Nach 60 Sekunden ohne Eingabe automatisch löschen; Restzeit anzeigen
+  planeLoeschen() {
+    clearTimeout(this.loeschTimer);
+    clearInterval(this.zaehlTimer);
+    if (!$("pruef-feld").value) { this.zeigeLoeschHinweis(); return; }
+    this.loeschZeit = Date.now() + LOESCHEN_NACH_MS;
+    this.loeschTimer = setTimeout(() => this.leereFeld(), LOESCHEN_NACH_MS);
+    this.zaehlTimer = setInterval(() => this.zeigeLoeschHinweis(), 1000);
+    this.zeigeLoeschHinweis();
+  },
+
+  zeigeLoeschHinweis() {
+    const rest = Math.max(0, Math.ceil((this.loeschZeit - Date.now()) / 1000));
+    $("pruef-hinweis").textContent = $("pruef-feld").value
+      ? `Die Prüfung läuft nur hier im Browser. Nichts wird gespeichert oder übertragen. Die Eingabe wird in ${rest} Sekunden automatisch gelöscht – oder sofort, wenn du den Tab wechselst oder die Seite verlässt.`
+      : "Die Prüfung läuft nur hier im Browser. Nichts wird gespeichert oder übertragen. Die Eingabe wird automatisch gelöscht, wenn du 60 Sekunden nichts tippst, den Tab wechselst oder die Seite verlässt.";
+  },
+
+  leereFeld() {
+    const feld = $("pruef-feld");
+    if (!feld) return;
+    feld.value = "";
+    feld.type = "password";
+    $("btn-zeigen").textContent = "Anzeigen";
+    $("btn-zeigen").setAttribute("aria-pressed", "false");
+    clearTimeout(this.loeschTimer);
+    clearInterval(this.zaehlTimer);
+    $("pruef-ergebnis").hidden = true;
+    $("pruef-muster").innerHTML = "";
+    $("pruef-hinweise").innerHTML = "";
+    this.zeigeLoeschHinweis();
+  },
+
+  // ------------------------------------------------ Allgemeines
+
+  async kopiere(text, erfolg) {
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      this.meldung(erfolg);
+    } catch (e) {
+      const feld = document.createElement("textarea");
+      feld.value = text;
+      document.body.appendChild(feld);
+      feld.select();
+      const ok = document.execCommand("copy");
+      feld.remove();
+      this.meldung(ok ? erfolg : "Kopieren war nicht möglich.");
+    }
+  },
+
+  meldung(text) {
+    const m = $("meldung");
+    m.textContent = text;
+    m.hidden = false;
+    clearTimeout(this.meldungTimer);
+    this.meldungTimer = setTimeout(() => { m.hidden = true; }, 3500);
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => App.init());
+</script>
+</body>
+</html>

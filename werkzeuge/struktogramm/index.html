@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<!-- Struktogramm-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<!-- pwa --><script src="pwa.js?v=500a4b260f" data-tool="struktogramm" data-name="Struktogramm-Editor" data-daten="ja" data-schluessel="browserwerkzeuge-struktogramm"></script><!-- /pwa -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Struktogramm-Editor</title>
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<style>
+/* Grundlayout der Diagramm-Tools */
+:root{--auf-akzent:#fff;--hinter:#f3f5f8;--flaeche:#fff;--text:#1f2933;--dezent:#5f6b7a;--rand:#d6dae0;--rand-feld:#858f9b;--akzent:#1f5f99;--akzent-hell:#e8f0f8;--linie:#1f2933;--gut:#15803d;--gut-hell:#dcfce7;--schlecht:#b91c1c;--schlecht-hell:#fee2e2;--warn:#b45309}
+[data-design="dunkel"]{--auf-akzent:#0e131c;--hinter:#14181d;--flaeche:#1e242b;--text:#e6e9ed;--dezent:#9aa4b1;--rand:#343c46;--rand-feld:#7d8794;--akzent:#5aa0e6;--akzent-hell:#243447;--linie:#cfd5dc;--gut:#4ade80;--gut-hell:#14361f;--schlecht:#f87171;--schlecht-hell:#3b1717;--warn:#f59e0b}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--hinter);color:var(--text);line-height:1.5}
+header{background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf{max-width:1320px;margin:0 auto;padding:10px 20px;display:flex;gap:10px;align-items:center}
+.kopf h1{font-size:1.15rem;margin:0;flex:1}
+.kopf a{color:var(--akzent);text-decoration:none;font-size:.9rem}
+main{max-width:1320px;margin:16px auto;padding:0 20px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr) 330px;align-items:start}
+section{background:var(--flaeche);border:1px solid var(--rand);border-radius:8px;padding:14px 16px}
+h2{font-size:1.02rem;margin:0 0 8px}
+button,select,input,textarea{font:inherit;color:var(--text)}
+button{padding:5px 10px;border:1px solid var(--rand-feld);background:var(--flaeche);border-radius:6px;cursor:pointer;white-space:nowrap}
+button:hover:not(:disabled){background:var(--akzent-hell)}
+button:disabled{opacity:.45;cursor:default}
+button.primaer,button.aktiv,button.primaer:hover:not(:disabled),button.aktiv:hover:not(:disabled){background:var(--akzent);border-color:var(--akzent);color:var(--auf-akzent)}
+button.primaer:hover:not(:disabled),button.aktiv:hover:not(:disabled){filter:brightness(1.12)}
+aside button{white-space:normal;text-align:left}
+select{padding:5px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche)}
+[hidden]{display:none!important}
+.dezent{color:var(--dezent)}.klein{font-size:.86rem}
+.werkzeuge{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-start}
+.gruppe{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.gruppe>.titel{width:100%;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--dezent)}
+.spalte{display:grid;gap:16px;min-width:0}
+aside{display:grid;gap:16px;position:sticky;top:12px}
+.feld{display:grid;gap:3px;margin:8px 0}
+.feld label{font-size:.88rem;font-weight:600}
+.feld input,.feld textarea,.feld select{width:100%;padding:6px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche);font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:.95rem}
+.feld select{font-family:inherit}
+.feld input:focus,.feld textarea:focus{outline:none;border-color:var(--akzent)}
+.feld small{font-size:.8rem}
+.haken{display:inline-flex;gap:6px;align-items:center;margin:4px 12px 4px 0;font-size:.92rem}
+.zeile{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+details summary{cursor:pointer;font-weight:600}
+pre.code{margin:0;padding:10px 12px;background:var(--hinter);border:1px solid var(--rand);border-radius:6px;overflow:auto;font-size:.88rem;max-height:460px}
+.hinweis{font-size:.82rem;color:var(--dezent);margin:8px 0 0}
+table.tabelle{border-collapse:collapse;font-size:.9rem;margin:6px 0}
+table.tabelle th,table.tabelle td{border:1px solid var(--rand);padding:3px 9px;text-align:center}
+table.tabelle th{background:var(--hinter)}
+.k-dialog{border:1px solid var(--rand);border-radius:10px;padding:18px 20px;max-width:min(520px,calc(100vw - 32px));background:var(--flaeche);color:var(--text)}
+.k-dialog::backdrop{background:rgba(0,0,0,.35)}
+.k-dialog p{margin:6px 0}
+.k-knoepfe{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.link-feld{width:100%;font-family:ui-monospace,monospace;font-size:.8rem;padding:6px;border:1px solid var(--rand);border-radius:6px;background:var(--hinter);word-break:break-all}
+#meldung{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:#1f2933;color:#fff;padding:10px 14px;border-radius:6px;max-width:min(420px,calc(100vw - 32px));z-index:10;box-shadow:0 6px 20px -8px rgba(0,0,0,.5)}
+footer{max-width:1320px;margin:0 auto 24px;padding:0 20px;color:var(--dezent);font-size:.85rem;text-align:center}
+footer a{color:inherit}
+#druck{display:none}
+/* Zeichenfläche (Automat, UML, ER) */
+.leinwand{padding:0;overflow:hidden;position:relative}
+.leinwand svg.zeichnung{display:block;width:100%;height:min(68vh,640px);touch-action:none;user-select:none;-webkit-user-select:none;background:var(--flaeche);background-image:radial-gradient(var(--rand) 1px,transparent 1px);background-size:20px 20px;border-radius:8px;cursor:grab}
+.leinwand .zoom{position:absolute;right:10px;bottom:10px;display:flex;gap:4px}
+.leinwand .zoom button{min-width:34px;background:var(--flaeche)}
+.leinwand .modus-hinweis{position:absolute;left:10px;top:10px;font-size:.85rem;background:var(--akzent);color:var(--auf-akzent);border-radius:6px;padding:3px 10px;pointer-events:none}
+svg.zeichnung .griff{cursor:crosshair}
+svg.zeichnung .griff .griff-kreis{fill:var(--akzent)}
+line.gummiband{stroke:var(--akzent);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
+svg.zeichnung text{pointer-events:none}
+svg.zeichnung [data-ziel] text.a-text,svg.zeichnung [data-ziel] text.u-halo{pointer-events:auto;cursor:pointer}
+@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}aside{position:static;order:2}
+  /* schmal: Eigenschaften direkt unter der Zeichenfläche */
+  .spalte{display:contents}.spalte>*{order:3}.spalte>.leinwand,.spalte>.flaeche,.spalte>.instabil{order:1}}
+@media print{body{background:#fff}header,main,footer,#meldung,.ap-leiste{display:none!important}#druck{display:block}#druck svg{max-width:100%;height:auto}}
+/* Tastaturbedienung: nur vorgelesene Texte, Fokusrahmen auf der Zeichenfläche */
+.nur-vorlesen{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.zeichnung:focus{outline:none}
+.zeichnung:focus-visible{outline:3px solid var(--akzent);outline-offset:2px}
+.tastatur-hilfe{margin:6px 0 0;font-size:.9rem;color:var(--dezent)}
+.tastatur-hilfe summary{cursor:pointer}
+.tastatur-hilfe p{margin:4px 0 0}
+@media print{.tastatur-hilfe{display:none}}
+.tastatur-fokus{fill:none;stroke:var(--akzent);stroke-width:3;stroke-dasharray:7 4;pointer-events:none}
+.tastatur-fokus.verbinden{stroke:var(--gut,#1e9e5a)}
+@media print{.tastatur-fokus{display:none}}
+/* schmale Bildschirme und Zoom: Auswahllisten nie breiter als ihr Platz; Kästchen gut treffbar */
+select{max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px}
+input[type=range]{min-height:24px}
+.gruppe{min-width:0;max-width:100%}
+.gruppe select{min-width:0}
+/* Struktogramm */
+.einfuegen button{display:inline-flex;align-items:center;gap:6px}
+.einfuegen svg{width:22px;height:16px;flex:none}
+.einfuegen svg *{stroke:var(--linie);fill:none;stroke-width:1.3}
+#einfuege-ziel{width:100%;margin:0}
+.flaeche{padding:16px;min-height:240px;background:var(--flaeche)}
+#zeichnung{outline:none;overflow:auto}
+#zeichnung:focus-visible{outline:3px solid var(--akzent);outline-offset:2px}
+#zeichnung svg{display:block;max-width:100%;height:auto;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+#zeichnung rect.s-flaeche{fill:var(--flaeche);stroke:var(--linie);cursor:pointer}
+#zeichnung rect.s-flaeche:hover{fill:var(--akzent-hell)}
+#zeichnung rect.s-titel{fill:var(--hinter)}
+#zeichnung line{stroke:var(--linie)}
+#zeichnung text{fill:var(--text);pointer-events:none}
+#zeichnung text.s-dezent{fill:var(--dezent)}
+#zeichnung text.s-klein{font-size:12px;fill:var(--dezent)}
+#zeichnung rect.s-auswahl{stroke:var(--akzent);stroke-width:3;pointer-events:none}
+.einstellungen{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin-top:10px;font-size:.9rem}
+.einstellungen label{display:inline-flex;gap:6px;align-items:center}
+input[type=range]{width:160px}
+.reihe4{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.sonderzeichen{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:10px}
+.sonderzeichen button{min-width:34px;padding:3px 6px;font-size:1rem}
+.code-leiste{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:10px 0}
+.code-leiste label{display:inline-flex;gap:6px;align-items:center;font-size:.9rem}
+</style>
+<!-- pwa -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181d" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Struktogramm">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- /pwa -->
+</head>
+<body>
+<header>
+  <div class="kopf">
+    <h1>Struktogramm-Editor</h1>
+    <a id="ruecklink" href="../" hidden>← Übersicht</a>
+    <button type="button" id="btn-design">Dunkel</button>
+  </div>
+</header>
+
+<main>
+  <section class="werkzeuge" aria-label="Werkzeuge">
+    <div class="gruppe einfuegen">
+      <span class="titel">Einfügen</span>
+      <button type="button" data-neu="anweisung" title="Anweisung"><svg viewBox="0 0 22 16"><rect x="1" y="2" width="20" height="12"/></svg>Anweisung</button>
+      <button type="button" data-neu="wenn" title="Verzweigung (wenn – dann – sonst)"><svg viewBox="0 0 22 16"><rect x="1" y="1" width="20" height="14"/><path d="M1 1l10 6 10-6M1 7h20M11 7v8"/></svg>Verzweigung</button>
+      <button type="button" data-neu="fall" title="Fallauswahl (mehrere Fälle)"><svg viewBox="0 0 22 16"><rect x="1" y="1" width="20" height="14"/><path d="M1 1l14 6 6-6M1 7h20M8 7v8M15 7v8"/></svg>Fallauswahl</button>
+      <button type="button" data-neu="solange" title="Solange-Schleife (kopfgesteuert)"><svg viewBox="0 0 22 16"><rect x="1" y="1" width="20" height="14"/><path d="M6 6h15M6 6v9"/></svg>Solange</button>
+      <button type="button" data-neu="wiederhole" title="Wiederhole-Schleife (fußgesteuert)"><svg viewBox="0 0 22 16"><rect x="1" y="1" width="20" height="14"/><path d="M6 10h15M6 1v9"/></svg>Wiederhole</button>
+      <button type="button" data-neu="zaehle" title="Zählschleife (für i von … bis …)"><svg viewBox="0 0 22 16"><rect x="1" y="1" width="20" height="14"/><path d="M6 6h15M6 6v9"/><path d="M2.5 3.5h2" /></svg>Zählschleife</button>
+      <button type="button" data-neu="aufruf" title="Aufruf eines Unterprogramms"><svg viewBox="0 0 22 16"><rect x="1" y="2" width="20" height="12"/><path d="M4 2v12M18 2v12"/></svg>Aufruf</button>
+      <p id="einfuege-ziel" class="dezent klein"></p>
+    </div>
+    <div class="gruppe">
+      <span class="titel">Bearbeiten</span>
+      <button type="button" id="btn-hoch" title="Nach oben (Alt+↑)">↑</button>
+      <button type="button" id="btn-runter" title="Nach unten (Alt+↓)">↓</button>
+      <button type="button" id="btn-ausschneiden" title="Ausschneiden (Strg+X)">Ausschneiden</button>
+      <button type="button" id="btn-kopieren" title="Kopieren (Strg+C)">Kopieren</button>
+      <button type="button" id="btn-einfuegen" title="Einfügen (Strg+V)">Einfügen</button>
+      <button type="button" id="btn-loeschen" title="Löschen (Entf)">Löschen</button>
+      <button type="button" id="btn-rueck" title="Rückgängig (Strg+Z)">↶</button>
+      <button type="button" id="btn-vor" title="Wiederholen (Strg+Y)">↷</button>
+    </div>
+    <div class="gruppe">
+      <span class="titel">Datei</span>
+      <button type="button" id="btn-neu">Neu</button>
+      <button type="button" id="btn-oeffnen">Öffnen</button>
+      <button type="button" id="btn-speichern">Speichern</button>
+      <select id="beispiele" aria-label="Beispiel laden">
+        <option value="">Beispiele …</option>
+        <option value="summe">Summe 1 bis n (Solange)</option>
+        <option value="maximum">Maximum (Verzweigung)</option>
+        <option value="raten">Zahlenraten (Wiederhole)</option>
+        <option value="einmaleins">Einmaleins (Zählschleife)</option>
+        <option value="noten">Notentext (Fallauswahl)</option>
+      </select>
+    </div>
+    <div class="gruppe">
+      <span class="titel">Weitergeben</span>
+      <button type="button" id="btn-svg" title="Als Vektorgrafik, z. B. für Arbeitsblätter">SVG</button>
+      <button type="button" id="btn-png">PNG</button>
+      <button type="button" id="btn-drucken">Drucken</button>
+      <button type="button" id="btn-teilen">Link teilen</button>
+    </div>
+  </section>
+
+  <div class="spalte">
+    <section class="flaeche">
+      <div id="zeichnung" tabindex="0" role="application" aria-roledescription="Zeichenfläche" aria-label="Struktogramm" aria-describedby="zeichnung-tastatur"></div>
+      <details class="tastatur-hilfe"><summary>Bedienung mit der Tastatur</summary><p id="zeichnung-tastatur">Pfeiltasten: Block oder Einfügestelle wählen. Pos1, Ende: erster oder letzter. Eingabetaste: bearbeiten. Alt und Pfeil auf oder ab: Block verschieben. Entfernen: löschen. Strg und C, X, V: kopieren, ausschneiden, einfügen. Escape: Auswahl aufheben.</p></details>
+      <div class="einstellungen">
+        <label>Breite <input type="range" id="breite" min="320" max="1100" step="10"></label>
+        <label>Beschriftung
+          <select id="beschriftung"><option value="wahr">wahr / falsch</option><option value="ja">ja / nein</option></select>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <details id="code-bereich">
+        <summary>Code-Gerüst anzeigen</summary>
+        <div class="code-leiste">
+          <select id="code-art" aria-label="Sprache"><option value="java">Java</option><option value="pseudo">Pseudocode</option></select>
+          <label><input type="checkbox" id="code-methode" checked> als Methode (Titel als Methodenkopf)</label>
+          <button type="button" id="btn-code-kopieren">Kopieren</button>
+        </div>
+        <pre id="code-text" class="code"></pre>
+        <p class="hinweis">Das Gerüst übersetzt ←, ≠, ≤, ≥, ∧, ∨, ¬ sowie „und“, „oder“, „nicht“ in Java-Schreibweise. Umgangssprachliche Anweisungen wie „gib summe aus“ werden als Kommentar übernommen und müssen von Hand ergänzt werden.</p>
+      </details>
+    </section>
+  </div>
+
+  <aside>
+    <section id="eigenschaften" aria-live="polite"></section>
+    <section class="klein dezent">
+      <h2 style="color:var(--text)">So geht's</h2>
+      Block antippen → rechts bearbeiten. Neue Blöcke kommen hinter den markierten Block oder in einen markierten leeren Bereich (∅).
+      Zum Verschieben in einen anderen Zweig: Ausschneiden, Ziel antippen, Einfügen.
+      Ihr Struktogramm wird automatisch in diesem Browser gespeichert.
+    </section>
+  </aside>
+</main>
+
+<footer>
+  Struktogramm-Editor · Version 1.3.1 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+</footer>
+
+<div id="druck"></div>
+<div id="meldung" role="status" hidden></div>
+<script>
+/* ==== diagramm-kern: Anfang – gemeinsamer Teil aller Diagramm-Werkzeuge, hier nicht ändern ==== */
+/* Browserwerkzeuge · Diagrammkern · Version 1.6.0 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
+ *
+ * Gemeinsame Bausteine der Diagramm-Tools (Struktogramm, Automat, UML …):
+ * Design, Meldungen, Rückgängig, Dateien, SVG/PNG-Export, Teilen per Link, Textmessung.
+ * Alles läuft lokal im Browser – es wird nichts an einen Server geschickt.
+ * Der Kern steht in jedem Diagramm-Werkzeug zwischen den Markierungen „diagramm-kern“ und ist überall gleich.
+ * Änderungen bitte nicht in einem einzelnen Werkzeug vornehmen, sondern als Issue melden.
+ */
+"use strict";
+const Kern = (() => {
+  const $ = id => document.getElementById(id);
+  const DESIGN = "browserwerkzeuge-theme";                    // gemeinsam mit allen Tools: "dark" / "light"
+  const istIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  const esc = t => String(t).replace(/[&<>"']/g, z => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[z]));
+
+  /* ---------------------------------------------------------------- Design */
+  function design(knopfId) {
+    const setze = d => {
+      document.documentElement.dataset.design = d;
+      if ($(knopfId)) $(knopfId).textContent = d === "dunkel" ? "Hell" : "Dunkel";
+    };
+    let gespeichert = null;
+    try { gespeichert = localStorage.getItem(DESIGN); } catch (e) { /* ohne Speicher */ }
+    const system = matchMedia("(prefers-color-scheme: dark)");
+    setze((gespeichert ? gespeichert === "dark" : system.matches) ? "dunkel" : "hell");
+    system.addEventListener("change", ev => {                 // Systemdesign folgen, solange nichts gewählt wurde
+      let gewaehlt = null; try { gewaehlt = localStorage.getItem(DESIGN); } catch (e) { /* ohne Speicher */ }
+      if (!gewaehlt) setze(ev.matches ? "dunkel" : "hell");
+    });
+    if ($(knopfId)) $(knopfId).addEventListener("click", () => {
+      const neu = document.documentElement.dataset.design === "dunkel" ? "hell" : "dunkel";
+      setze(neu);
+      try { localStorage.setItem(DESIGN, neu === "dunkel" ? "dark" : "light"); } catch (e) { /* ohne Folgen */ }
+    });
+  }
+
+  /* ---------------------------------------------------------------- Geladene Daten bereinigen
+   * Dateien und geteilte Links stammen von außen: Texte bleiben Texte, Zahlen Zahlen, IDs harmlos. */
+  const pruefe = {
+    text: v => typeof v === "string" ? v.slice(0, 5000) : v == null ? "" : String(v).slice(0, 5000),
+    zahl: (v, d = 0, min = -1e6, max = 1e6) => { const n = +v; return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : d; },
+    id: v => typeof v === "string" && /^[\w-]{1,40}$/.test(v),
+    wahl: (v, erlaubt, d) => erlaubt.includes(v) ? v : d,
+    liste: v => Array.isArray(v) ? v.filter(x => x && typeof x === "object") : []
+  };
+
+  /* ---------------------------------------------------------------- Meldung */
+  let meldungTimer = null;
+  function meldung(text) {
+    let m = $("meldung");
+    if (!m) { m = document.createElement("div"); m.id = "meldung"; m.setAttribute("role", "status"); document.body.appendChild(m); }
+    m.textContent = text; m.hidden = false;
+    clearTimeout(meldungTimer);
+    meldungTimer = setTimeout(() => { m.hidden = true; }, 3500);
+  }
+
+  // Kurze Ansage für Screenreader (unsichtbar), z. B. welches Element gerade gewählt ist
+  let ansageTimer = null;
+  function ansage(text) {
+    let a = $("k-ansage");
+    if (!a) {
+      a = document.createElement("div"); a.id = "k-ansage"; a.className = "nur-vorlesen";
+      a.setAttribute("aria-live", "polite"); a.setAttribute("aria-atomic", "true"); document.body.appendChild(a);
+    }
+    clearTimeout(ansageTimer);
+    a.textContent = "";                              // gleicher Text zweimal hintereinander wird sonst nicht vorgelesen
+    ansageTimer = setTimeout(() => { a.textContent = text; }, 30);
+  }
+
+  /* ---------------------------------------------------------------- Rückgängig / Wiederholen */
+  class Verlauf {
+    constructor(holen, setzen, max = 200) { this.holen = holen; this.setzen = setzen; this.max = max; this.zurueck = []; this.vor = []; }
+    merke() {                                    // VOR einer Änderung aufrufen
+      const stand = this.holen();
+      if (this.zurueck[this.zurueck.length - 1] === stand) return;
+      this.zurueck.push(stand);
+      if (this.zurueck.length > this.max) this.zurueck.shift();
+      this.vor = [];
+    }
+    rueckgaengig() { if (!this.zurueck.length) return false; this.vor.push(this.holen()); this.setzen(this.zurueck.pop()); return true; }
+    wiederholen() { if (!this.vor.length) return false; this.zurueck.push(this.holen()); this.setzen(this.vor.pop()); return true; }
+    leeren() { this.zurueck = []; this.vor = []; }
+  }
+
+  /* ---------------------------------------------------------------- Speicher */
+  let speicherGewarnt = false;                      // Hinweis auf Speicherprobleme nur einmal je Sitzung
+  const benutzt = new Set();                         // Einträge, die dieser Tab liest oder schreibt
+  // Derselbe Eintrag in einem anderen Tab geändert: Hinweis, statt beim nächsten Speichern stillschweigend zu überschreiben
+  window.addEventListener("storage", e => {
+    if (e.key && benutzt.has(e.key))
+      meldung("Dieses Diagramm wurde in einem anderen Tab geändert. Zum Übernehmen die Seite neu laden – sonst überschreibt dieser Tab den Stand beim nächsten Speichern.");
+  });
+  const speicher = {
+    lies(schluessel) { benutzt.add(schluessel); try { return JSON.parse(localStorage.getItem(schluessel)); } catch (e) { return null; } },
+    schreib(schluessel, wert) {
+      benutzt.add(schluessel);
+      try { localStorage.setItem(schluessel, JSON.stringify(wert)); speicherGewarnt = false; return true; }
+      catch (e) {
+        if (!speicherGewarnt) {
+          speicherGewarnt = true;
+          meldung("Achtung: Der Stand kann in diesem Browser nicht gespeichert werden (Speicher voll oder gesperrt). Bitte über „Speichern“ als Datei sichern.");
+        }
+        return false;
+      }
+    }
+  };
+
+  /* ---------------------------------------------------------------- Dateien */
+  async function speichereDatei(name, inhalt, typ) {
+    const datei = new File([inhalt], name, { type: typ });
+    if (istIOS && navigator.canShare && navigator.canShare({ files: [datei] })) {
+      try { await navigator.share({ files: [datei], title: name }); return; }
+      catch (e) { if (e && e.name === "AbortError") return; }
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(datei); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+  }
+
+  function oeffneDatei(accept) {
+    return new Promise(fertig => {
+      const e = document.createElement("input");
+      e.type = "file"; e.accept = istIOS ? "" : accept;      // iOS kennt eigene Dateiendungen nicht und graut sie sonst aus
+      e.addEventListener("change", async () => {
+        const d = e.files && e.files[0];
+        fertig(d ? { name: d.name, text: await d.text() } : null);
+      });
+      e.click();
+    });
+  }
+
+  function dateiname(text, endung) {
+    const basis = String(text || "").replace(/\(.*$/, "").trim()
+      .replace(/[äÄ]/g, "ae").replace(/[öÖ]/g, "oe").replace(/[üÜ]/g, "ue").replace(/ß/g, "ss")
+      .replace(/[^\w-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+    return (basis || "diagramm") + "." + endung;
+  }
+
+  /* ---------------------------------------------------------------- Export */
+  function exportiereSVG(svgText, name) {
+    return speichereDatei(name, '<?xml version="1.0" encoding="UTF-8"?>\n' + svgText, "image/svg+xml");
+  }
+
+  function svgZuCanvas(svgText, breite, hoehe, skala = 2) {
+    return new Promise((fertig, fehler) => {
+      const bild = new Image();
+      bild.onload = () => {
+        const c = document.createElement("canvas");
+        c.width = Math.ceil(breite * skala); c.height = Math.ceil(hoehe * skala);
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(bild, 0, 0, c.width, c.height);
+        fertig(c);
+      };
+      bild.onerror = () => fehler(new Error("SVG konnte nicht gezeichnet werden"));
+      bild.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgText);
+    });
+  }
+
+  async function exportierePNG(svgText, breite, hoehe, name) {
+    const c = await svgZuCanvas(svgText, breite, hoehe, 2);
+    const blob = await new Promise(f => c.toBlob(f, "image/png"));
+    return speichereDatei(name, blob, "image/png");
+  }
+
+  async function kopiere(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch (e) {
+      const t = document.createElement("textarea");
+      t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch (e2) { ok = false; }
+      t.remove(); return ok;
+    }
+  }
+
+  /* ---------------------------------------------------------------- Teilen per Link
+   * Der Inhalt steckt komprimiert im #-Teil der Adresse. Dieser Teil wird vom Browser
+   * nie an den Server geschickt – geteilt wird also nur zwischen den Geräten. */
+  const b64url = bytes => { let s = ""; bytes.forEach(b => { s += String.fromCharCode(b); }); return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); };
+  const vonB64url = text => { const s = atob(text.replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(s, z => z.charCodeAt(0)); };
+
+  async function strom(bytes, art) {
+    const s = new Blob([bytes]).stream().pipeThrough(art);
+    return new Uint8Array(await new Response(s).arrayBuffer());
+  }
+
+  async function kodiere(objekt) {
+    const roh = new TextEncoder().encode(JSON.stringify(objekt));
+    if (typeof CompressionStream === "function") {
+      try { return "z" + b64url(await strom(roh, new CompressionStream("deflate-raw"))); } catch (e) { /* unkomprimiert */ }
+    }
+    return "j" + b64url(roh);
+  }
+
+  // Entpacken mit Obergrenze: Ein kurzer Link darf nicht zu Hunderten Megabyte aufgeblasen werden
+  const MAX_ENTPACKT = 8 * 1024 * 1024;
+  async function entpacke(bytes) {
+    const leser = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw")).getReader();
+    const teile = []; let laenge = 0;
+    for (;;) {
+      const { done, value } = await leser.read();
+      if (done) break;
+      laenge += value.length;
+      if (laenge > MAX_ENTPACKT) { leser.cancel().catch(() => {}); throw new Error("Link zu groß"); }
+      teile.push(value);
+    }
+    const roh = new Uint8Array(laenge); let pos = 0;
+    for (const t of teile) { roh.set(t, pos); pos += t.length; }
+    return roh;
+  }
+
+  async function dekodiere(text) {
+    const art = text[0], daten = vonB64url(text.slice(1));
+    const roh = art === "z" ? await entpacke(daten) : daten;
+    if (roh.length > MAX_ENTPACKT) throw new Error("Link zu groß");
+    return JSON.parse(new TextDecoder().decode(roh));
+  }
+
+  /* ---------------------------------------------------------------- Textmessung & Umbruch */
+  const messCanvas = document.createElement("canvas").getContext("2d");
+  function textBreite(text, schrift) { messCanvas.font = schrift; return messCanvas.measureText(text).width; }
+
+  function umbrechen(text, breite, schrift) {
+    const zeilen = [];
+    String(text || "").split("\n").forEach(absatz => {
+      const woerter = absatz.split(/(\s+)/).filter(w => w.length);
+      let zeile = "";
+      woerter.forEach(wort => {
+        const probe = zeile + wort;
+        if (!zeile || textBreite(probe.trimEnd(), schrift) <= breite) { zeile = probe; return; }
+        zeilen.push(zeile.trimEnd());
+        zeile = /^\s+$/.test(wort) ? "" : wort;
+        // sehr lange Wörter hart trennen
+        while (textBreite(zeile, schrift) > breite && zeile.length > 1) {
+          let n = zeile.length - 1;
+          while (n > 1 && textBreite(zeile.slice(0, n), schrift) > breite) n--;
+          zeilen.push(zeile.slice(0, n)); zeile = zeile.slice(n);
+        }
+      });
+      zeilen.push(zeile.trimEnd());
+    });
+    return zeilen.length ? zeilen : [""];
+  }
+
+  /* ---------------------------------------------------------------- Dialog */
+  function dialog(titel, html, aktionen) {
+    const d = document.createElement("dialog");
+    d.className = "k-dialog";
+    d.innerHTML = `<h2>${esc(titel)}</h2>${html}<div class="k-knoepfe"></div>`;
+    aktionen.forEach(a => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = a.text;
+      if (a.primaer) b.className = "primaer";
+      b.addEventListener("click", () => { d.close(); if (a.aktion) a.aktion(d); });
+      d.querySelector(".k-knoepfe").appendChild(b);
+    });
+    d.addEventListener("close", () => d.remove());
+    document.body.appendChild(d);
+    if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+    return d;
+  }
+
+  /* ---------------------------------------------------------------- Zeichenfläche (Automat, UML, ER …)
+   * <svg> mit <g class="welt">. Elemente mit data-ziel="…" sind antippbar, zusätzlich
+   * data-knoten (verbindbar) und data-ziehbar (verschiebbar). Hintergrund ziehen = verschieben,
+   * Mausrad oder zwei Finger = zoomen. Verbinden: am Griff (data-griff="Knoten-ID") zum Ziel ziehen
+   * oder Griff und dann Ziel antippen; im Modus „verbinden“ geht das auch direkt vom Knoten aus.
+   * Tastatur (Fläche fokussiert): Pfeiltasten wählen das nächste Element in dieser Richtung, Bild↑/Bild↓ der Reihe
+   * nach (auch Verbindungen), Umschalt+Pfeil verschiebt, Eingabe bearbeitet, V verbindet, N legt neu an,
+   * + / − / 0 zoomen bzw. passen ein, Entf löscht (im Tool), Esc bricht ab. */
+  class Flaeche {
+    constructor(svg, o) {
+      this.svg = svg; this.o = o; this.tx = 40; this.ty = 40; this.s = 1;
+      this.welt = svg.querySelector(".welt");
+      this.band = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      this.band.setAttribute("class", "gummiband"); this.band.style.display = "none";
+      svg.appendChild(this.band);
+      this.zeiger = new Map(); this.aktion = null; this.letzterKlick = null; this.verbindeVon = null;
+      svg.addEventListener("pointerdown", e => { this.mitTastatur = false; this.zeigeFokus(); this.runter(e); });
+      svg.addEventListener("pointermove", e => this.bewege(e));
+      svg.addEventListener("pointerup", e => this.hoch(e));
+      svg.addEventListener("pointercancel", e => {
+        this.zeiger.delete(e.pointerId);
+        if (this.aktion && this.aktion.bewegt && this.aktion.art === "ziehen" && this.o.onZiehEnde) this.o.onZiehEnde(this.aktion.ziel);
+        this.aktion = null; this.pinch = null; this.band.style.display = "none";
+      });
+      // Mausrad/Trackpad: mit Strg (oder Trackpad-Pinch) zoomen, sonst verschieben
+      svg.addEventListener("wheel", e => {
+        e.preventDefault();
+        const faktor = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+        if (e.ctrlKey || e.metaKey) this.zoom(Math.exp(-e.deltaY * faktor * 0.01), e.clientX, e.clientY);
+        else { this.tx -= e.deltaX * faktor; this.ty -= e.deltaY * faktor; this.setze(); }
+      }, { passive: false });
+      this.richteTastaturEin();
+      this.setze();
+    }
+    setze() {
+      this.welt.setAttribute("transform", `translate(${this.tx} ${this.ty}) scale(${this.s})`);
+      if (this.s !== this.letzteS) { this.letzteS = this.s; if (this.o.onZoom) this.o.onZoom(this.s); }
+      this.zeigeFokus();
+    }
+    inhalt(html) { this.welt.innerHTML = html; this.zeigeFokus(); }
+    punkt(cx, cy) { const r = this.svg.getBoundingClientRect(); return { x: (cx - r.left - this.tx) / this.s, y: (cy - r.top - this.ty) / this.s }; }
+    zoom(f, cx, cy) {
+      const r = this.svg.getBoundingClientRect();
+      if (cx === undefined) { cx = r.left + r.width / 2; cy = r.top + r.height / 2; }
+      const neu = Math.min(4, Math.max(0.2, this.s * f)), px = cx - r.left, py = cy - r.top;
+      this.tx = px - (px - this.tx) * neu / this.s; this.ty = py - (py - this.ty) * neu / this.s; this.s = neu; this.setze();
+    }
+    einpassen(rand = 30) {
+      const b = this.welt.getBBox(), r = this.svg.getBoundingClientRect();
+      if (!b.width || !r.width) { this.tx = 40; this.ty = 40; this.s = 1; return this.setze(); }
+      this.s = Math.min(1.5, (r.width - 2 * rand) / b.width, (r.height - 2 * rand) / b.height);
+      this.tx = (r.width - b.width * this.s) / 2 - b.x * this.s; this.ty = (r.height - b.height * this.s) / 2 - b.y * this.s; this.setze();
+    }
+    mitte() { const r = this.svg.getBoundingClientRect(); return this.punkt(r.left + r.width / 2, r.top + r.height / 2); }
+    ziel(el) {
+      const t = el && el.closest && el.closest("[data-ziel]");
+      return t ? { id: t.dataset.ziel, knoten: t.hasAttribute("data-knoten"), ziehbar: t.hasAttribute("data-ziehbar"), el: t } : null;
+    }
+    knotenMitte(z) {
+      const el = this.welt.querySelector(`[data-ziel="${CSS.escape(z.id)}"]`) || this.welt.querySelector(`[data-griff="${CSS.escape(z.id)}"]`);
+      if (!el) return null; const b = el.getBBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+    }
+    naechsterGriff(cx, cy, max) {
+      let best = null;
+      this.welt.querySelectorAll("[data-griff]").forEach(el => {
+        const b = el.getBoundingClientRect(), d = Math.hypot(b.left + b.width / 2 - cx, b.top + b.height / 2 - cy);
+        if (d <= max && (!best || d < best.abstand)) best = { el, abstand: d };
+      });
+      return best;
+    }
+    setzeVerbindeVon(z) { this.verbindeVon = z; if (this.o.onVerbindeStart) this.o.onVerbindeStart(z); }
+    runter(e) {
+      if (e.button > 0) return;
+      this.svg.setPointerCapture(e.pointerId);
+      this.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.zeiger.size === 2) {
+        const [a, b] = [...this.zeiger.values()];
+        this.pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), s: this.s, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, tx: this.tx, ty: this.ty };
+        if (this.aktion && this.aktion.bewegt && this.aktion.art === "ziehen" && this.o.onZiehEnde) this.o.onZiehEnde(this.aktion.ziel);
+        this.aktion = null; this.band.style.display = "none"; return;
+      }
+      let griff = e.target.closest && e.target.closest("[data-griff]");
+      if (!griff && e.pointerType !== "mouse") {                // Finger: nahe Anschlüsse großzügig treffen
+        const nah = this.naechsterGriff(e.clientX, e.clientY, 22);
+        if (nah && (!this.ziel(e.target) || nah.abstand <= 12)) griff = nah.el;
+      }
+      const z = griff ? { id: griff.dataset.griff, knoten: true, ziehbar: false, griff: true } : this.ziel(e.target);
+      const modus = this.o.modus ? this.o.modus() : "auswahl";
+      const art = griff || (modus === "verbinden" && z && z.knoten) ? "verbinden" : z && z.ziehbar ? "ziehen" : "schieben";
+      this.aktion = { art, ziel: z, sx: e.clientX, sy: e.clientY, tx: this.tx, ty: this.ty, bewegt: false, letzte: this.punkt(e.clientX, e.clientY) };
+    }
+    bewege(e) {
+      if (!this.zeiger.has(e.pointerId)) return;
+      this.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.pinch && this.zeiger.size === 2) {
+        const [a, b] = [...this.zeiger.values()], p = this.pinch, r = this.svg.getBoundingClientRect();
+        const neu = Math.min(4, Math.max(0.2, p.s * Math.hypot(a.x - b.x, a.y - b.y) / (p.d || 1)));
+        const mx = (a.x + b.x) / 2 - r.left, my = (a.y + b.y) / 2 - r.top, m0x = p.mx - r.left, m0y = p.my - r.top;
+        this.tx = mx - (m0x - p.tx) * neu / p.s; this.ty = my - (m0y - p.ty) * neu / p.s; this.s = neu; this.setze(); return;
+      }
+      const a = this.aktion; if (!a) return;
+      if (!a.bewegt && Math.hypot(e.clientX - a.sx, e.clientY - a.sy) < 5) return;
+      if (!a.bewegt) { a.bewegt = true; if (a.art === "ziehen" && this.o.onZiehStart) this.o.onZiehStart(a.ziel); }
+      if (a.art === "ziehen") {
+        const p = this.punkt(e.clientX, e.clientY);
+        this.o.onZiehen(a.ziel, p.x - a.letzte.x, p.y - a.letzte.y, p); a.letzte = p;
+      } else if (a.art === "schieben") {
+        this.tx = a.tx + e.clientX - a.sx; this.ty = a.ty + e.clientY - a.sy; this.setze();
+      } else if (a.art === "verbinden") {
+        const m = this.knotenMitte(a.ziel), p = this.punkt(e.clientX, e.clientY);
+        if (!m) return;
+        const t = v => v * this.s;
+        this.band.setAttribute("x1", t(m.x) + this.tx); this.band.setAttribute("y1", t(m.y) + this.ty);
+        this.band.setAttribute("x2", t(p.x) + this.tx); this.band.setAttribute("y2", t(p.y) + this.ty);
+        this.band.style.display = "";
+      }
+    }
+    hoch(e) {
+      this.zeiger.delete(e.pointerId);
+      if (this.pinch) { if (!this.zeiger.size) this.pinch = null; this.aktion = null; return; }
+      const a = this.aktion; this.aktion = null; if (!a) return;
+      const p = this.punkt(e.clientX, e.clientY);
+      if (!a.bewegt) {                               // Antippen (mit eigener Doppelklick-Erkennung)
+        const jetzt = performance.now(), l = this.letzterKlick;
+        const doppel = l && jetzt - l.t < 400 && Math.hypot(e.clientX - l.x, e.clientY - l.y) < 12 && (l.id || "") === (a.ziel ? a.ziel.id : "");
+        this.letzterKlick = doppel ? null : { t: jetzt, x: e.clientX, y: e.clientY, id: a.ziel ? a.ziel.id : "" };
+        const modus = this.o.modus ? this.o.modus() : "auswahl";
+        if (a.ziel && a.ziel.griff) {                                         // Griff antippen
+          if (this.verbindeVon && this.verbindeVon.id !== a.ziel.id) { const von = this.verbindeVon; this.setzeVerbindeVon(null); this.o.onVerbinde(von.id, a.ziel.id); }
+          else this.setzeVerbindeVon(this.verbindeVon ? null : a.ziel);          // erneut antippen = abbrechen
+          return;
+        }
+        if ((modus === "verbinden" || this.verbindeVon) && a.ziel && a.ziel.knoten) {
+          if (this.verbindeVon) { const von = this.verbindeVon; this.setzeVerbindeVon(null); this.o.onVerbinde(von.id, a.ziel.id); }
+          else this.setzeVerbindeVon(a.ziel);
+          return;
+        }
+        if (this.verbindeVon) { this.setzeVerbindeVon(null); if (!a.ziel) return; }   // abbrechen
+        this.fokus = a.ziel ? a.ziel.id : null;
+        if (doppel && this.o.onDoppel) this.o.onDoppel(a.ziel, p);
+        else if (this.o.onKlick) this.o.onKlick(a.ziel, p);
+        return;
+      }
+      if (a.art === "ziehen" && this.o.onZiehEnde) this.o.onZiehEnde(a.ziel);
+      if (a.art === "verbinden") {
+        this.band.style.display = "none";
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        let g = el && el.closest && el.closest("[data-griff]");
+        if (!g && e.pointerType !== "mouse" && !(this.ziel(el) || {}).knoten) { const nah = this.naechsterGriff(e.clientX, e.clientY, 22); if (nah) g = nah.el; }
+        const unten = g ? { id: g.dataset.griff, knoten: true } : this.ziel(el);
+        if (unten && unten.knoten) { this.setzeVerbindeVon(null); this.o.onVerbinde(a.ziel.id, unten.id); }
+      }
+    }
+
+    /* ---------- Tastatur */
+    richteTastaturEin() {
+      const svg = this.svg;
+      this.fokus = null; this.mitTastatur = false; this.tVerbinden = null;
+      svg.setAttribute("tabindex", "0");
+      svg.setAttribute("role", "application");
+      svg.setAttribute("aria-roledescription", "Zeichenfläche");
+      // Sichtbare Kurzhilfe unter der Fläche (zugeklappt); Screenreader bekommen den Text als Beschreibung
+      const kasten = document.createElement("details"), titel = document.createElement("summary");
+      kasten.className = "tastatur-hilfe"; titel.textContent = "Bedienung mit der Tastatur";
+      const hilfe = document.createElement("p");
+      hilfe.id = (svg.id || "flaeche") + "-tastatur";
+      hilfe.textContent = "Pfeiltasten: Element wählen. Bild auf, Bild ab: alle Elemente der Reihe nach. Umschalt und Pfeiltaste: verschieben. " +
+        "Eingabetaste: bearbeiten. V: verbinden. N: neues Element. Entfernen: löschen. Plus, Minus, Null: zoomen. " +
+        "Escape: abbrechen oder aus den Eigenschaften zurück zur Zeichenfläche.";
+      kasten.append(titel, hilfe);
+      (svg.closest(".leinwand") || svg).after(kasten);
+      svg.setAttribute("aria-describedby", hilfe.id);
+      this.ring = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      this.ring.setAttribute("class", "tastatur-fokus"); this.ring.setAttribute("rx", "6"); this.ring.style.display = "none";
+      svg.appendChild(this.ring);
+      svg.addEventListener("keydown", e => this.taste(e));
+      svg.addEventListener("focus", () => { if (this.mitTastatur) this.zeigeFokus(); });
+      svg.addEventListener("blur", () => { this.ring.style.display = "none"; });
+      // Esc in einem Eingabefeld der Eigenschaften führt zurück auf die Zeichenfläche
+      document.addEventListener("keydown", e => {
+        if (e.key !== "Escape" || !this.mitTastatur || document.querySelector("dialog[open]")) return;
+        const a = document.activeElement;
+        if (a && a !== svg && a.closest && a.closest("#eigenschaften")) { e.preventDefault(); e.stopPropagation(); svg.focus(); this.zeigeFokus(); }
+      }, true);
+    }
+    // Was gerade mit der Tastatur erreichbar ist: Elemente – beim Verbinden Knoten und Anschlüsse
+    tZiele() {
+      const liste = [], gesehen = new Set();
+      const dazu = (el, id, knoten, ziehbar, griff) => { if (id && !gesehen.has(id)) { gesehen.add(id); liste.push({ el, id, knoten, ziehbar, griff }); } };
+      const v = this.tVerbinden;
+      if (v && v.schritt === "von") {
+        v.anschluesse.forEach(id => { const el = this.welt.querySelector(`[data-griff="${CSS.escape(id)}"]`); if (el) dazu(el, id, true, false, true); });
+        return liste;
+      }
+      this.welt.querySelectorAll("[data-ziel], [data-griff]").forEach(el => {
+        if (el.hasAttribute("data-griff")) { if (v && this.o.anschluesse) dazu(el, el.dataset.griff, true, false, true); return; }
+        if (v && !el.hasAttribute("data-knoten")) return;
+        dazu(el, el.dataset.ziel, el.hasAttribute("data-knoten"), el.hasAttribute("data-ziehbar"), false);
+      });
+      return liste;
+    }
+    tElement(id) {
+      if (!id) return null;
+      return this.welt.querySelector(`[data-ziel="${CSS.escape(id)}"]`) || this.welt.querySelector(`[data-griff="${CSS.escape(id)}"]`);
+    }
+    zeigeFokus() {
+      if (!this.ring) return;
+      const el = this.mitTastatur && document.activeElement === this.svg ? this.tElement(this.fokus) : null;
+      if (!el) { this.ring.style.display = "none"; return; }
+      const r = el.getBoundingClientRect(), f = this.svg.getBoundingClientRect(), rand = 5;
+      this.ring.setAttribute("x", r.left - f.left - rand); this.ring.setAttribute("y", r.top - f.top - rand);
+      this.ring.setAttribute("width", r.width + 2 * rand); this.ring.setAttribute("height", r.height + 2 * rand);
+      this.ring.classList.toggle("verbinden", !!this.tVerbinden);
+      this.ring.style.display = "";
+    }
+    beschreibe(id) {
+      const text = this.o.beschreibe ? this.o.beschreibe(id) : "";
+      if (text) return text;
+      const el = this.tElement(id);
+      return (el && (el.getAttribute("aria-label") || el.textContent.replace(/\s+/g, " ").trim())) || "Element";
+    }
+    // Ausgewähltes Element sichtbar machen, falls es außerhalb liegt
+    insBild(el) {
+      const r = el.getBoundingClientRect(), f = this.svg.getBoundingClientRect();
+      if (r.left >= f.left && r.right <= f.right && r.top >= f.top && r.bottom <= f.bottom) return;
+      this.tx += f.left + f.width / 2 - (r.left + r.width / 2); this.ty += f.top + f.height / 2 - (r.top + r.height / 2); this.setze();
+    }
+    tWaehle(z, ansagen = true) {
+      this.fokus = z ? z.id : null;
+      if (!this.tVerbinden) {
+        const waehle = this.o.onWaehle || this.o.onKlick;
+        if (waehle) waehle(z ? { id: z.id, knoten: z.knoten, ziehbar: z.ziehbar, el: z.el } : null, this.mitte());
+      }
+      const el = this.tElement(this.fokus);
+      if (el) this.insBild(el);
+      this.zeigeFokus();
+      if (ansagen && z) ansage((this.tVerbinden ? (this.tVerbinden.schritt === "von" ? "Anschluss: " : "Verbinden mit: ") : "") + this.beschreibe(z.id));
+    }
+    tNaechstes(richtung) {                           // richtung: [dx, dy] für Pfeiltasten, +1/−1 für Bild↑/↓
+      const ziele = this.tZiele();
+      if (!ziele.length) { ansage(this.tVerbinden ? "Kein mögliches Ziel." : "Die Zeichenfläche ist leer. N legt ein neues Element an."); return; }
+      const i = ziele.findIndex(z => z.id === this.fokus);
+      if (i < 0) { this.tWaehle(ziele[0]); return; }
+      if (typeof richtung === "number") { this.tWaehle(ziele[(i + richtung + ziele.length) % ziele.length]); return; }
+      const mitte = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+      const [cx, cy] = mitte(ziele[i].el), [dx, dy] = richtung;
+      let best = null;
+      ziele.forEach((z, j) => {
+        if (j === i) return;
+        const [x, y] = mitte(z.el), vor = (x - cx) * dx + (y - cy) * dy, quer = Math.abs((x - cx) * dy - (y - cy) * dx);
+        if (vor <= 1) return;
+        const wert = vor + 2 * quer;
+        if (!best || wert < best.wert) best = { z, wert };
+      });
+      if (best) this.tWaehle(best.z); else ansage("In dieser Richtung liegt kein weiteres Element.");
+    }
+    taste(e) {
+      if (e.target !== this.svg || e.ctrlKey || e.metaKey) return;   // Strg-Kürzel (Rückgängig …) erledigt das Tool
+      this.mitTastatur = true;
+      const k = e.key, PFEIL = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+      const z = this.tZiele().find(x => x.id === this.fokus) || null;
+      let fertig = true;
+      if (PFEIL[k] && e.shiftKey) {                  // verschieben
+        if (z && z.ziehbar && !this.tVerbinden) {
+          const schritt = (e.altKey ? 2 : 20) / this.s, [dx, dy] = PFEIL[k];
+          if (this.o.onZiehStart) this.o.onZiehStart(z);
+          this.o.onZiehen(z, dx * schritt, dy * schritt, null);
+          if (this.o.onZiehEnde) this.o.onZiehEnde(z);
+          this.zeigeFokus();
+        } else ansage(z ? "Dieses Element lässt sich nicht verschieben." : "Kein Element gewählt.");
+      } else if (PFEIL[k]) this.tNaechstes(PFEIL[k]);
+      else if (k === "PageDown") this.tNaechstes(1);
+      else if (k === "PageUp") this.tNaechstes(-1);
+      else if (k === "Home" || k === "End") { const l = this.tZiele(); if (l.length) this.tWaehle(l[k === "Home" ? 0 : l.length - 1]); }
+      else if (k === "Enter" || k === " ") {
+        if (this.tVerbinden) this.tBestaetige(z);
+        else if (z && this.o.onDoppel) this.o.onDoppel(z, this.mitte());
+        else if (!z) this.tNaechstes(1);
+      } else if (k === "F2") { if (z && this.o.onDoppel && !this.tVerbinden) this.o.onDoppel(z, this.mitte()); }
+      else if (k.toLowerCase() === "v" && !e.altKey) this.tVerbindeStart(z);
+      else if (k.toLowerCase() === "n" && !e.altKey && !this.tVerbinden) {
+        if (this.o.onDoppel && this.o.neuMitTastatur !== false) {
+          const vorher = new Set(this.tZiele().map(x => x.id));
+          this.o.onDoppel(null, this.mitte());
+          const neu = this.tZiele().find(x => !vorher.has(x.id));
+          if (neu) { this.fokus = neu.id; this.zeigeFokus(); ansage("Neu: " + this.beschreibe(neu.id)); }
+        } else ansage("Neue Elemente über die Knöpfe über der Zeichenfläche einfügen.");
+      } else if (k === "+" || k === "=") { this.zoom(1.25); ansage(`Zoom ${Math.round(this.s * 100)} Prozent`); }
+      else if (k === "-") { this.zoom(0.8); ansage(`Zoom ${Math.round(this.s * 100)} Prozent`); }
+      else if (k === "0") { this.einpassen(); ansage("Ganzes Diagramm eingepasst"); }
+      else if (k === "Escape") {
+        if (this.tVerbinden) { this.tVerbinden = null; this.setzeVerbindeVon(null); ansage("Verbinden abgebrochen"); this.zeigeFokus(); }
+        else { this.fokus = null; this.zeigeFokus(); fertig = false; }          // Esc auch an das Tool (Auswahl aufheben)
+      } else fertig = false;                                                 // Entf, Rückgängig usw. erledigt das Tool
+      if (fertig) { e.preventDefault(); e.stopPropagation(); }
+    }
+    tVerbindeStart(z) {
+      if (this.tVerbinden) return;
+      if (!z) { ansage("Erst ein Element wählen, dann V drücken."); return; }
+      const anschluesse = this.o.anschluesse ? this.o.anschluesse(z.id) : null;
+      if (anschluesse && anschluesse.length) {     // z. B. Schaltung: erst den Anschluss am Element wählen
+        this.tVerbinden = { schritt: "von", anschluesse, element: z.id };
+        ansage("Verbinden: Anschluss mit den Pfeiltasten wählen, mit der Eingabetaste bestätigen. Escape bricht ab.");
+        this.tWaehle(this.tZiele()[0]);
+        return;
+      }
+      if (!z.knoten) { ansage("Dieses Element lässt sich nicht verbinden."); return; }
+      this.tVerbinden = { schritt: "nach", von: z.id };
+      this.setzeVerbindeVon({ id: z.id, knoten: true });
+      ansage(`Verbinden von ${this.beschreibe(z.id)}: Ziel mit den Pfeiltasten wählen, mit der Eingabetaste bestätigen. Escape bricht ab.`);
+      this.zeigeFokus();
+    }
+    tBestaetige(z) {
+      const v = this.tVerbinden;
+      if (!z) { ansage("Kein Ziel gewählt."); return; }
+      if (v.schritt === "von") {
+        this.tVerbinden = { schritt: "nach", von: z.id };
+        this.setzeVerbindeVon({ id: z.id, knoten: true, griff: true });
+        ansage(`Verbinden von ${this.beschreibe(z.id)}: Ziel wählen und mit der Eingabetaste bestätigen.`);
+        this.zeigeFokus();
+        return;
+      }
+      this.tVerbinden = null;
+      this.setzeVerbindeVon(null);
+      const vorher = new Set(this.tZiele().map(x => x.id));
+      this.o.onVerbinde(v.von, z.id);
+      const neu = this.tZiele().find(x => !vorher.has(x.id));
+      if (neu) { this.fokus = neu.id; ansage("Verbunden: " + this.beschreibe(neu.id)); }
+      else ansage("Verbunden.");
+      this.zeigeFokus();
+    }
+  }
+
+  // Export: Inhalt messen und als eigenständiges SVG (weißer Hintergrund) verpacken
+  function bildAus(inhalt, rand = 16) {
+    const ns = "http://www.w3.org/2000/svg";
+    const mess = document.createElementNS(ns, "svg");
+    mess.setAttribute("style", "position:absolute;left:-10000px;top:0;width:10px;height:10px;visibility:hidden");
+    mess.innerHTML = `<g>${inhalt}</g>`;
+    document.body.appendChild(mess);
+    const b = mess.firstChild.getBBox(); mess.remove();
+    const x = Math.floor(b.x - rand), y = Math.floor(b.y - rand), w = Math.ceil(b.width + 2 * rand), h = Math.ceil(b.height + 2 * rand);
+    const sauber = inhalt.replace(/<g data-griff=[\s\S]*?<\/g>/g, "")
+      .replace(/<(?:path|rect|circle)\b[^>]*(?:stroke|fill)="transparent"[^>]*\/>/g, "")      // unsichtbare Trefferflächen
+      .replace(/ (class|data-[\w-]+)="[^"]*"/g, "").replace(/ data-(knoten|ziehbar)(?=[ >\/])/g, "");
+    return { breite: w, hoehe: h,
+      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${x} ${y} ${w} ${h}">` +
+           `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff"/>${sauber}</svg>` };
+  }
+
+  // Zwei Formate in die Zwischenablage (z. B. unterstrichene Schlüssel für Word)
+  async function kopiereFormatiert(html, text) {
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], { type: "text/html" }), "text/plain": new Blob([text], { type: "text/plain" }) })]);
+      return true;
+    } catch (e) { return kopiere(text); }
+  }
+
+  // Blauer Verbinden-Griff; wächst beim Herauszoomen mit, damit er mit dem Finger treffbar bleibt
+  function griff(id, x, y, skala = 1) {
+    const r = Math.max(12, 13 / skala), t = Math.max(r, 22 / skala), k = r / 12, n = v => (+v).toFixed(1);
+    return `<g data-griff="${esc(id)}" class="griff"><circle cx="${n(x)}" cy="${n(y)}" r="${n(t)}" fill="transparent" class="griff-treffer"/>` +
+      `<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="#1f5f99" class="griff-kreis"/>` +
+      `<path d="M${n(x - 5 * k)} ${n(y)}h${n(10 * k)}m${n(-4 * k)} ${n(-4 * k)}l${n(4 * k)} ${n(4 * k)}-${n(4 * k)} ${n(4 * k)}" fill="none" stroke="#fff" stroke-width="${n(2.2 * k)}" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  }
+
+  // Geteilten Link öffnen: Wenn schon etwas gezeichnet ist, vorher fragen
+  function linkOeffnen(istLeer, oeffnen, verwerfen) {
+    if (istLeer) { oeffnen(); return; }
+    dialog("Geteilten Link öffnen?", "<p>Der Link enthält ein Diagramm. Es ersetzt Ihr aktuelles Diagramm in diesem Browser.</p>" +
+      "<p class=\"dezent klein\">Tipp: Wenn Sie Ihr aktuelles Diagramm behalten möchten, speichern Sie es vorher als Datei.</p>",
+      [{ text: "Nicht öffnen", aktion: verwerfen }, { text: "Öffnen", primaer: true, aktion: oeffnen }]);
+  }
+
+  return { $, esc, istIOS, pruefe, linkOeffnen, griff, design, meldung, ansage, Verlauf, speicher, speichereDatei, oeffneDatei, dateiname, Flaeche, bildAus, kopiereFormatiert,
+           exportiereSVG, exportierePNG, kopiere, kodiere, dekodiere, textBreite, umbrechen, dialog };
+})();
+/* ==== diagramm-kern: Ende ==== */
+</script>
+<script>
+/* Struktogramm-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
+ * Struktogramme (Nassi-Shneiderman, angelehnt an DIN 66261) zeichnen, als SVG/PNG exportieren
+ * und als Java- oder Pseudocode-Gerüst ausgeben. Alles bleibt im Browser.
+ */
+"use strict";
+const { $, esc } = Kern;
+const SPEICHER = "browserwerkzeuge-struktogramm";
+const FORMAT = "browserwerkzeuge-struktogramm";
+const ALT_FORMAT = "anton-struktogramm";                 // Dateien, Links und Speicher aus Version 1.x – werden weiter gelesen
+
+/* ------------------------------------------------------------------ Maße */
+const SCHRIFT_PX = 14;
+const SCHRIFT = `${SCHRIFT_PX}px Arial, Helvetica, "Liberation Sans", sans-serif`;
+const ZH = 19;          // Zeilenhöhe
+const RAND = 6;         // Innenabstand
+const EINZUG = 22;      // Breite des Schleifenbalkens
+const AUFRUF = 8;       // Abstand der Doppellinien beim Aufruf
+const LEER = "∅";
+
+const TYPEN = {
+  anweisung:  { name: "Anweisung" },
+  aufruf:     { name: "Aufruf (Unterprogramm)" },
+  wenn:       { name: "Verzweigung" },
+  fall:       { name: "Fallauswahl" },
+  solange:    { name: "Solange-Schleife (kopfgesteuert)" },
+  wiederhole: { name: "Wiederhole-Schleife (fußgesteuert)" },
+  zaehle:     { name: "Zählschleife" }
+};
+
+function neuerBlock(typ) {
+  switch (typ) {
+    case "anweisung":  return { typ, text: "" };
+    case "aufruf":     return { typ, text: "" };
+    case "wenn":       return { typ, bedingung: "", ja: [], nein: [] };
+    case "fall":       return { typ, ausdruck: "", faelle: [{ wert: "1", bloecke: [] }, { wert: "2", bloecke: [] }], sonst: [] };
+    case "solange":    return { typ, bedingung: "", bloecke: [] };
+    case "wiederhole": return { typ, bedingung: "", bloecke: [] };
+    case "zaehle":     return { typ, variable: "i", von: "1", bis: "10", schritt: "1", bloecke: [] };
+  }
+  return null;
+}
+
+function leeresDiagramm() {
+  return { format: FORMAT, version: 1, titel: "", bloecke: [], einstellungen: { breite: 600, beschriftung: "wahr" } };
+}
+
+/* ------------------------------------------------------------------ Hilfen für das Modell */
+const unterlisten = b =>
+  b.typ === "wenn" ? [b.ja, b.nein] :
+  b.typ === "fall" ? [...b.faelle.map(f => f.bloecke), ...(b.sonst ? [b.sonst] : [])] :
+  ["solange", "wiederhole", "zaehle"].includes(b.typ) ? [b.bloecke] : [];
+
+function zaehlText(b) {
+  const s = String(b.schritt || "1").trim();
+  return `für ${b.variable || "i"} von ${b.von} bis ${b.bis}` + (s && s !== "1" ? ` Schrittweite ${s}` : "");
+}
+const bandText = b => b.typ === "zaehle" ? zaehlText(b) : "solange " + (b.bedingung || "");
+
+function gewicht(liste) { return liste.length ? Math.max(...liste.map(gewichtBlock)) : 1; }
+function gewichtBlock(b) {
+  if (b.typ === "wenn") return gewicht(b.ja) + gewicht(b.nein);
+  if (b.typ === "fall") return unterlisten(b).reduce((s, l) => s + gewicht(l), 0);
+  if (unterlisten(b).length) return gewicht(unterlisten(b)[0]);
+  return 1;
+}
+function teile(breite, listen) {                     // Spaltenbreiten nach Verschachtelungstiefe
+  const g = listen.map(gewicht), summe = g.reduce((a, b) => a + b, 0);
+  let rest = breite;
+  return g.map((x, i) => {
+    if (i === g.length - 1) return rest;
+    const w = Math.round(breite * x / summe); rest -= w; return w;
+  });
+}
+
+/* ------------------------------------------------------------------ Messen */
+const zeilen = (text, breite) => Kern.umbrechen(text, Math.max(20, breite), SCHRIFT);
+const textHoehe = (text, breite) => zeilen(text, breite - 2 * RAND).length * ZH + 2 * RAND;
+
+function kopfHoehe(text, breite) {               // Kopf mit Dreieck (Verzweigung, Fallauswahl)
+  const n = zeilen(text, breite * 0.5 - RAND).length;
+  return 2 * (n * ZH + RAND);
+}
+
+function hoeheListe(liste, w) {
+  return liste.length ? liste.reduce((s, b) => s + hoehe(b, w), 0) : ZH + 2 * RAND;
+}
+
+function hoehe(b, w) {
+  switch (b.typ) {
+    case "anweisung": return textHoehe(b.text, w);
+    case "aufruf":    return textHoehe(b.text, w - 2 * AUFRUF);
+    case "wenn": {
+      const [wl, wr] = teile(w, [b.ja, b.nein]);
+      return kopfHoehe(b.bedingung, w) + Math.max(hoeheListe(b.ja, wl), hoeheListe(b.nein, wr));
+    }
+    case "fall": {
+      const listen = unterlisten(b), breiten = teile(w, listen);
+      return kopfHoehe(b.ausdruck, w) + ZH + 2 * RAND + Math.max(...listen.map((l, i) => hoeheListe(l, breiten[i])));
+    }
+    case "solange": case "zaehle": case "wiederhole":
+      return textHoehe(bandText(b), w) + hoeheListe(b.bloecke, w - EINZUG);
+  }
+  return ZH + 2 * RAND;
+}
+
+/* ------------------------------------------------------------------ Zeichnen
+ * Ergebnis ist ein SVG-Text. Die Farben stehen als Attribute drin (schwarz/weiß für den Export);
+ * in der Seite überschreiben CSS-Klassen sie passend zum Hell-/Dunkelmodus. */
+class Zeichner {
+  constructor(modell, mitAuswahl, auswahl) {
+    this.m = modell; this.teile = []; this.ziele = new Map(); this.zaehler = 0;
+    this.mitAuswahl = mitAuswahl; this.auswahl = auswahl; this.auswahlRahmen = "";
+  }
+  id(objekt, liste, index) { const id = "e" + (++this.zaehler); this.ziele.set(id, { objekt, liste, index }); return id; }
+  rechteck(x, y, w, h, klasse, id) {
+    this.teile.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff" stroke="#000" stroke-width="1.2" class="${klasse}"${id ? ` data-ziel="${id}"` : ""}/>`);
+  }
+  linie(x1, y1, x2, y2) { this.teile.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#000" stroke-width="1.2" class="s-linie"/>`); }
+  text(x, y, t, anker = "start", klasse = "s-text") {
+    this.teile.push(`<text x="${x}" y="${y}" font-family="Arial, Helvetica, sans-serif" font-size="${SCHRIFT_PX}" fill="#000" text-anchor="${anker}" class="${klasse}">${esc(t)}</text>`);
+  }
+  textblock(t, x, y, w, anker = "start", klasse) {
+    zeilen(t, w - 2 * RAND).forEach((z, i) => {
+      const tx = anker === "middle" ? x + w / 2 : x + RAND;
+      this.text(tx, y + RAND + i * ZH + ZH * 0.74, z, anker, klasse);
+    });
+  }
+  markiere(objekt, x, y, w, h) {
+    if (this.mitAuswahl && objekt === this.auswahl)
+      this.auswahlRahmen = `<rect x="${x + 1.5}" y="${y + 1.5}" width="${Math.max(0, w - 3)}" height="${Math.max(0, h - 3)}" fill="none" class="s-auswahl"/>`;
+  }
+
+  liste(liste, x, y, w, h) {
+    if (!liste.length) {
+      const id = this.id(liste, null, null);
+      this.rechteck(x, y, w, h, "s-flaeche s-leer", id);
+      this.text(x + w / 2, y + RAND + ZH * 0.74, LEER, "middle", "s-text s-dezent");
+      this.markiere(liste, x, y, w, h);
+      return;
+    }
+    let yy = y;
+    liste.forEach((b, i) => {
+      const natuerlich = hoehe(b, w);
+      const hh = i === liste.length - 1 ? y + h - yy : natuerlich;   // letzter Block füllt den Rest
+      this.block(b, liste, i, x, yy, w, hh);
+      yy += natuerlich;
+    });
+  }
+
+  kopfDreieck(text, x, y, w, spitzeX, H) {          // Bedingungstext im umgedrehten Dreieck
+    zeilen(text, w * 0.5 - RAND).forEach((z, i) => {
+      const grund = y + RAND + i * ZH + ZH * 0.74, tiefe = grund - y;
+      const links = x + (spitzeX - x) * tiefe / H, rechts = x + w - (x + w - spitzeX) * tiefe / H;
+      this.text((links + rechts) / 2, grund, z, "middle");
+    });
+  }
+
+  block(b, liste, index, x, y, w, h) {
+    const id = this.id(b, liste, index);
+    this.rechteck(x, y, w, h, "s-flaeche", id);
+    switch (b.typ) {
+      case "anweisung": this.textblock(b.text, x, y, w); break;
+      case "aufruf":
+        this.linie(x + AUFRUF, y, x + AUFRUF, y + h); this.linie(x + w - AUFRUF, y, x + w - AUFRUF, y + h);
+        this.textblock(b.text, x + AUFRUF, y, w - 2 * AUFRUF); break;
+      case "wenn": {
+        const [wl, wr] = teile(w, [b.ja, b.nein]);
+        const H = kopfHoehe(b.bedingung, w), sx = x + wl;
+        this.linie(x, y, sx, y + H); this.linie(x + w, y, sx, y + H);
+        this.kopfDreieck(b.bedingung, x, y, w, sx, H);
+        const [ja, nein] = this.m.einstellungen.beschriftung === "ja" ? ["ja", "nein"] : ["wahr", "falsch"];
+        this.text(x + RAND, y + H - RAND, ja, "start", "s-text s-klein");
+        this.text(x + w - RAND, y + H - RAND, nein, "end", "s-text s-klein");
+        this.liste(b.ja, x, y + H, wl, h - H);
+        this.liste(b.nein, sx, y + H, wr, h - H);
+        break;
+      }
+      case "fall": {
+        const listen = unterlisten(b), breiten = teile(w, listen);
+        const H = kopfHoehe(b.ausdruck, w), R = ZH + 2 * RAND;
+        const sx = b.sonst ? x + w - breiten[breiten.length - 1] : x + w;
+        this.linie(x, y, sx, y + H); if (b.sonst) this.linie(x + w, y, sx, y + H);
+        this.kopfDreieck(b.ausdruck, x, y, w, sx, H);
+        let xx = x;
+        listen.forEach((l, i) => {
+          const istSonst = b.sonst && i === listen.length - 1;
+          this.rechteck(xx, y + H, breiten[i], R, "s-flaeche s-wert", id);
+          this.textblock(istSonst ? "sonst" : b.faelle[i].wert, xx, y + H, breiten[i], "middle");
+          this.liste(l, xx, y + H + R, breiten[i], h - H - R);
+          xx += breiten[i];
+        });
+        break;
+      }
+      case "solange": case "zaehle": {
+        const B = textHoehe(bandText(b), w);
+        this.textblock(bandText(b), x, y, w);
+        this.liste(b.bloecke, x + EINZUG, y + B, w - EINZUG, h - B);
+        break;
+      }
+      case "wiederhole": {
+        const B = textHoehe(bandText(b), w);
+        this.liste(b.bloecke, x + EINZUG, y, w - EINZUG, h - B);
+        this.textblock(bandText(b), x, y + h - B, w);
+        break;
+      }
+    }
+    this.markiere(b, x, y, w, h);
+  }
+
+  zeichne() {
+    const m = this.m, B = m.einstellungen.breite, X = 1, Y = 1;
+    let y = Y;
+    if (m.titel.trim()) {
+      const th = textHoehe(m.titel, B);
+      this.rechteck(X, y, B, th, "s-flaeche s-titel", this.id("titel", null, null));
+      zeilen(m.titel, B - 2 * RAND).forEach((z, i) =>
+        this.text(X + RAND, y + RAND + i * ZH + ZH * 0.74, z, "start", "s-text s-fett"));
+      y += th;
+    }
+    const h = hoeheListe(m.bloecke, B);
+    this.liste(m.bloecke, X, y, B, h);
+    const gesamtH = y + h + 1, gesamtB = B + 2;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${gesamtB}" height="${gesamtH}" viewBox="0 0 ${gesamtB} ${gesamtH}">` +
+      `<desc>Struktogramm · erstellt mit dem Struktogramm-Editor der Browserwerkzeuge</desc>` +
+      this.teile.join("").replace(/class="s-text s-fett"/g, 'class="s-text s-fett" font-weight="bold"') +
+      this.auswahlRahmen + `</svg>`;
+    return { svg, breite: gesamtB, hoehe: gesamtH };
+  }
+}
+
+/* ------------------------------------------------------------------ Code-Ausgabe */
+const Code = {
+  // Teile in Anführungszeichen bleiben unverändert
+  ausserhalbVonText(t, f) {
+    return String(t).split(/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/).map((s, i) => i % 2 ? s : f(s)).join("");
+  },
+  java(t, bedingung) {
+    return this.ausserhalbVonText(String(t || "").trim(), s => {
+      s = s.replace(/←|:=/g, "=").replace(/≠/g, "!=").replace(/≤/g, "<=").replace(/≥/g, ">=")
+           .replace(/∧/g, "&&").replace(/∨/g, "||").replace(/¬\s*/g, "!")
+           .replace(/\bund\b/gi, "&&").replace(/\boder\b/gi, "||").replace(/\bnicht\s+/gi, "!")
+           .replace(/\bwahr\b/gi, "true").replace(/\bfalsch\b/gi, "false");
+      if (bedingung) s = s.replace(/([^<>!=])=(?!=)/g, "$1==");
+      return s;
+    });
+  },
+  // Code, wenn Operatoren vorkommen und keine zwei Wörter ohne Operator aufeinander folgen
+  // („summe ← summe + i“ ja, „zahl ← zufallszahl zwischen 1 und 100“ nein)
+  istCode(j) {
+    const ohneText = j.replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, "0")
+      .replace(/\b(return|new|int|double|boolean|String|char|long|float|final|var)\s+/g, "");
+    if (/[A-Za-zÄÖÜäöüß_][\wÄÖÜäöüß]*\s+[A-Za-zÄÖÜäöüß_]/.test(ohneText)) return false;
+    return /[=();]|\+\+|--|^\s*(return|break|continue)\b/.test(j);
+  },
+  anweisung(z) {
+    const j = this.java(z, false).trim();
+    if (!j) return null;
+    if (!this.istCode(j)) return `// ${z.trim()}`;
+    return /[;{}]$/.test(j) ? j : j + ";";
+  },
+
+  alsJava(m, alsMethode) {
+    const aus = [];
+    const zeile = (e, t) => aus.push("    ".repeat(e) + t);
+    const liste = (l, e) => l.forEach(b => block(b, e));
+    const block = (b, e) => {
+      switch (b.typ) {
+        case "anweisung":
+          String(b.text || "").split("\n").forEach(z => { const a = this.anweisung(z); if (a) zeile(e, a); });
+          break;
+        case "aufruf": {
+          let a = this.java(b.text, false).trim();
+          if (!a) break;
+          if (!/\)\s*;?$/.test(a)) a += "()";
+          zeile(e, /;$/.test(a) ? a : a + ";");
+          break;
+        }
+        case "wenn":
+          zeile(e, `if (${this.java(b.bedingung, true) || "/* Bedingung */ true"}) {`);
+          liste(b.ja, e + 1);
+          if (b.nein.length) { zeile(e, "} else {"); liste(b.nein, e + 1); }
+          zeile(e, "}");
+          break;
+        case "fall":
+          zeile(e, `switch (${this.java(b.ausdruck, false) || "/* Ausdruck */ 0"}) {`);
+          b.faelle.forEach(f => {
+            String(f.wert).split(",").map(w => w.trim()).filter(Boolean).forEach(w => zeile(e + 1, `case ${this.java(w, false)}:`));
+            liste(f.bloecke, e + 2); zeile(e + 2, "break;");
+          });
+          if (b.sonst) { zeile(e + 1, "default:"); liste(b.sonst, e + 2); zeile(e + 2, "break;"); }
+          zeile(e, "}");
+          break;
+        case "solange":
+          zeile(e, `while (${this.java(b.bedingung, true) || "/* Bedingung */ true"}) {`);
+          liste(b.bloecke, e + 1); zeile(e, "}");
+          break;
+        case "wiederhole":
+          zeile(e, "do {"); liste(b.bloecke, e + 1);
+          zeile(e, `} while (${this.java(b.bedingung, true) || "/* Bedingung */ true"});`);
+          break;
+        case "zaehle": {
+          const v = b.variable || "i", s = String(b.schritt || "1").trim();
+          const rueckwaerts = s.startsWith("-");
+          const betrag = s.replace(/^[-+]/, "") || "1";
+          const schritt = betrag === "1" ? `${v}${rueckwaerts ? "--" : "++"}` : `${v} = ${v} ${rueckwaerts ? "-" : "+"} ${betrag}`;
+          zeile(e, `for (int ${v} = ${this.java(b.von, false)}; ${v} ${rueckwaerts ? ">=" : "<="} ${this.java(b.bis, false)}; ${schritt}) {`);
+          liste(b.bloecke, e + 1); zeile(e, "}");
+          break;
+        }
+      }
+    };
+    if (alsMethode) {
+      const t = m.titel.trim();
+      const k = t.match(/^([A-Za-z_]\w*)\s*\((.*)\)\s*$/);
+      const kopf = k ? `public void ${k[1]}(${k[2]})` : /^[A-Za-z_]\w*$/.test(t) ? `public void ${t}()` : "public void struktogramm()";
+      if (t && !k && !/^[A-Za-z_]\w*$/.test(t)) aus.push(`// ${t}`);
+      aus.push(kopf + " {");
+      liste(m.bloecke, 1);
+      aus.push("}");
+    } else liste(m.bloecke, 0);
+    return aus.join("\n");
+  },
+
+  alsPseudocode(m) {
+    const aus = [];
+    const zeile = (e, t) => aus.push("    ".repeat(e) + t);
+    const liste = (l, e) => l.forEach(b => block(b, e));
+    const block = (b, e) => {
+      switch (b.typ) {
+        case "anweisung": String(b.text || "").split("\n").filter(z => z.trim()).forEach(z => zeile(e, z.trim())); break;
+        case "aufruf": if (b.text.trim()) zeile(e, `rufe ${b.text.trim()} auf`); break;
+        case "wenn":
+          zeile(e, `wenn ${b.bedingung} dann`); liste(b.ja, e + 1);
+          if (b.nein.length) { zeile(e, "sonst"); liste(b.nein, e + 1); }
+          zeile(e, "ende wenn"); break;
+        case "fall":
+          zeile(e, `falls ${b.ausdruck}`);
+          b.faelle.forEach(f => { zeile(e + 1, `${f.wert}:`); liste(f.bloecke, e + 2); });
+          if (b.sonst) { zeile(e + 1, "sonst:"); liste(b.sonst, e + 2); }
+          zeile(e, "ende falls"); break;
+        case "solange": zeile(e, `solange ${b.bedingung} wiederhole`); liste(b.bloecke, e + 1); zeile(e, "ende solange"); break;
+        case "wiederhole": zeile(e, "wiederhole"); liste(b.bloecke, e + 1); zeile(e, `solange ${b.bedingung}`); break;
+        case "zaehle": zeile(e, zaehlText(b)); liste(b.bloecke, e + 1); zeile(e, "ende für"); break;
+      }
+    };
+    if (m.titel.trim()) aus.push(m.titel.trim());
+    liste(m.bloecke, m.titel.trim() ? 1 : 0);
+    return aus.join("\n");
+  }
+};
+
+/* ------------------------------------------------------------------ Beispiele */
+const A = text => ({ typ: "anweisung", text });
+const BEISPIELE = {
+  summe: { titel: "berechneSumme(int n)", bloecke: [
+    A("summe ← 0"), A("i ← 1"),
+    { typ: "solange", bedingung: "i ≤ n", bloecke: [A("summe ← summe + i"), A("i ← i + 1")] },
+    A("return summe")] },
+  maximum: { titel: "maximum(int a, int b)", bloecke: [
+    { typ: "wenn", bedingung: "a > b", ja: [A("max ← a")], nein: [A("max ← b")] },
+    A("return max")] },
+  raten: { titel: "Zahlenraten", bloecke: [
+    A("zahl ← zufallszahl zwischen 1 und 100"), A("versuche ← 0"),
+    { typ: "wiederhole", bedingung: "tipp ≠ zahl", bloecke: [
+      A("lies tipp ein"), A("versuche ← versuche + 1"),
+      { typ: "wenn", bedingung: "tipp < zahl", ja: [A("gib \"zu klein\" aus")], nein: [
+        { typ: "wenn", bedingung: "tipp > zahl", ja: [A("gib \"zu groß\" aus")], nein: [A("gib \"richtig\" aus")] }] }] },
+    A("gib versuche aus")] },
+  einmaleins: { titel: "einmaleins(int zahl)", bloecke: [
+    { typ: "zaehle", variable: "i", von: "1", bis: "10", schritt: "1", bloecke: [A("ergebnis ← i * zahl"), A("gib ergebnis aus")] }] },
+  noten: { titel: "notenText(int note)", bloecke: [
+    { typ: "fall", ausdruck: "note", faelle: [
+      { wert: "1", bloecke: [A("text ← \"sehr gut\"")] }, { wert: "2", bloecke: [A("text ← \"gut\"")] },
+      { wert: "3", bloecke: [A("text ← \"befriedigend\"")] }, { wert: "4", bloecke: [A("text ← \"ausreichend\"")] }],
+      sonst: [A("text ← \"nicht ausreichend\"")] },
+    A("return text")] }
+};
+
+/* ------------------------------------------------------------------ Anwendung */
+const App = {
+  m: leeresDiagramm(),
+  auswahl: null,            // Block-Objekt, leere Liste (Array) oder "titel"
+  ablage: null,             // ausgeschnittener/kopierter Block (JSON)
+  ziele: new Map(),
+  bild: null,
+
+  init() {
+    Kern.design("btn-design");
+    this.verlauf = new Kern.Verlauf(() => JSON.stringify(this.m), s => { this.m = JSON.parse(s); this.auswahl = null; this.aktualisiere(); });
+    const gespeichert = Kern.speicher.lies(SPEICHER);
+    if (gespeichert && (gespeichert.format === FORMAT || gespeichert.format === ALT_FORMAT)) this.m = this.vervollstaendige(gespeichert);
+    this.binde();
+    this.aktualisiere();
+    this.ladeAusLink();
+    window.addEventListener("hashchange", () => this.ladeAusLink());   // Link in schon geöffnetem Tab
+  },
+
+  vervollstaendige(d) {                         // Daten von außen streng prüfen (Dateien, Links, Speicher)
+    const P = Kern.pruefe, m = leeresDiagramm();
+    d = d && typeof d === "object" ? d : {};
+    let anzahl = 0;
+    const liste = (l, tiefe) => tiefe > 40 ? [] : P.liste(l).map(b => block(b, tiefe)).filter(Boolean);
+    const block = (b, tiefe) => {
+      if (!Object.hasOwn(TYPEN, b.typ) || ++anzahl > 3000) return null;
+      const n = neuerBlock(b.typ);
+      ["text", "bedingung", "ausdruck", "variable", "von", "bis", "schritt"].forEach(k => { if (k in n) n[k] = P.text(b[k]).slice(0, 1000); });
+      if (b.typ === "wenn") { n.ja = liste(b.ja, tiefe + 1); n.nein = liste(b.nein, tiefe + 1); }
+      if (["solange", "wiederhole", "zaehle"].includes(b.typ)) n.bloecke = liste(b.bloecke, tiefe + 1);
+      if (b.typ === "fall") {
+        const faelle = P.liste(b.faelle).slice(0, 20).map(f => ({ wert: P.text(f.wert).slice(0, 100), bloecke: liste(f.bloecke, tiefe + 1) }));
+        n.faelle = faelle.length ? faelle : n.faelle;
+        n.sonst = Array.isArray(b.sonst) ? liste(b.sonst, tiefe + 1) : null;
+      }
+      return n;
+    };
+    m.titel = P.text(d.titel).slice(0, 300);
+    m.bloecke = liste(d.bloecke, 0);
+    const e = d.einstellungen && typeof d.einstellungen === "object" ? d.einstellungen : {};
+    m.einstellungen = { breite: Math.round(P.zahl(e.breite, 600, 320, 1100)), beschriftung: P.wahl(e.beschriftung, ["wahr", "ja"], "wahr") };
+    return m;
+  },
+  ladeSicher(daten) {                             // erst prüfen und probezeichnen, dann übernehmen
+    if (!daten || (daten.format !== FORMAT && daten.format !== ALT_FORMAT)) throw new Error("falsches Format");
+    const neu = this.vervollstaendige(daten);
+    new Zeichner(neu, false, null).zeichne();
+    this.aendere(() => { this.m = neu; this.auswahl = null; });
+    $("breite").value = this.m.einstellungen.breite; $("beschriftung").value = this.m.einstellungen.beschriftung;
+  },
+
+  /* ---------- Änderungen */
+  aendere(f, merken = true) {
+    if (merken) this.verlauf.merke();
+    f();
+    this.aktualisiere();
+  },
+
+  aktualisiere() {
+    const z = new Zeichner(this.m, true, this.auswahl);
+    const erg = z.zeichne();
+    this.ziele = z.ziele;
+    $("zeichnung").innerHTML = erg.svg;
+    this.zeigeEigenschaften();
+    this.zeigeCode();
+    this.knoepfe();
+    Kern.speicher.schreib(SPEICHER, this.m);
+  },
+
+  exportBild() {                                 // ohne Auswahl, Klassen und Klickziele
+    const b = new Zeichner(this.m, false, null).zeichne();
+    b.svg = b.svg.replace(/ (class|data-ziel)="[^"]*"/g, "");
+    return b;
+  },
+
+  /* ---------- Auswahl */
+  ort(objekt) {                                  // Liste und Position eines Blocks suchen
+    const suche = liste => {
+      for (let i = 0; i < liste.length; i++) {
+        if (liste[i] === objekt) return { liste, index: i };
+        for (const l of unterlisten(liste[i])) { const t = suche(l); if (t) return t; }
+      }
+      return null;
+    };
+    return suche(this.m.bloecke);
+  },
+  istBlock(o) { return o && typeof o === "object" && !Array.isArray(o); },
+
+  // Tastatur: Blöcke und Einfügestellen der Reihe nach wählen (oben → unten, links → rechts)
+  tastaturWahl(taste) {
+    const ids = [...$("zeichnung").querySelectorAll("[data-ziel]")].map(el => el.dataset.ziel).filter(id => this.ziele.has(id));
+    if (!ids.length) { Kern.ansage("Das Struktogramm ist leer. Über die Knöpfe einen Block einfügen."); return; }
+    const jetzt = ids.findIndex(id => this.ziele.get(id).objekt === this.auswahl);
+    const schritt = taste === "ArrowUp" || taste === "ArrowLeft" ? -1 : 1;
+    const i = taste === "Home" ? 0 : taste === "End" ? ids.length - 1 : jetzt < 0 ? 0 : Math.min(ids.length - 1, Math.max(0, jetzt + schritt));
+    const o = this.ziele.get(ids[i]).objekt;
+    this.waehle(o, false);
+    Kern.ansage(this.beschreibe(o));
+  },
+  beschreibe(o) {
+    if (Array.isArray(o)) return "Einfügestelle" + (o.length ? ` mit ${o.length === 1 ? "einem Block" : o.length + " Blöcken"}` : ", leer");
+    if (!this.istBlock(o)) return "";
+    const typ = Object.hasOwn(TYPEN, o.typ) ? TYPEN[o.typ].name : "Block";
+    const text = o.typ === "zaehle" ? zaehlText(o) : [o.text, o.bedingung, o.ausdruck].filter(t => typeof t === "string" && t.trim()).join(", ");
+    return text ? `${typ}: ${text}` : typ;
+  },
+
+  waehle(o, fokus) {
+    this.auswahl = o;
+    this.aktualisiere();
+    if (fokus) { const f = $("eigenschaften").querySelector("input,textarea"); if (f) { f.focus(); f.select(); } }
+  },
+
+  /* ---------- Bearbeiten */
+  fuegeEin(block) {
+    this.aendere(() => {
+      const a = this.auswahl;
+      if (Array.isArray(a)) a.push(block);
+      else if (this.istBlock(a)) { const o = this.ort(a); if (o) o.liste.splice(o.index + 1, 0, block); else this.m.bloecke.push(block); }
+      else this.m.bloecke.push(block);
+      this.auswahl = block;
+    });
+    const f = $("eigenschaften").querySelector("input,textarea");
+    if (f) f.focus();
+  },
+
+  verschiebe(richtung) {
+    const o = this.istBlock(this.auswahl) && this.ort(this.auswahl);
+    if (!o) return;
+    const ziel = o.index + richtung;
+    if (ziel < 0 || ziel >= o.liste.length) return;
+    this.aendere(() => { const [b] = o.liste.splice(o.index, 1); o.liste.splice(ziel, 0, b); });
+  },
+
+  loesche() {
+    const o = this.istBlock(this.auswahl) && this.ort(this.auswahl);
+    if (!o) return;
+    this.aendere(() => {
+      o.liste.splice(o.index, 1);
+      this.auswahl = o.liste[Math.min(o.index, o.liste.length - 1)] || o.liste;
+    });
+  },
+
+  kopiereBlock(ausschneiden) {
+    if (!this.istBlock(this.auswahl)) return;
+    this.ablage = JSON.stringify(this.auswahl);
+    if (ausschneiden) this.loesche();
+    else this.knoepfe();
+    Kern.meldung(ausschneiden ? "Ausgeschnitten – Ziel wählen und „Einfügen“ tippen." : "Kopiert – Ziel wählen und „Einfügen“ tippen.");
+  },
+
+  fuegeAblageEin() { if (this.ablage) this.fuegeEin(JSON.parse(this.ablage)); },
+
+  knoepfe() {
+    const block = this.istBlock(this.auswahl) ? this.ort(this.auswahl) : null;
+    $("btn-hoch").disabled = !block || block.index === 0;
+    $("btn-runter").disabled = !block || block.index === block.liste.length - 1;
+    $("btn-loeschen").disabled = $("btn-ausschneiden").disabled = $("btn-kopieren").disabled = !block;
+    $("btn-einfuegen").disabled = !this.ablage;
+    $("btn-rueck").disabled = !this.verlauf.zurueck.length;
+    $("btn-vor").disabled = !this.verlauf.vor.length;
+    const ziel = Array.isArray(this.auswahl) ? "in den leeren Bereich" : block ? "nach dem markierten Block" : "am Ende";
+    $("einfuege-ziel").textContent = "Neue Blöcke kommen " + ziel + ".";
+  },
+
+  /* ---------- Eigenschaften */
+  feld(beschriftung, wert, setzen, art = "input", hinweis = "") {
+    const id = "f" + Math.random().toString(36).slice(2, 8);
+    const huelle = document.createElement("div");
+    huelle.className = "feld";
+    huelle.innerHTML = `<label for="${id}">${esc(beschriftung)}</label>` +
+      (art === "textarea" ? `<textarea id="${id}" rows="3" spellcheck="false"></textarea>` : `<input id="${id}" type="text" spellcheck="false" autocomplete="off">`) +
+      (hinweis ? `<small class="dezent">${esc(hinweis)}</small>` : "");
+    const e = huelle.querySelector("input,textarea");
+    e.value = wert || "";
+    let gemerkt = false;
+    e.addEventListener("focus", () => { gemerkt = false; this.letztesFeld = e; });
+    e.addEventListener("input", () => {
+      if (!gemerkt) { this.verlauf.merke(); gemerkt = true; }
+      setzen(e.value);
+      this.zeichneNur();
+    });
+    e.addEventListener("keydown", ev => {
+      if (ev.key === "Enter" && art !== "textarea" && !ev.shiftKey) { ev.preventDefault(); $("zeichnung").focus(); }
+    });
+    return huelle;
+  },
+
+  zeichneNur() {                                // beim Tippen: Fokus im Feld behalten
+    const z = new Zeichner(this.m, true, this.auswahl);
+    $("zeichnung").innerHTML = z.zeichne().svg;
+    this.ziele = z.ziele;
+    this.zeigeCode();
+    this.knoepfe();
+    Kern.speicher.schreib(SPEICHER, this.m);
+  },
+
+  zeigeEigenschaften() {
+    const p = $("eigenschaften");
+    p.innerHTML = "";
+    const a = this.auswahl;
+    const kopf = document.createElement("h2");
+    p.appendChild(kopf);
+    if (a === "titel" || a === null) {
+      kopf.textContent = "Struktogramm";
+      p.appendChild(this.feld("Titel (z. B. Methodenkopf)", this.m.titel, v => { this.m.titel = v; }, "input", "z. B. berechneSumme(int n) – leer lassen für keinen Titel"));
+      const tipp = document.createElement("p");
+      tipp.className = "dezent klein";
+      tipp.textContent = "Tippen Sie auf einen Block im Struktogramm, um ihn zu bearbeiten, oder fügen Sie oben einen neuen Block ein.";
+      p.appendChild(tipp);
+      return;
+    }
+    if (Array.isArray(a)) {
+      kopf.textContent = "Leerer Bereich";
+      const t = document.createElement("p"); t.className = "dezent klein";
+      t.textContent = "Fügen Sie oben einen Block ein – er landet in diesem Bereich. Bleibt er leer, steht im Struktogramm „∅“.";
+      p.appendChild(t);
+      return;
+    }
+    kopf.textContent = TYPEN[a.typ].name;
+    switch (a.typ) {
+      case "anweisung":
+        p.appendChild(this.feld("Anweisung(en)", a.text, v => { a.text = v; }, "textarea", "Mehrere Zeilen sind möglich, z. B. summe ← summe + i"));
+        break;
+      case "aufruf":
+        p.appendChild(this.feld("Aufruf", a.text, v => { a.text = v; }, "input", "z. B. zeichneQuadrat(50)"));
+        break;
+      case "wenn": case "solange": case "wiederhole":
+        p.appendChild(this.feld("Bedingung", a.bedingung, v => { a.bedingung = v; }, "input",
+          a.typ === "wiederhole" ? "Die Schleife wird wiederholt, solange die Bedingung wahr ist." : "z. B. i ≤ n"));
+        break;
+      case "fall": {
+        p.appendChild(this.feld("Ausdruck", a.ausdruck, v => { a.ausdruck = v; }, "input", "z. B. note"));
+        p.appendChild(this.feld("Fälle (durch ; getrennt)", a.faelle.map(f => f.wert).join("; "), v => {
+          const werte = v.split(";").map(w => w.trim()).filter(w => w.length);
+          if (!werte.length) return;
+          while (a.faelle.length < werte.length) a.faelle.push({ wert: "", bloecke: [] });
+          if (a.faelle.length > werte.length) {
+            const weg = a.faelle.splice(werte.length);
+            weg.forEach(f => { if (f.bloecke.length) a.faelle[a.faelle.length - 1].bloecke.push(...f.bloecke); });
+          }
+          werte.forEach((w, i) => { a.faelle[i].wert = w; });
+        }, "input", "z. B. 1; 2; 3 – mehrere Werte für einen Fall mit Komma: 1, 2"));
+        const l = document.createElement("label");
+        l.className = "haken";
+        l.innerHTML = `<input type="checkbox" ${a.sonst ? "checked" : ""}> sonst-Zweig`;
+        l.querySelector("input").addEventListener("change", ev => this.aendere(() => {
+          if (ev.target.checked) a.sonst = a.sonst || [];
+          else { if (a.sonst && a.sonst.length) a.faelle[a.faelle.length - 1].bloecke.push(...a.sonst); a.sonst = null; }
+        }));
+        p.appendChild(l);
+        break;
+      }
+      case "zaehle": {
+        const reihe = document.createElement("div"); reihe.className = "reihe4";
+        reihe.appendChild(this.feld("Variable", a.variable, v => { a.variable = v; }));
+        reihe.appendChild(this.feld("von", a.von, v => { a.von = v; }));
+        reihe.appendChild(this.feld("bis", a.bis, v => { a.bis = v; }));
+        reihe.appendChild(this.feld("Schrittweite", a.schritt, v => { a.schritt = v; }));
+        p.appendChild(reihe);
+        break;
+      }
+    }
+    const zeichen = document.createElement("div");
+    zeichen.className = "sonderzeichen";
+    zeichen.innerHTML = '<span class="dezent klein">Zeichen einfügen:</span>' +
+      ["←", "≠", "≤", "≥", "∧", "∨", "¬"].map(z => `<button type="button" data-zeichen="${z}" title="${z}">${z}</button>`).join("");
+    zeichen.addEventListener("pointerdown", ev => { if (ev.target.dataset.zeichen) ev.preventDefault(); }); // Fokus im Feld lassen
+    zeichen.addEventListener("click", ev => {
+      const z = ev.target.dataset.zeichen, f = this.letztesFeld;
+      if (!z || !f || !document.body.contains(f)) return;
+      const s = f.selectionStart ?? f.value.length, e = f.selectionEnd ?? s;
+      f.value = f.value.slice(0, s) + z + f.value.slice(e);
+      f.setSelectionRange(s + z.length, s + z.length);
+      f.dispatchEvent(new Event("input")); f.focus();
+    });
+    p.appendChild(zeichen);
+  },
+
+  /* ---------- Code */
+  zeigeCode() {
+    if (!$("code-bereich").open) return;
+    const art = $("code-art").value;
+    $("code-methode").parentElement.hidden = art !== "java";
+    $("code-text").textContent = art === "java" ? Code.alsJava(this.m, $("code-methode").checked) : Code.alsPseudocode(this.m);
+  },
+
+  /* ---------- Dateien und Export */
+  neu() {
+    const leer = !this.m.bloecke.length && !this.m.titel;
+    const los = () => this.aendere(() => {
+      const e = this.m.einstellungen;
+      this.m = leeresDiagramm(); this.m.einstellungen = e; this.auswahl = null;
+    });
+    if (leer) return los();
+    Kern.dialog("Neues Struktogramm", "<p>Das aktuelle Struktogramm wird geleert. Mit „Rückgängig“ holen Sie es zurück.</p>",
+      [{ text: "Abbrechen" }, { text: "Leeren", primaer: true, aktion: los }]);
+  },
+
+  async oeffne() {
+    const d = await Kern.oeffneDatei(".struktogramm,.json,application/json");
+    if (!d) return;
+    try {
+      this.ladeSicher(JSON.parse(d.text));
+      Kern.meldung(`„${d.name}“ geöffnet.`);
+    } catch (e) { Kern.meldung("Diese Datei ist kein Struktogramm dieses Editors."); }
+  },
+
+  speichere() {
+    Kern.speichereDatei(Kern.dateiname(this.m.titel || "struktogramm", "struktogramm"), JSON.stringify(this.m, null, 1), "application/json");
+  },
+
+  beispiel(name) {
+    const b = BEISPIELE[name];
+    if (!b) return;
+    this.aendere(() => {
+      const e = this.m.einstellungen;
+      this.m = this.vervollstaendige(JSON.parse(JSON.stringify(Object.assign(leeresDiagramm(), b))));
+      this.m.einstellungen = e; this.auswahl = null;
+    });
+    Kern.meldung("Beispiel geladen – „Rückgängig“ stellt Ihr vorheriges Struktogramm wieder her.");
+  },
+
+  async teile() {
+    try {
+      const link = location.origin + location.pathname + "#s=" + await Kern.kodiere(this.m);
+      const ok = await Kern.kopiere(link);
+      Kern.dialog("Link teilen",
+        `<p>${ok ? "Der Link ist kopiert." : "Kopieren Sie den Link:"} Wer ihn öffnet, sieht dieses Struktogramm und kann damit weiterarbeiten.</p>` +
+        `<textarea readonly rows="4" class="link-feld">${esc(link)}</textarea>` +
+        `<p class="dezent klein">Das Struktogramm steckt im Link selbst (nach dem #). Dieser Teil wird nie an den Server übertragen. ` +
+        (link.length > 2000 ? "Der Link ist recht lang – für einen QR-Code besser die Datei weitergeben." : "Mit dem QR-Generator können Sie daraus einen QR-Code machen.") + `</p>`,
+        [{ text: "Schließen", primaer: true }]);
+    } catch (e) { Kern.meldung("Der Link konnte nicht erstellt werden."); }
+  },
+
+  async ladeAusLink() {
+    const m = location.hash.match(/^#s=(.+)$/);
+    if (!m) return;
+    history.replaceState(null, "", location.pathname + location.search);
+    let daten;
+    try { daten = await Kern.dekodiere(m[1]); } catch (e) { Kern.meldung("Der Link enthält kein lesbares Struktogramm (evtl. unvollständig kopiert)."); return; }
+    Kern.linkOeffnen(!this.m.bloecke.length && !this.m.titel, () => {
+      try { this.ladeSicher(daten); Kern.meldung("Geteiltes Struktogramm geöffnet – „Rückgängig“ stellt Ihr vorheriges wieder her."); }
+      catch (e) { Kern.meldung("Der Link enthält kein lesbares Struktogramm."); }
+    });
+  },
+
+  /* ---------- Ereignisse */
+  binde() {
+    document.querySelectorAll("[data-neu]").forEach(b => b.addEventListener("click", () => this.fuegeEin(neuerBlock(b.dataset.neu))));
+    $("btn-hoch").addEventListener("click", () => this.verschiebe(-1));
+    $("btn-runter").addEventListener("click", () => this.verschiebe(1));
+    $("btn-loeschen").addEventListener("click", () => this.loesche());
+    $("btn-ausschneiden").addEventListener("click", () => this.kopiereBlock(true));
+    $("btn-kopieren").addEventListener("click", () => this.kopiereBlock(false));
+    $("btn-einfuegen").addEventListener("click", () => this.fuegeAblageEin());
+    $("btn-rueck").addEventListener("click", () => this.verlauf.rueckgaengig());
+    $("btn-vor").addEventListener("click", () => this.verlauf.wiederholen());
+    $("btn-neu").addEventListener("click", () => this.neu());
+    $("btn-oeffnen").addEventListener("click", () => this.oeffne());
+    $("btn-speichern").addEventListener("click", () => this.speichere());
+    $("btn-teilen").addEventListener("click", () => this.teile());
+    $("btn-drucken").addEventListener("click", () => {
+      const b = this.exportBild();
+      $("druck").innerHTML = b.svg;
+      window.print();
+    });
+    $("btn-svg").addEventListener("click", () => {
+      const b = this.exportBild();
+      Kern.exportiereSVG(b.svg, Kern.dateiname(this.m.titel || "struktogramm", "svg"));
+    });
+    $("btn-png").addEventListener("click", async () => {
+      const b = this.exportBild();
+      try { await Kern.exportierePNG(b.svg, b.breite, b.hoehe, Kern.dateiname(this.m.titel || "struktogramm", "png")); }
+      catch (e) { Kern.meldung("PNG-Export war nicht möglich – bitte SVG verwenden."); }
+    });
+    $("beispiele").addEventListener("change", ev => { this.beispiel(ev.target.value); ev.target.value = ""; });
+
+    $("breite").value = this.m.einstellungen.breite;
+    $("breite").addEventListener("input", ev => { this.m.einstellungen.breite = +ev.target.value; this.zeichneNur(); });
+    $("breite").addEventListener("change", () => Kern.speicher.schreib(SPEICHER, this.m));
+    $("beschriftung").value = this.m.einstellungen.beschriftung;
+    $("beschriftung").addEventListener("change", ev => this.aendere(() => { this.m.einstellungen.beschriftung = ev.target.value; }));
+
+    $("code-bereich").addEventListener("toggle", () => this.zeigeCode());
+    $("code-art").addEventListener("change", () => this.zeigeCode());
+    $("code-methode").addEventListener("change", () => this.zeigeCode());
+    $("btn-code-kopieren").addEventListener("click", async () =>
+      Kern.meldung(await Kern.kopiere($("code-text").textContent) ? "Code kopiert." : "Kopieren war nicht möglich."));
+
+    $("zeichnung").addEventListener("click", ev => {
+      const t = ev.target.closest("[data-ziel]");
+      const z = t && this.ziele.get(t.dataset.ziel);
+      this.waehle(z ? z.objekt : null, false);
+    });
+    $("zeichnung").addEventListener("dblclick", ev => {
+      const t = ev.target.closest("[data-ziel]");
+      const z = t && this.ziele.get(t.dataset.ziel);
+      if (z) this.waehle(z.objekt, true);
+    });
+
+    document.addEventListener("keydown", ev => {
+      const imFeld = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);
+      const strg = ev.ctrlKey || ev.metaKey;
+      if (strg && ev.key.toLowerCase() === "z" && !imFeld) { ev.preventDefault(); ev.shiftKey ? this.verlauf.wiederholen() : this.verlauf.rueckgaengig(); return; }
+      if (strg && ev.key.toLowerCase() === "y" && !imFeld) { ev.preventDefault(); this.verlauf.wiederholen(); return; }
+      if (imFeld || document.querySelector("dialog[open]")) return;
+      if (ev.key === "Delete" || ev.key === "Backspace") { if (this.istBlock(this.auswahl)) { ev.preventDefault(); this.loesche(); } }
+      else if (strg && ev.key.toLowerCase() === "x") { ev.preventDefault(); this.kopiereBlock(true); }
+      else if (strg && ev.key.toLowerCase() === "c" && this.istBlock(this.auswahl)) { ev.preventDefault(); this.kopiereBlock(false); }
+      else if (strg && ev.key.toLowerCase() === "v") { ev.preventDefault(); this.fuegeAblageEin(); }
+      else if (ev.key === "Enter" && this.auswahl) { ev.preventDefault(); this.waehle(this.auswahl, true); }
+      else if (ev.key === "Escape") this.waehle(null, false);
+      else if (ev.altKey && ev.key === "ArrowUp") { ev.preventDefault(); this.verschiebe(-1); }
+      else if (ev.altKey && ev.key === "ArrowDown") { ev.preventDefault(); this.verschiebe(1); }
+      else if (document.activeElement === $("zeichnung") && ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(ev.key)) {
+        ev.preventDefault(); this.tastaturWahl(ev.key);
+      }
+    });
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => App.init());
+</script>
+</body>
+</html>

@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<!-- ER-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<!-- pwa --><script src="pwa.js?v=7aada1f91b" data-tool="er" data-name="ER-Editor" data-daten="ja" data-schluessel="browserwerkzeuge-er"></script><!-- /pwa -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ER-Editor</title>
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<style>
+/* Grundlayout der Diagramm-Tools */
+:root{--auf-akzent:#fff;--hinter:#f3f5f8;--flaeche:#fff;--text:#1f2933;--dezent:#5f6b7a;--rand:#d6dae0;--rand-feld:#858f9b;--akzent:#1f5f99;--akzent-hell:#e8f0f8;--linie:#1f2933;--gut:#15803d;--gut-hell:#dcfce7;--schlecht:#b91c1c;--schlecht-hell:#fee2e2;--warn:#b45309}
+[data-design="dunkel"]{--auf-akzent:#0e131c;--hinter:#14181d;--flaeche:#1e242b;--text:#e6e9ed;--dezent:#9aa4b1;--rand:#343c46;--rand-feld:#7d8794;--akzent:#5aa0e6;--akzent-hell:#243447;--linie:#cfd5dc;--gut:#4ade80;--gut-hell:#14361f;--schlecht:#f87171;--schlecht-hell:#3b1717;--warn:#f59e0b}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--hinter);color:var(--text);line-height:1.5}
+header{background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf{max-width:1320px;margin:0 auto;padding:10px 20px;display:flex;gap:10px;align-items:center}
+.kopf h1{font-size:1.15rem;margin:0;flex:1}
+.kopf a{color:var(--akzent);text-decoration:none;font-size:.9rem}
+main{max-width:1320px;margin:16px auto;padding:0 20px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr) 330px;align-items:start}
+section{background:var(--flaeche);border:1px solid var(--rand);border-radius:8px;padding:14px 16px}
+h2{font-size:1.02rem;margin:0 0 8px}
+button,select,input,textarea{font:inherit;color:var(--text)}
+button{padding:5px 10px;border:1px solid var(--rand-feld);background:var(--flaeche);border-radius:6px;cursor:pointer;white-space:nowrap}
+button:hover:not(:disabled){background:var(--akzent-hell)}
+button:disabled{opacity:.45;cursor:default}
+button.primaer,button.aktiv,button.primaer:hover:not(:disabled),button.aktiv:hover:not(:disabled){background:var(--akzent);border-color:var(--akzent);color:var(--auf-akzent)}
+button.primaer:hover:not(:disabled),button.aktiv:hover:not(:disabled){filter:brightness(1.12)}
+aside button{white-space:normal;text-align:left}
+select{padding:5px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche)}
+[hidden]{display:none!important}
+.dezent{color:var(--dezent)}.klein{font-size:.86rem}
+.werkzeuge{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-start}
+.gruppe{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.gruppe>.titel{width:100%;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--dezent)}
+.spalte{display:grid;gap:16px;min-width:0}
+aside{display:grid;gap:16px;position:sticky;top:12px}
+.feld{display:grid;gap:3px;margin:8px 0}
+.feld label{font-size:.88rem;font-weight:600}
+.feld input,.feld textarea,.feld select{width:100%;padding:6px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche);font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:.95rem}
+.feld select{font-family:inherit}
+.feld input:focus,.feld textarea:focus{outline:none;border-color:var(--akzent)}
+.feld small{font-size:.8rem}
+.haken{display:inline-flex;gap:6px;align-items:center;margin:4px 12px 4px 0;font-size:.92rem}
+.zeile{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+details summary{cursor:pointer;font-weight:600}
+pre.code{margin:0;padding:10px 12px;background:var(--hinter);border:1px solid var(--rand);border-radius:6px;overflow:auto;font-size:.88rem;max-height:460px}
+.hinweis{font-size:.82rem;color:var(--dezent);margin:8px 0 0}
+table.tabelle{border-collapse:collapse;font-size:.9rem;margin:6px 0}
+table.tabelle th,table.tabelle td{border:1px solid var(--rand);padding:3px 9px;text-align:center}
+table.tabelle th{background:var(--hinter)}
+.k-dialog{border:1px solid var(--rand);border-radius:10px;padding:18px 20px;max-width:min(520px,calc(100vw - 32px));background:var(--flaeche);color:var(--text)}
+.k-dialog::backdrop{background:rgba(0,0,0,.35)}
+.k-dialog p{margin:6px 0}
+.k-knoepfe{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.link-feld{width:100%;font-family:ui-monospace,monospace;font-size:.8rem;padding:6px;border:1px solid var(--rand);border-radius:6px;background:var(--hinter);word-break:break-all}
+#meldung{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:#1f2933;color:#fff;padding:10px 14px;border-radius:6px;max-width:min(420px,calc(100vw - 32px));z-index:10;box-shadow:0 6px 20px -8px rgba(0,0,0,.5)}
+footer{max-width:1320px;margin:0 auto 24px;padding:0 20px;color:var(--dezent);font-size:.85rem;text-align:center}
+footer a{color:inherit}
+#druck{display:none}
+/* Zeichenfläche (Automat, UML, ER) */
+.leinwand{padding:0;overflow:hidden;position:relative}
+.leinwand svg.zeichnung{display:block;width:100%;height:min(68vh,640px);touch-action:none;user-select:none;-webkit-user-select:none;background:var(--flaeche);background-image:radial-gradient(var(--rand) 1px,transparent 1px);background-size:20px 20px;border-radius:8px;cursor:grab}
+.leinwand .zoom{position:absolute;right:10px;bottom:10px;display:flex;gap:4px}
+.leinwand .zoom button{min-width:34px;background:var(--flaeche)}
+.leinwand .modus-hinweis{position:absolute;left:10px;top:10px;font-size:.85rem;background:var(--akzent);color:var(--auf-akzent);border-radius:6px;padding:3px 10px;pointer-events:none}
+svg.zeichnung .griff{cursor:crosshair}
+svg.zeichnung .griff .griff-kreis{fill:var(--akzent)}
+line.gummiband{stroke:var(--akzent);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
+svg.zeichnung text{pointer-events:none}
+svg.zeichnung [data-ziel] text.a-text,svg.zeichnung [data-ziel] text.u-halo{pointer-events:auto;cursor:pointer}
+@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}aside{position:static;order:2}
+  /* schmal: Eigenschaften direkt unter der Zeichenfläche */
+  .spalte{display:contents}.spalte>*{order:3}.spalte>.leinwand,.spalte>.flaeche,.spalte>.instabil{order:1}}
+@media print{body{background:#fff}header,main,footer,#meldung,.ap-leiste{display:none!important}#druck{display:block}#druck svg{max-width:100%;height:auto}}
+/* Tastaturbedienung: nur vorgelesene Texte, Fokusrahmen auf der Zeichenfläche */
+.nur-vorlesen{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.zeichnung:focus{outline:none}
+.zeichnung:focus-visible{outline:3px solid var(--akzent);outline-offset:2px}
+.tastatur-hilfe{margin:6px 0 0;font-size:.9rem;color:var(--dezent)}
+.tastatur-hilfe summary{cursor:pointer}
+.tastatur-hilfe p{margin:4px 0 0}
+@media print{.tastatur-hilfe{display:none}}
+.tastatur-fokus{fill:none;stroke:var(--akzent);stroke-width:3;stroke-dasharray:7 4;pointer-events:none}
+.tastatur-fokus.verbinden{stroke:var(--gut,#1e9e5a)}
+@media print{.tastatur-fokus{display:none}}
+/* schmale Bildschirme und Zoom: Auswahllisten nie breiter als ihr Platz; Kästchen gut treffbar */
+select{max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px}
+input[type=range]{min-height:24px}
+.gruppe{min-width:0;max-width:100%}
+.gruppe select{min-width:0}
+/* ER */
+svg.zeichnung .e-form{fill:var(--flaeche);stroke:var(--linie)}
+svg.zeichnung .e-text{fill:var(--text)}
+svg.zeichnung .e-linie{stroke:var(--linie)}
+svg.zeichnung .e-kard{fill:var(--text);stroke:var(--flaeche)}
+svg.zeichnung [data-ziehbar]{cursor:move}
+svg.zeichnung .e-form.markiert{stroke:var(--akzent);stroke-width:3}
+svg.zeichnung .e-form.verbinde{stroke:var(--akzent);stroke-width:3;stroke-dasharray:6 3}
+svg.zeichnung line.markiert{stroke:var(--akzent);stroke-width:2.6}
+.zwei-felder{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;align-items:end}
+.feld-titel{display:block;font-size:.88rem;font-weight:600;margin:10px 0 4px}
+.attr-zeile{display:flex;gap:6px;align-items:center;margin:4px 0}
+.attr-zeile input[type=text]{flex:1;min-width:0;padding:5px 8px;border:1px solid var(--rand);border-radius:6px;background:var(--flaeche);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.attr-zeile input[type=checkbox]{width:18px;height:18px}
+.attr-zeile button{padding:3px 9px}
+.relation{font-family:Arial,Helvetica,sans-serif;font-size:1.05rem;margin:6px 0;line-height:1.6}
+ul.warn{margin:8px 0 0;padding-left:20px;color:var(--warn);font-size:.9rem}
+.code-leiste{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:10px 0}
+.code-leiste label{display:inline-flex;gap:6px;align-items:center;font-size:.9rem}
+.druck-schema{margin-top:18px;font-family:Arial,sans-serif;color:#000}
+</style>
+<!-- pwa -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181d" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ER-Modell">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- /pwa -->
+</head>
+<body>
+<header>
+  <div class="kopf">
+    <h1>ER-Editor</h1>
+    <a id="ruecklink" href="../" hidden>← Übersicht</a>
+    <button type="button" id="btn-design">Dunkel</button>
+  </div>
+</header>
+
+<main>
+  <section class="werkzeuge" aria-label="Werkzeuge">
+    <div class="gruppe">
+      <span class="titel">Zeichnen</span>
+      <button type="button" id="btn-entitaet" title="Neuer Entitätstyp (oder doppelt auf die Fläche tippen)">＋ Entitätstyp</button>
+      <button type="button" id="btn-attribut" title="Attribut zum markierten Entitäts- oder Beziehungstyp">＋ Attribut</button>
+      <button type="button" id="btn-verbinden" title="Beziehungstyp: von Entitätstyp zu Entitätstyp ziehen">→ Beziehung</button>
+      <button type="button" id="btn-loeschen" title="Löschen (Entf)">Löschen</button>
+      <button type="button" id="btn-rueck" title="Rückgängig (Strg+Z)">↶</button>
+      <button type="button" id="btn-vor" title="Wiederholen (Strg+Y)">↷</button>
+    </div>
+    <div class="gruppe">
+      <span class="titel">Datei</span>
+      <button type="button" id="btn-neu">Neu</button>
+      <button type="button" id="btn-oeffnen">Öffnen</button>
+      <button type="button" id="btn-speichern">Speichern</button>
+      <select id="beispiele" aria-label="Beispiel laden">
+        <option value="">Beispiele …</option>
+        <option value="schule">Schule (1:n und n:m)</option>
+        <option value="bibliothek">Bibliothek</option>
+      </select>
+    </div>
+    <div class="gruppe">
+      <span class="titel">Weitergeben</span>
+      <button type="button" id="btn-svg">SVG</button>
+      <button type="button" id="btn-png">PNG</button>
+      <button type="button" id="btn-drucken" title="Diagramm und Relationenschema">Drucken</button>
+      <button type="button" id="btn-teilen">Link teilen</button>
+    </div>
+  </section>
+
+  <div class="spalte">
+    <section class="leinwand">
+      <svg class="zeichnung" id="zeichnung" role="group" aria-label="ER-Diagramm"><g class="welt"></g></svg>
+      <div class="modus-hinweis" id="modus-hinweis" hidden></div>
+      <div class="zoom"><button type="button" id="zoom-minus" title="Verkleinern">−</button><button type="button" id="zoom-passend" title="Alles zeigen">⤢</button><button type="button" id="zoom-plus" title="Vergrößern">＋</button></div>
+    </section>
+
+    <section>
+      <h2>Relationales Datenbankschema</h2>
+      <div id="schema"></div>
+      <ul class="warn" id="schema-warn"></ul>
+      <div class="code-leiste">
+        <label>Fremdschlüssel <select id="fk-art"><option value="pfeil">mit ↑ davor</option><option value="kursiv">kursiv</option><option value="fk">mit (FK) dahinter</option></select></label>
+        <button type="button" id="btn-schema">Schema kopieren</button>
+      </div>
+      <p class="hinweis">Primärschlüssel sind unterstrichen. 1:n – der Fremdschlüssel kommt in die Tabelle auf der n-Seite; n:m – der Beziehungstyp wird eine eigene Tabelle.
+        Beim Kopieren bleiben Unterstreichungen in Word erhalten; als reiner Text stehen Primärschlüssel zwischen _Unterstrichen_.</p>
+      <details id="sql-bereich" style="margin-top:10px">
+        <summary>SQL-Gerüst (CREATE TABLE)</summary>
+        <div class="code-leiste"><button type="button" id="btn-sql">Kopieren</button></div>
+        <pre class="code" id="sql-text"></pre>
+        <p class="hinweis">Die Datentypen sind nur geschätzt (…ID/…Nr → INTEGER, …datum → DATE, sonst VARCHAR) und müssen ggf. angepasst werden.</p>
+      </details>
+    </section>
+  </div>
+
+  <aside>
+    <section id="eigenschaften" aria-live="polite"></section>
+    <section class="klein dezent">
+      <h2 style="color:var(--text)">So geht's</h2>
+      Doppelt auf die Fläche tippen legt einen Entitätstyp an. Attribute rechts eintragen, der Haken macht ein Attribut zum Primärschlüssel.
+      Für eine Beziehung den Entitätstyp antippen und am <strong>blauen Pfeil</strong> zum anderen ziehen; Name und Kardinalitäten rechts eintragen.
+      Ziehen eines Entitätstyps nimmt seine Attribute mit. Ihr Diagramm wird automatisch in diesem Browser gespeichert.
+    </section>
+    <datalist id="kard-liste"><option value="1"></option><option value="n"></option><option value="m"></option><option value="0..1"></option><option value="1..*"></option><option value="0..*"></option></datalist>
+  </aside>
+</main>
+
+<footer>
+  ER-Editor · Version 1.3.1 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+</footer>
+
+<div id="druck"></div>
+<div id="meldung" role="status" hidden></div>
+<script>
+/* ==== diagramm-kern: Anfang – gemeinsamer Teil aller Diagramm-Werkzeuge, hier nicht ändern ==== */
+/* Browserwerkzeuge · Diagrammkern · Version 1.6.0 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
+ *
+ * Gemeinsame Bausteine der Diagramm-Tools (Struktogramm, Automat, UML …):
+ * Design, Meldungen, Rückgängig, Dateien, SVG/PNG-Export, Teilen per Link, Textmessung.
+ * Alles läuft lokal im Browser – es wird nichts an einen Server geschickt.
+ * Der Kern steht in jedem Diagramm-Werkzeug zwischen den Markierungen „diagramm-kern“ und ist überall gleich.
+ * Änderungen bitte nicht in einem einzelnen Werkzeug vornehmen, sondern als Issue melden.
+ */
+"use strict";
+const Kern = (() => {
+  const $ = id => document.getElementById(id);
+  const DESIGN = "browserwerkzeuge-theme";                    // gemeinsam mit allen Tools: "dark" / "light"
+  const istIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  const esc = t => String(t).replace(/[&<>"']/g, z => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[z]));
+
+  /* ---------------------------------------------------------------- Design */
+  function design(knopfId) {
+    const setze = d => {
+      document.documentElement.dataset.design = d;
+      if ($(knopfId)) $(knopfId).textContent = d === "dunkel" ? "Hell" : "Dunkel";
+    };
+    let gespeichert = null;
+    try { gespeichert = localStorage.getItem(DESIGN); } catch (e) { /* ohne Speicher */ }
+    const system = matchMedia("(prefers-color-scheme: dark)");
+    setze((gespeichert ? gespeichert === "dark" : system.matches) ? "dunkel" : "hell");
+    system.addEventListener("change", ev => {                 // Systemdesign folgen, solange nichts gewählt wurde
+      let gewaehlt = null; try { gewaehlt = localStorage.getItem(DESIGN); } catch (e) { /* ohne Speicher */ }
+      if (!gewaehlt) setze(ev.matches ? "dunkel" : "hell");
+    });
+    if ($(knopfId)) $(knopfId).addEventListener("click", () => {
+      const neu = document.documentElement.dataset.design === "dunkel" ? "hell" : "dunkel";
+      setze(neu);
+      try { localStorage.setItem(DESIGN, neu === "dunkel" ? "dark" : "light"); } catch (e) { /* ohne Folgen */ }
+    });
+  }
+
+  /* ---------------------------------------------------------------- Geladene Daten bereinigen
+   * Dateien und geteilte Links stammen von außen: Texte bleiben Texte, Zahlen Zahlen, IDs harmlos. */
+  const pruefe = {
+    text: v => typeof v === "string" ? v.slice(0, 5000) : v == null ? "" : String(v).slice(0, 5000),
+    zahl: (v, d = 0, min = -1e6, max = 1e6) => { const n = +v; return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : d; },
+    id: v => typeof v === "string" && /^[\w-]{1,40}$/.test(v),
+    wahl: (v, erlaubt, d) => erlaubt.includes(v) ? v : d,
+    liste: v => Array.isArray(v) ? v.filter(x => x && typeof x === "object") : []
+  };
+
+  /* ---------------------------------------------------------------- Meldung */
+  let meldungTimer = null;
+  function meldung(text) {
+    let m = $("meldung");
+    if (!m) { m = document.createElement("div"); m.id = "meldung"; m.setAttribute("role", "status"); document.body.appendChild(m); }
+    m.textContent = text; m.hidden = false;
+    clearTimeout(meldungTimer);
+    meldungTimer = setTimeout(() => { m.hidden = true; }, 3500);
+  }
+
+  // Kurze Ansage für Screenreader (unsichtbar), z. B. welches Element gerade gewählt ist
+  let ansageTimer = null;
+  function ansage(text) {
+    let a = $("k-ansage");
+    if (!a) {
+      a = document.createElement("div"); a.id = "k-ansage"; a.className = "nur-vorlesen";
+      a.setAttribute("aria-live", "polite"); a.setAttribute("aria-atomic", "true"); document.body.appendChild(a);
+    }
+    clearTimeout(ansageTimer);
+    a.textContent = "";                              // gleicher Text zweimal hintereinander wird sonst nicht vorgelesen
+    ansageTimer = setTimeout(() => { a.textContent = text; }, 30);
+  }
+
+  /* ---------------------------------------------------------------- Rückgängig / Wiederholen */
+  class Verlauf {
+    constructor(holen, setzen, max = 200) { this.holen = holen; this.setzen = setzen; this.max = max; this.zurueck = []; this.vor = []; }
+    merke() {                                    // VOR einer Änderung aufrufen
+      const stand = this.holen();
+      if (this.zurueck[this.zurueck.length - 1] === stand) return;
+      this.zurueck.push(stand);
+      if (this.zurueck.length > this.max) this.zurueck.shift();
+      this.vor = [];
+    }
+    rueckgaengig() { if (!this.zurueck.length) return false; this.vor.push(this.holen()); this.setzen(this.zurueck.pop()); return true; }
+    wiederholen() { if (!this.vor.length) return false; this.zurueck.push(this.holen()); this.setzen(this.vor.pop()); return true; }
+    leeren() { this.zurueck = []; this.vor = []; }
+  }
+
+  /* ---------------------------------------------------------------- Speicher */
+  let speicherGewarnt = false;                      // Hinweis auf Speicherprobleme nur einmal je Sitzung
+  const benutzt = new Set();                         // Einträge, die dieser Tab liest oder schreibt
+  // Derselbe Eintrag in einem anderen Tab geändert: Hinweis, statt beim nächsten Speichern stillschweigend zu überschreiben
+  window.addEventListener("storage", e => {
+    if (e.key && benutzt.has(e.key))
+      meldung("Dieses Diagramm wurde in einem anderen Tab geändert. Zum Übernehmen die Seite neu laden – sonst überschreibt dieser Tab den Stand beim nächsten Speichern.");
+  });
+  const speicher = {
+    lies(schluessel) { benutzt.add(schluessel); try { return JSON.parse(localStorage.getItem(schluessel)); } catch (e) { return null; } },
+    schreib(schluessel, wert) {
+      benutzt.add(schluessel);
+      try { localStorage.setItem(schluessel, JSON.stringify(wert)); speicherGewarnt = false; return true; }
+      catch (e) {
+        if (!speicherGewarnt) {
+          speicherGewarnt = true;
+          meldung("Achtung: Der Stand kann in diesem Browser nicht gespeichert werden (Speicher voll oder gesperrt). Bitte über „Speichern“ als Datei sichern.");
+        }
+        return false;
+      }
+    }
+  };
+
+  /* ---------------------------------------------------------------- Dateien */
+  async function speichereDatei(name, inhalt, typ) {
+    const datei = new File([inhalt], name, { type: typ });
+    if (istIOS && navigator.canShare && navigator.canShare({ files: [datei] })) {
+      try { await navigator.share({ files: [datei], title: name }); return; }
+      catch (e) { if (e && e.name === "AbortError") return; }
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(datei); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+  }
+
+  function oeffneDatei(accept) {
+    return new Promise(fertig => {
+      const e = document.createElement("input");
+      e.type = "file"; e.accept = istIOS ? "" : accept;      // iOS kennt eigene Dateiendungen nicht und graut sie sonst aus
+      e.addEventListener("change", async () => {
+        const d = e.files && e.files[0];
+        fertig(d ? { name: d.name, text: await d.text() } : null);
+      });
+      e.click();
+    });
+  }
+
+  function dateiname(text, endung) {
+    const basis = String(text || "").replace(/\(.*$/, "").trim()
+      .replace(/[äÄ]/g, "ae").replace(/[öÖ]/g, "oe").replace(/[üÜ]/g, "ue").replace(/ß/g, "ss")
+      .replace(/[^\w-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+    return (basis || "diagramm") + "." + endung;
+  }
+
+  /* ---------------------------------------------------------------- Export */
+  function exportiereSVG(svgText, name) {
+    return speichereDatei(name, '<?xml version="1.0" encoding="UTF-8"?>\n' + svgText, "image/svg+xml");
+  }
+
+  function svgZuCanvas(svgText, breite, hoehe, skala = 2) {
+    return new Promise((fertig, fehler) => {
+      const bild = new Image();
+      bild.onload = () => {
+        const c = document.createElement("canvas");
+        c.width = Math.ceil(breite * skala); c.height = Math.ceil(hoehe * skala);
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(bild, 0, 0, c.width, c.height);
+        fertig(c);
+      };
+      bild.onerror = () => fehler(new Error("SVG konnte nicht gezeichnet werden"));
+      bild.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgText);
+    });
+  }
+
+  async function exportierePNG(svgText, breite, hoehe, name) {
+    const c = await svgZuCanvas(svgText, breite, hoehe, 2);
+    const blob = await new Promise(f => c.toBlob(f, "image/png"));
+    return speichereDatei(name, blob, "image/png");
+  }
+
+  async function kopiere(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch (e) {
+      const t = document.createElement("textarea");
+      t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch (e2) { ok = false; }
+      t.remove(); return ok;
+    }
+  }
+
+  /* ---------------------------------------------------------------- Teilen per Link
+   * Der Inhalt steckt komprimiert im #-Teil der Adresse. Dieser Teil wird vom Browser
+   * nie an den Server geschickt – geteilt wird also nur zwischen den Geräten. */
+  const b64url = bytes => { let s = ""; bytes.forEach(b => { s += String.fromCharCode(b); }); return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); };
+  const vonB64url = text => { const s = atob(text.replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(s, z => z.charCodeAt(0)); };
+
+  async function strom(bytes, art) {
+    const s = new Blob([bytes]).stream().pipeThrough(art);
+    return new Uint8Array(await new Response(s).arrayBuffer());
+  }
+
+  async function kodiere(objekt) {
+    const roh = new TextEncoder().encode(JSON.stringify(objekt));
+    if (typeof CompressionStream === "function") {
+      try { return "z" + b64url(await strom(roh, new CompressionStream("deflate-raw"))); } catch (e) { /* unkomprimiert */ }
+    }
+    return "j" + b64url(roh);
+  }
+
+  // Entpacken mit Obergrenze: Ein kurzer Link darf nicht zu Hunderten Megabyte aufgeblasen werden
+  const MAX_ENTPACKT = 8 * 1024 * 1024;
+  async function entpacke(bytes) {
+    const leser = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw")).getReader();
+    const teile = []; let laenge = 0;
+    for (;;) {
+      const { done, value } = await leser.read();
+      if (done) break;
+      laenge += value.length;
+      if (laenge > MAX_ENTPACKT) { leser.cancel().catch(() => {}); throw new Error("Link zu groß"); }
+      teile.push(value);
+    }
+    const roh = new Uint8Array(laenge); let pos = 0;
+    for (const t of teile) { roh.set(t, pos); pos += t.length; }
+    return roh;
+  }
+
+  async function dekodiere(text) {
+    const art = text[0], daten = vonB64url(text.slice(1));
+    const roh = art === "z" ? await entpacke(daten) : daten;
+    if (roh.length > MAX_ENTPACKT) throw new Error("Link zu groß");
+    return JSON.parse(new TextDecoder().decode(roh));
+  }
+
+  /* ---------------------------------------------------------------- Textmessung & Umbruch */
+  const messCanvas = document.createElement("canvas").getContext("2d");
+  function textBreite(text, schrift) { messCanvas.font = schrift; return messCanvas.measureText(text).width; }
+
+  function umbrechen(text, breite, schrift) {
+    const zeilen = [];
+    String(text || "").split("\n").forEach(absatz => {
+      const woerter = absatz.split(/(\s+)/).filter(w => w.length);
+      let zeile = "";
+      woerter.forEach(wort => {
+        const probe = zeile + wort;
+        if (!zeile || textBreite(probe.trimEnd(), schrift) <= breite) { zeile = probe; return; }
+        zeilen.push(zeile.trimEnd());
+        zeile = /^\s+$/.test(wort) ? "" : wort;
+        // sehr lange Wörter hart trennen
+        while (textBreite(zeile, schrift) > breite && zeile.length > 1) {
+          let n = zeile.length - 1;
+          while (n > 1 && textBreite(zeile.slice(0, n), schrift) > breite) n--;
+          zeilen.push(zeile.slice(0, n)); zeile = zeile.slice(n);
+        }
+      });
+      zeilen.push(zeile.trimEnd());
+    });
+    return zeilen.length ? zeilen : [""];
+  }
+
+  /* ---------------------------------------------------------------- Dialog */
+  function dialog(titel, html, aktionen) {
+    const d = document.createElement("dialog");
+    d.className = "k-dialog";
+    d.innerHTML = `<h2>${esc(titel)}</h2>${html}<div class="k-knoepfe"></div>`;
+    aktionen.forEach(a => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = a.text;
+      if (a.primaer) b.className = "primaer";
+      b.addEventListener("click", () => { d.close(); if (a.aktion) a.aktion(d); });
+      d.querySelector(".k-knoepfe").appendChild(b);
+    });
+    d.addEventListener("close", () => d.remove());
+    document.body.appendChild(d);
+    if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+    return d;
+  }
+
+  /* ---------------------------------------------------------------- Zeichenfläche (Automat, UML, ER …)
+   * <svg> mit <g class="welt">. Elemente mit data-ziel="…" sind antippbar, zusätzlich
+   * data-knoten (verbindbar) und data-ziehbar (verschiebbar). Hintergrund ziehen = verschieben,
+   * Mausrad oder zwei Finger = zoomen. Verbinden: am Griff (data-griff="Knoten-ID") zum Ziel ziehen
+   * oder Griff und dann Ziel antippen; im Modus „verbinden“ geht das auch direkt vom Knoten aus.
+   * Tastatur (Fläche fokussiert): Pfeiltasten wählen das nächste Element in dieser Richtung, Bild↑/Bild↓ der Reihe
+   * nach (auch Verbindungen), Umschalt+Pfeil verschiebt, Eingabe bearbeitet, V verbindet, N legt neu an,
+   * + / − / 0 zoomen bzw. passen ein, Entf löscht (im Tool), Esc bricht ab. */
+  class Flaeche {
+    constructor(svg, o) {
+      this.svg = svg; this.o = o; this.tx = 40; this.ty = 40; this.s = 1;
+      this.welt = svg.querySelector(".welt");
+      this.band = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      this.band.setAttribute("class", "gummiband"); this.band.style.display = "none";
+      svg.appendChild(this.band);
+      this.zeiger = new Map(); this.aktion = null; this.letzterKlick = null; this.verbindeVon = null;
+      svg.addEventListener("pointerdown", e => { this.mitTastatur = false; this.zeigeFokus(); this.runter(e); });
+      svg.addEventListener("pointermove", e => this.bewege(e));
+      svg.addEventListener("pointerup", e => this.hoch(e));
+      svg.addEventListener("pointercancel", e => {
+        this.zeiger.delete(e.pointerId);
+        if (this.aktion && this.aktion.bewegt && this.aktion.art === "ziehen" && this.o.onZiehEnde) this.o.onZiehEnde(this.aktion.ziel);
+        this.aktion = null; this.pinch = null; this.band.style.display = "none";
+      });
+      // Mausrad/Trackpad: mit Strg (oder Trackpad-Pinch) zoomen, sonst verschieben
+      svg.addEventListener("wheel", e => {
+        e.preventDefault();
+        const faktor = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+        if (e.ctrlKey || e.metaKey) this.zoom(Math.exp(-e.deltaY * faktor * 0.01), e.clientX, e.clientY);
+        else { this.tx -= e.deltaX * faktor; this.ty -= e.deltaY * faktor; this.setze(); }
+      }, { passive: false });
+      this.richteTastaturEin();
+      this.setze();
+    }
+    setze() {
+      this.welt.setAttribute("transform", `translate(${this.tx} ${this.ty}) scale(${this.s})`);
+      if (this.s !== this.letzteS) { this.letzteS = this.s; if (this.o.onZoom) this.o.onZoom(this.s); }
+      this.zeigeFokus();
+    }
+    inhalt(html) { this.welt.innerHTML = html; this.zeigeFokus(); }
+    punkt(cx, cy) { const r = this.svg.getBoundingClientRect(); return { x: (cx - r.left - this.tx) / this.s, y: (cy - r.top - this.ty) / this.s }; }
+    zoom(f, cx, cy) {
+      const r = this.svg.getBoundingClientRect();
+      if (cx === undefined) { cx = r.left + r.width / 2; cy = r.top + r.height / 2; }
+      const neu = Math.min(4, Math.max(0.2, this.s * f)), px = cx - r.left, py = cy - r.top;
+      this.tx = px - (px - this.tx) * neu / this.s; this.ty = py - (py - this.ty) * neu / this.s; this.s = neu; this.setze();
+    }
+    einpassen(rand = 30) {
+      const b = this.welt.getBBox(), r = this.svg.getBoundingClientRect();
+      if (!b.width || !r.width) { this.tx = 40; this.ty = 40; this.s = 1; return this.setze(); }
+      this.s = Math.min(1.5, (r.width - 2 * rand) / b.width, (r.height - 2 * rand) / b.height);
+      this.tx = (r.width - b.width * this.s) / 2 - b.x * this.s; this.ty = (r.height - b.height * this.s) / 2 - b.y * this.s; this.setze();
+    }
+    mitte() { const r = this.svg.getBoundingClientRect(); return this.punkt(r.left + r.width / 2, r.top + r.height / 2); }
+    ziel(el) {
+      const t = el && el.closest && el.closest("[data-ziel]");
+      return t ? { id: t.dataset.ziel, knoten: t.hasAttribute("data-knoten"), ziehbar: t.hasAttribute("data-ziehbar"), el: t } : null;
+    }
+    knotenMitte(z) {
+      const el = this.welt.querySelector(`[data-ziel="${CSS.escape(z.id)}"]`) || this.welt.querySelector(`[data-griff="${CSS.escape(z.id)}"]`);
+      if (!el) return null; const b = el.getBBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+    }
+    naechsterGriff(cx, cy, max) {
+      let best = null;
+      this.welt.querySelectorAll("[data-griff]").forEach(el => {
+        const b = el.getBoundingClientRect(), d = Math.hypot(b.left + b.width / 2 - cx, b.top + b.height / 2 - cy);
+        if (d <= max && (!best || d < best.abstand)) best = { el, abstand: d };
+      });
+      return best;
+    }
+    setzeVerbindeVon(z) { this.verbindeVon = z; if (this.o.onVerbindeStart) this.o.onVerbindeStart(z); }
+    runter(e) {
+      if (e.button > 0) return;
+      this.svg.setPointerCapture(e.pointerId);
+      this.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.zeiger.size === 2) {
+        const [a, b] = [...this.zeiger.values()];
+        this.pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), s: this.s, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, tx: this.tx, ty: this.ty };
+        if (this.aktion && this.aktion.bewegt && this.aktion.art === "ziehen" && this.o.onZiehEnde) this.o.onZiehEnde(this.aktion.ziel);
+        this.aktion = null; this.band.style.display = "none"; return;
+      }
+      let griff = e.target.closest && e.target.closest("[data-griff]");
+      if (!griff && e.pointerType !== "mouse") {                // Finger: nahe Anschlüsse großzügig treffen
+        const nah = this.naechsterGriff(e.clientX, e.clientY, 22);
+        if (nah && (!this.ziel(e.target) || nah.abstand <= 12)) griff = nah.el;
+      }
+      const z = griff ? { id: griff.dataset.griff, knoten: true, ziehbar: false, griff: true } : this.ziel(e.target);
+      const modus = this.o.modus ? this.o.modus() : "auswahl";
+      const art = griff || (modus === "verbinden" && z && z.knoten) ? "verbinden" : z && z.ziehbar ? "ziehen" : "schieben";
+      this.aktion = { art, ziel: z, sx: e.clientX, sy: e.clientY, tx: this.tx, ty: this.ty, bewegt: false, letzte: this.punkt(e.clientX, e.clientY) };
+    }
+    bewege(e) {
+      if (!this.zeiger.has(e.pointerId)) return;
+      this.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.pinch && this.zeiger.size === 2) {
+        const [a, b] = [...this.zeiger.values()], p = this.pinch, r = this.svg.getBoundingClientRect();
+        const neu = Math.min(4, Math.max(0.2, p.s * Math.hypot(a.x - b.x, a.y - b.y) / (p.d || 1)));
+        const mx = (a.x + b.x) / 2 - r.left, my = (a.y + b.y) / 2 - r.top, m0x = p.mx - r.left, m0y = p.my - r.top;
+        this.tx = mx - (m0x - p.tx) * neu / p.s; this.ty = my - (m0y - p.ty) * neu / p.s; this.s = neu; this.setze(); return;
+      }
+      const a = this.aktion; if (!a) return;
+      if (!a.bewegt && Math.hypot(e.clientX - a.sx, e.clientY - a.sy) < 5) return;
+      if (!a.bewegt) { a.bewegt = true; if (a.art === "ziehen" && this.o.onZiehStart) this.o.onZiehStart(a.ziel); }
+      if (a.art === "ziehen") {
+        const p = this.punkt(e.clientX, e.clientY);
+        this.o.onZiehen(a.ziel, p.x - a.letzte.x, p.y - a.letzte.y, p); a.letzte = p;
+      } else if (a.art === "schieben") {
+        this.tx = a.tx + e.clientX - a.sx; this.ty = a.ty + e.clientY - a.sy; this.setze();
+      } else if (a.art === "verbinden") {
+        const m = this.knotenMitte(a.ziel), p = this.punkt(e.clientX, e.clientY);
+        if (!m) return;
+        const t = v => v * this.s;
+        this.band.setAttribute("x1", t(m.x) + this.tx); this.band.setAttribute("y1", t(m.y) + this.ty);
+        this.band.setAttribute("x2", t(p.x) + this.tx); this.band.setAttribute("y2", t(p.y) + this.ty);
+        this.band.style.display = "";
+      }
+    }
+    hoch(e) {
+      this.zeiger.delete(e.pointerId);
+      if (this.pinch) { if (!this.zeiger.size) this.pinch = null; this.aktion = null; return; }
+      const a = this.aktion; this.aktion = null; if (!a) return;
+      const p = this.punkt(e.clientX, e.clientY);
+      if (!a.bewegt) {                               // Antippen (mit eigener Doppelklick-Erkennung)
+        const jetzt = performance.now(), l = this.letzterKlick;
+        const doppel = l && jetzt - l.t < 400 && Math.hypot(e.clientX - l.x, e.clientY - l.y) < 12 && (l.id || "") === (a.ziel ? a.ziel.id : "");
+        this.letzterKlick = doppel ? null : { t: jetzt, x: e.clientX, y: e.clientY, id: a.ziel ? a.ziel.id : "" };
+        const modus = this.o.modus ? this.o.modus() : "auswahl";
+        if (a.ziel && a.ziel.griff) {                                         // Griff antippen
+          if (this.verbindeVon && this.verbindeVon.id !== a.ziel.id) { const von = this.verbindeVon; this.setzeVerbindeVon(null); this.o.onVerbinde(von.id, a.ziel.id); }
+          else this.setzeVerbindeVon(this.verbindeVon ? null : a.ziel);          // erneut antippen = abbrechen
+          return;
+        }
+        if ((modus === "verbinden" || this.verbindeVon) && a.ziel && a.ziel.knoten) {
+          if (this.verbindeVon) { const von = this.verbindeVon; this.setzeVerbindeVon(null); this.o.onVerbinde(von.id, a.ziel.id); }
+          else this.setzeVerbindeVon(a.ziel);
+          return;
+        }
+        if (this.verbindeVon) { this.setzeVerbindeVon(null); if (!a.ziel) return; }   // abbrechen
+        this.fokus = a.ziel ? a.ziel.id : null;
+        if (doppel && this.o.onDoppel) this.o.onDoppel(a.ziel, p);
+        else if (this.o.onKlick) this.o.onKlick(a.ziel, p);
+        return;
+      }
+      if (a.art === "ziehen" && this.o.onZiehEnde) this.o.onZiehEnde(a.ziel);
+      if (a.art === "verbinden") {
+        this.band.style.display = "none";
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        let g = el && el.closest && el.closest("[data-griff]");
+        if (!g && e.pointerType !== "mouse" && !(this.ziel(el) || {}).knoten) { const nah = this.naechsterGriff(e.clientX, e.clientY, 22); if (nah) g = nah.el; }
+        const unten = g ? { id: g.dataset.griff, knoten: true } : this.ziel(el);
+        if (unten && unten.knoten) { this.setzeVerbindeVon(null); this.o.onVerbinde(a.ziel.id, unten.id); }
+      }
+    }
+
+    /* ---------- Tastatur */
+    richteTastaturEin() {
+      const svg = this.svg;
+      this.fokus = null; this.mitTastatur = false; this.tVerbinden = null;
+      svg.setAttribute("tabindex", "0");
+      svg.setAttribute("role", "application");
+      svg.setAttribute("aria-roledescription", "Zeichenfläche");
+      // Sichtbare Kurzhilfe unter der Fläche (zugeklappt); Screenreader bekommen den Text als Beschreibung
+      const kasten = document.createElement("details"), titel = document.createElement("summary");
+      kasten.className = "tastatur-hilfe"; titel.textContent = "Bedienung mit der Tastatur";
+      const hilfe = document.createElement("p");
+      hilfe.id = (svg.id || "flaeche") + "-tastatur";
+      hilfe.textContent = "Pfeiltasten: Element wählen. Bild auf, Bild ab: alle Elemente der Reihe nach. Umschalt und Pfeiltaste: verschieben. " +
+        "Eingabetaste: bearbeiten. V: verbinden. N: neues Element. Entfernen: löschen. Plus, Minus, Null: zoomen. " +
+        "Escape: abbrechen oder aus den Eigenschaften zurück zur Zeichenfläche.";
+      kasten.append(titel, hilfe);
+      (svg.closest(".leinwand") || svg).after(kasten);
+      svg.setAttribute("aria-describedby", hilfe.id);
+      this.ring = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      this.ring.setAttribute("class", "tastatur-fokus"); this.ring.setAttribute("rx", "6"); this.ring.style.display = "none";
+      svg.appendChild(this.ring);
+      svg.addEventListener("keydown", e => this.taste(e));
+      svg.addEventListener("focus", () => { if (this.mitTastatur) this.zeigeFokus(); });
+      svg.addEventListener("blur", () => { this.ring.style.display = "none"; });
+      // Esc in einem Eingabefeld der Eigenschaften führt zurück auf die Zeichenfläche
+      document.addEventListener("keydown", e => {
+        if (e.key !== "Escape" || !this.mitTastatur || document.querySelector("dialog[open]")) return;
+        const a = document.activeElement;
+        if (a && a !== svg && a.closest && a.closest("#eigenschaften")) { e.preventDefault(); e.stopPropagation(); svg.focus(); this.zeigeFokus(); }
+      }, true);
+    }
+    // Was gerade mit der Tastatur erreichbar ist: Elemente – beim Verbinden Knoten und Anschlüsse
+    tZiele() {
+      const liste = [], gesehen = new Set();
+      const dazu = (el, id, knoten, ziehbar, griff) => { if (id && !gesehen.has(id)) { gesehen.add(id); liste.push({ el, id, knoten, ziehbar, griff }); } };
+      const v = this.tVerbinden;
+      if (v && v.schritt === "von") {
+        v.anschluesse.forEach(id => { const el = this.welt.querySelector(`[data-griff="${CSS.escape(id)}"]`); if (el) dazu(el, id, true, false, true); });
+        return liste;
+      }
+      this.welt.querySelectorAll("[data-ziel], [data-griff]").forEach(el => {
+        if (el.hasAttribute("data-griff")) { if (v && this.o.anschluesse) dazu(el, el.dataset.griff, true, false, true); return; }
+        if (v && !el.hasAttribute("data-knoten")) return;
+        dazu(el, el.dataset.ziel, el.hasAttribute("data-knoten"), el.hasAttribute("data-ziehbar"), false);
+      });
+      return liste;
+    }
+    tElement(id) {
+      if (!id) return null;
+      return this.welt.querySelector(`[data-ziel="${CSS.escape(id)}"]`) || this.welt.querySelector(`[data-griff="${CSS.escape(id)}"]`);
+    }
+    zeigeFokus() {
+      if (!this.ring) return;
+      const el = this.mitTastatur && document.activeElement === this.svg ? this.tElement(this.fokus) : null;
+      if (!el) { this.ring.style.display = "none"; return; }
+      const r = el.getBoundingClientRect(), f = this.svg.getBoundingClientRect(), rand = 5;
+      this.ring.setAttribute("x", r.left - f.left - rand); this.ring.setAttribute("y", r.top - f.top - rand);
+      this.ring.setAttribute("width", r.width + 2 * rand); this.ring.setAttribute("height", r.height + 2 * rand);
+      this.ring.classList.toggle("verbinden", !!this.tVerbinden);
+      this.ring.style.display = "";
+    }
+    beschreibe(id) {
+      const text = this.o.beschreibe ? this.o.beschreibe(id) : "";
+      if (text) return text;
+      const el = this.tElement(id);
+      return (el && (el.getAttribute("aria-label") || el.textContent.replace(/\s+/g, " ").trim())) || "Element";
+    }
+    // Ausgewähltes Element sichtbar machen, falls es außerhalb liegt
+    insBild(el) {
+      const r = el.getBoundingClientRect(), f = this.svg.getBoundingClientRect();
+      if (r.left >= f.left && r.right <= f.right && r.top >= f.top && r.bottom <= f.bottom) return;
+      this.tx += f.left + f.width / 2 - (r.left + r.width / 2); this.ty += f.top + f.height / 2 - (r.top + r.height / 2); this.setze();
+    }
+    tWaehle(z, ansagen = true) {
+      this.fokus = z ? z.id : null;
+      if (!this.tVerbinden) {
+        const waehle = this.o.onWaehle || this.o.onKlick;
+        if (waehle) waehle(z ? { id: z.id, knoten: z.knoten, ziehbar: z.ziehbar, el: z.el } : null, this.mitte());
+      }
+      const el = this.tElement(this.fokus);
+      if (el) this.insBild(el);
+      this.zeigeFokus();
+      if (ansagen && z) ansage((this.tVerbinden ? (this.tVerbinden.schritt === "von" ? "Anschluss: " : "Verbinden mit: ") : "") + this.beschreibe(z.id));
+    }
+    tNaechstes(richtung) {                           // richtung: [dx, dy] für Pfeiltasten, +1/−1 für Bild↑/↓
+      const ziele = this.tZiele();
+      if (!ziele.length) { ansage(this.tVerbinden ? "Kein mögliches Ziel." : "Die Zeichenfläche ist leer. N legt ein neues Element an."); return; }
+      const i = ziele.findIndex(z => z.id === this.fokus);
+      if (i < 0) { this.tWaehle(ziele[0]); return; }
+      if (typeof richtung === "number") { this.tWaehle(ziele[(i + richtung + ziele.length) % ziele.length]); return; }
+      const mitte = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+      const [cx, cy] = mitte(ziele[i].el), [dx, dy] = richtung;
+      let best = null;
+      ziele.forEach((z, j) => {
+        if (j === i) return;
+        const [x, y] = mitte(z.el), vor = (x - cx) * dx + (y - cy) * dy, quer = Math.abs((x - cx) * dy - (y - cy) * dx);
+        if (vor <= 1) return;
+        const wert = vor + 2 * quer;
+        if (!best || wert < best.wert) best = { z, wert };
+      });
+      if (best) this.tWaehle(best.z); else ansage("In dieser Richtung liegt kein weiteres Element.");
+    }
+    taste(e) {
+      if (e.target !== this.svg || e.ctrlKey || e.metaKey) return;   // Strg-Kürzel (Rückgängig …) erledigt das Tool
+      this.mitTastatur = true;
+      const k = e.key, PFEIL = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+      const z = this.tZiele().find(x => x.id === this.fokus) || null;
+      let fertig = true;
+      if (PFEIL[k] && e.shiftKey) {                  // verschieben
+        if (z && z.ziehbar && !this.tVerbinden) {
+          const schritt = (e.altKey ? 2 : 20) / this.s, [dx, dy] = PFEIL[k];
+          if (this.o.onZiehStart) this.o.onZiehStart(z);
+          this.o.onZiehen(z, dx * schritt, dy * schritt, null);
+          if (this.o.onZiehEnde) this.o.onZiehEnde(z);
+          this.zeigeFokus();
+        } else ansage(z ? "Dieses Element lässt sich nicht verschieben." : "Kein Element gewählt.");
+      } else if (PFEIL[k]) this.tNaechstes(PFEIL[k]);
+      else if (k === "PageDown") this.tNaechstes(1);
+      else if (k === "PageUp") this.tNaechstes(-1);
+      else if (k === "Home" || k === "End") { const l = this.tZiele(); if (l.length) this.tWaehle(l[k === "Home" ? 0 : l.length - 1]); }
+      else if (k === "Enter" || k === " ") {
+        if (this.tVerbinden) this.tBestaetige(z);
+        else if (z && this.o.onDoppel) this.o.onDoppel(z, this.mitte());
+        else if (!z) this.tNaechstes(1);
+      } else if (k === "F2") { if (z && this.o.onDoppel && !this.tVerbinden) this.o.onDoppel(z, this.mitte()); }
+      else if (k.toLowerCase() === "v" && !e.altKey) this.tVerbindeStart(z);
+      else if (k.toLowerCase() === "n" && !e.altKey && !this.tVerbinden) {
+        if (this.o.onDoppel && this.o.neuMitTastatur !== false) {
+          const vorher = new Set(this.tZiele().map(x => x.id));
+          this.o.onDoppel(null, this.mitte());
+          const neu = this.tZiele().find(x => !vorher.has(x.id));
+          if (neu) { this.fokus = neu.id; this.zeigeFokus(); ansage("Neu: " + this.beschreibe(neu.id)); }
+        } else ansage("Neue Elemente über die Knöpfe über der Zeichenfläche einfügen.");
+      } else if (k === "+" || k === "=") { this.zoom(1.25); ansage(`Zoom ${Math.round(this.s * 100)} Prozent`); }
+      else if (k === "-") { this.zoom(0.8); ansage(`Zoom ${Math.round(this.s * 100)} Prozent`); }
+      else if (k === "0") { this.einpassen(); ansage("Ganzes Diagramm eingepasst"); }
+      else if (k === "Escape") {
+        if (this.tVerbinden) { this.tVerbinden = null; this.setzeVerbindeVon(null); ansage("Verbinden abgebrochen"); this.zeigeFokus(); }
+        else { this.fokus = null; this.zeigeFokus(); fertig = false; }          // Esc auch an das Tool (Auswahl aufheben)
+      } else fertig = false;                                                 // Entf, Rückgängig usw. erledigt das Tool
+      if (fertig) { e.preventDefault(); e.stopPropagation(); }
+    }
+    tVerbindeStart(z) {
+      if (this.tVerbinden) return;
+      if (!z) { ansage("Erst ein Element wählen, dann V drücken."); return; }
+      const anschluesse = this.o.anschluesse ? this.o.anschluesse(z.id) : null;
+      if (anschluesse && anschluesse.length) {     // z. B. Schaltung: erst den Anschluss am Element wählen
+        this.tVerbinden = { schritt: "von", anschluesse, element: z.id };
+        ansage("Verbinden: Anschluss mit den Pfeiltasten wählen, mit der Eingabetaste bestätigen. Escape bricht ab.");
+        this.tWaehle(this.tZiele()[0]);
+        return;
+      }
+      if (!z.knoten) { ansage("Dieses Element lässt sich nicht verbinden."); return; }
+      this.tVerbinden = { schritt: "nach", von: z.id };
+      this.setzeVerbindeVon({ id: z.id, knoten: true });
+      ansage(`Verbinden von ${this.beschreibe(z.id)}: Ziel mit den Pfeiltasten wählen, mit der Eingabetaste bestätigen. Escape bricht ab.`);
+      this.zeigeFokus();
+    }
+    tBestaetige(z) {
+      const v = this.tVerbinden;
+      if (!z) { ansage("Kein Ziel gewählt."); return; }
+      if (v.schritt === "von") {
+        this.tVerbinden = { schritt: "nach", von: z.id };
+        this.setzeVerbindeVon({ id: z.id, knoten: true, griff: true });
+        ansage(`Verbinden von ${this.beschreibe(z.id)}: Ziel wählen und mit der Eingabetaste bestätigen.`);
+        this.zeigeFokus();
+        return;
+      }
+      this.tVerbinden = null;
+      this.setzeVerbindeVon(null);
+      const vorher = new Set(this.tZiele().map(x => x.id));
+      this.o.onVerbinde(v.von, z.id);
+      const neu = this.tZiele().find(x => !vorher.has(x.id));
+      if (neu) { this.fokus = neu.id; ansage("Verbunden: " + this.beschreibe(neu.id)); }
+      else ansage("Verbunden.");
+      this.zeigeFokus();
+    }
+  }
+
+  // Export: Inhalt messen und als eigenständiges SVG (weißer Hintergrund) verpacken
+  function bildAus(inhalt, rand = 16) {
+    const ns = "http://www.w3.org/2000/svg";
+    const mess = document.createElementNS(ns, "svg");
+    mess.setAttribute("style", "position:absolute;left:-10000px;top:0;width:10px;height:10px;visibility:hidden");
+    mess.innerHTML = `<g>${inhalt}</g>`;
+    document.body.appendChild(mess);
+    const b = mess.firstChild.getBBox(); mess.remove();
+    const x = Math.floor(b.x - rand), y = Math.floor(b.y - rand), w = Math.ceil(b.width + 2 * rand), h = Math.ceil(b.height + 2 * rand);
+    const sauber = inhalt.replace(/<g data-griff=[\s\S]*?<\/g>/g, "")
+      .replace(/<(?:path|rect|circle)\b[^>]*(?:stroke|fill)="transparent"[^>]*\/>/g, "")      // unsichtbare Trefferflächen
+      .replace(/ (class|data-[\w-]+)="[^"]*"/g, "").replace(/ data-(knoten|ziehbar)(?=[ >\/])/g, "");
+    return { breite: w, hoehe: h,
+      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${x} ${y} ${w} ${h}">` +
+           `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff"/>${sauber}</svg>` };
+  }
+
+  // Zwei Formate in die Zwischenablage (z. B. unterstrichene Schlüssel für Word)
+  async function kopiereFormatiert(html, text) {
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], { type: "text/html" }), "text/plain": new Blob([text], { type: "text/plain" }) })]);
+      return true;
+    } catch (e) { return kopiere(text); }
+  }
+
+  // Blauer Verbinden-Griff; wächst beim Herauszoomen mit, damit er mit dem Finger treffbar bleibt
+  function griff(id, x, y, skala = 1) {
+    const r = Math.max(12, 13 / skala), t = Math.max(r, 22 / skala), k = r / 12, n = v => (+v).toFixed(1);
+    return `<g data-griff="${esc(id)}" class="griff"><circle cx="${n(x)}" cy="${n(y)}" r="${n(t)}" fill="transparent" class="griff-treffer"/>` +
+      `<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="#1f5f99" class="griff-kreis"/>` +
+      `<path d="M${n(x - 5 * k)} ${n(y)}h${n(10 * k)}m${n(-4 * k)} ${n(-4 * k)}l${n(4 * k)} ${n(4 * k)}-${n(4 * k)} ${n(4 * k)}" fill="none" stroke="#fff" stroke-width="${n(2.2 * k)}" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  }
+
+  // Geteilten Link öffnen: Wenn schon etwas gezeichnet ist, vorher fragen
+  function linkOeffnen(istLeer, oeffnen, verwerfen) {
+    if (istLeer) { oeffnen(); return; }
+    dialog("Geteilten Link öffnen?", "<p>Der Link enthält ein Diagramm. Es ersetzt Ihr aktuelles Diagramm in diesem Browser.</p>" +
+      "<p class=\"dezent klein\">Tipp: Wenn Sie Ihr aktuelles Diagramm behalten möchten, speichern Sie es vorher als Datei.</p>",
+      [{ text: "Nicht öffnen", aktion: verwerfen }, { text: "Öffnen", primaer: true, aktion: oeffnen }]);
+  }
+
+  return { $, esc, istIOS, pruefe, linkOeffnen, griff, design, meldung, ansage, Verlauf, speicher, speichereDatei, oeffneDatei, dateiname, Flaeche, bildAus, kopiereFormatiert,
+           exportiereSVG, exportierePNG, kopiere, kodiere, dekodiere, textBreite, umbrechen, dialog };
+})();
+/* ==== diagramm-kern: Ende ==== */
+</script>
+<script>
+/* ER-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
+ * ER-Diagramme in Chen-Notation zeichnen und automatisch in ein relationales Datenbankschema überführen
+ * (Primärschlüssel unterstrichen, Fremdschlüssel markiert), dazu ein SQL-Gerüst. Alles bleibt im Browser.
+ */
+"use strict";
+const { $, esc } = Kern;
+const SPEICHER = "browserwerkzeuge-er";
+const FORMAT = "browserwerkzeuge-er";
+const ALT_FORMAT = "anton-er";                 // Dateien, Links und Speicher aus Version 1.x – werden weiter gelesen
+const SCHRIFT = "15px Arial, Helvetica, sans-serif";
+const SVGSCHRIFT = 'font-family="Arial, Helvetica, sans-serif"';
+const f1 = v => v.toFixed(1);
+
+const leer = () => ({ format: FORMAT, version: 1, titel: "", fk: "pfeil", entitaeten: [], attribute: [], beziehungen: [] });
+
+/* ------------------------------------------------------------------ Formen */
+const Form = {
+  entitaet(e) { return { w: Math.max(110, Kern.textBreite(e.name, "bold " + SCHRIFT) + 28), h: 42 }; },
+  beziehung(r) { return { w: Math.max(100, Kern.textBreite(r.name, SCHRIFT) + 56), h: 58 }; },
+  attribut(a) { return { rx: Math.max(40, Kern.textBreite(a.name, SCHRIFT) / 2 + 16), ry: 19 }; },
+  // Randpunkt eines Rechtecks/einer Raute in Richtung (zx,zy)
+  rand(art, x, y, g, zx, zy) {
+    const dx = zx - x, dy = zy - y;
+    if (!dx && !dy) return [x, y];
+    if (art === "raute") { const t = 1 / (Math.abs(dx) / (g.w / 2) + Math.abs(dy) / (g.h / 2)); return [x + dx * t, y + dy * t]; }
+    const t = Math.min(dx ? (g.w / 2) / Math.abs(dx) : Infinity, dy ? (g.h / 2) / Math.abs(dy) : Infinity);
+    return [x + dx * t, y + dy * t];
+  }
+};
+const vielfach = k => /^(n|m|\*|[nm*]|\d*\.\.\*|[2-9]\d*|1\.\.[nm*])$/i.test(String(k || "").trim()) || /[nm*]/i.test(String(k || ""));
+
+function zeichne(m, z = {}) {
+  const ent = new Map(m.entitaeten.map(e => [e.id, e])), rel = new Map(m.beziehungen.map(r => [r.id, r]));
+  const linien = [], formen = [];
+  const besitzer = id => ent.get(id) || rel.get(id);
+  // Attribute: Linie zum Besitzer
+  m.attribute.forEach(a => {
+    const b = besitzer(a.an); if (!b) return;
+    linien.push(`<line x1="${f1(a.x)}" y1="${f1(a.y)}" x2="${f1(b.x)}" y2="${f1(b.y)}" stroke="#000" stroke-width="1.3" class="e-linie"/>`);
+  });
+  // Beziehungen: Linien zu beiden Entitätstypen, Kardinalität am Entitätstyp
+  m.beziehungen.forEach(r => {
+    const A = ent.get(r.a), B = ent.get(r.b); if (!A || !B) return;
+    const kl = "e-linie" + (z.auswahl === "r:" + r.id ? " markiert" : "");
+    [[A, r.kardA, -1], [B, r.kardB, 1]].forEach(([E, kard, seite]) => {
+      const g = Form.entitaet(E), rekursiv = r.a === r.b;
+      const dx0 = E.x - r.x, dy0 = E.y - r.y, l0 = Math.hypot(dx0, dy0) || 1;
+      const ox = rekursiv ? -dy0 / l0 * seite * 14 : 0, oy = rekursiv ? dx0 / l0 * seite * 14 : 0;   // rekursiv: zwei Linien nebeneinander
+      const p = Form.rand("rechteck", E.x + ox, E.y + oy, g, r.x + ox, r.y + oy);
+      linien.push(`<line x1="${f1(r.x + ox)}" y1="${f1(r.y + oy)}" x2="${f1(p[0])}" y2="${f1(p[1])}" stroke="#000" stroke-width="1.5" class="${kl}"/>`);
+      if (kard) {
+        const dx = r.x + ox - p[0], dy = r.y + oy - p[1], l = Math.hypot(dx, dy) || 1, ux = dx / l, uy = dy / l;
+        let nx = -uy, ny = ux; if (ny > 0.01 || (Math.abs(ny) <= 0.01 && nx < 0)) { nx = -nx; ny = -ny; }   // möglichst oberhalb/rechts der Linie
+        const lx = p[0] + ux * 16 + nx * 11, ly = p[1] + uy * 16 + ny * 11;
+        linien.push(`<text x="${f1(lx)}" y="${f1(ly)}" ${SVGSCHRIFT} font-size="15" font-weight="bold" text-anchor="middle" dominant-baseline="central" fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" class="e-kard">${esc(kard)}</text>`);
+      }
+    });
+  });
+  const markiert = id => (z.auswahl === id ? " markiert" : "") + (z.verbindeVon === id ? " verbinde" : "");
+  m.entitaeten.forEach(e => {
+    const g = Form.entitaet(e);
+    formen.push(`<g data-ziel="e:${e.id}" data-knoten data-ziehbar><rect x="${f1(e.x - g.w / 2)}" y="${f1(e.y - g.h / 2)}" width="${f1(g.w)}" height="${g.h}" fill="#fff" stroke="#000" stroke-width="1.6" class="e-form${markiert("e:" + e.id)}"/>` +
+      `<text x="${f1(e.x)}" y="${f1(e.y)}" ${SVGSCHRIFT} font-size="15" font-weight="bold" text-anchor="middle" dominant-baseline="central" fill="#000" class="e-text">${esc(e.name)}</text></g>`);
+  });
+  m.beziehungen.forEach(r => {
+    const g = Form.beziehung(r), hw = g.w / 2, hh = g.h / 2;
+    formen.push(`<g data-ziel="r:${r.id}" data-ziehbar><polygon points="${f1(r.x)},${f1(r.y - hh)} ${f1(r.x + hw)},${f1(r.y)} ${f1(r.x)},${f1(r.y + hh)} ${f1(r.x - hw)},${f1(r.y)}" fill="#fff" stroke="#000" stroke-width="1.6" class="e-form${markiert("r:" + r.id)}"/>` +
+      `<text x="${f1(r.x)}" y="${f1(r.y)}" ${SVGSCHRIFT} font-size="15" text-anchor="middle" dominant-baseline="central" fill="#000" class="e-text">${esc(r.name)}</text></g>`);
+  });
+  m.attribute.forEach(a => {
+    const g = Form.attribut(a), w = Kern.textBreite(a.name, SCHRIFT);
+    formen.push(`<g data-ziel="a:${a.id}" data-ziehbar><ellipse cx="${f1(a.x)}" cy="${f1(a.y)}" rx="${f1(g.rx)}" ry="${g.ry}" fill="#fff" stroke="#000" stroke-width="1.4" class="e-form${markiert("a:" + a.id)}"/>` +
+      `<text x="${f1(a.x)}" y="${f1(a.y)}" ${SVGSCHRIFT} font-size="15" text-anchor="middle" dominant-baseline="central" fill="#000" class="e-text">${esc(a.name)}</text>` +
+      (a.schluessel ? `<line x1="${f1(a.x - w / 2)}" y1="${f1(a.y + 9)}" x2="${f1(a.x + w / 2)}" y2="${f1(a.y + 9)}" stroke="#000" stroke-width="1.3" class="e-linie"/>` : "") + "</g>");
+  });
+  const sel = m.entitaeten.find(e => z.auswahl === "e:" + e.id);
+  const f = v => v.toFixed(1);
+  if (sel) { const g = Form.entitaet(sel), k = Math.min(1.6, Math.max(1, 1 / (z.skala || 1))); formen.push(Kern.griff("e:" + sel.id, sel.x + g.w / 2 + 6 * k, sel.y - g.h / 2 - 6 * k, z.skala || 1)); }
+  if (m.titel.trim()) {
+    const alle = [...m.entitaeten, ...m.beziehungen, ...m.attribute];
+    if (alle.length) formen.push(`<text x="${Math.min(...alle.map(o => o.x)) - 60}" y="${Math.min(...alle.map(o => o.y)) - 50}" ${SVGSCHRIFT} font-size="16" font-weight="bold" fill="#000" class="e-text">${esc(m.titel)}</text>`);
+  }
+  return linien.join("") + formen.join("");
+}
+
+/* ------------------------------------------------------------------ Überführung ins Relationenschema */
+const Schema = {
+  erzeuge(m) {
+    const warn = [], tab = new Map();
+    const attrVon = id => m.attribute.filter(a => a.an === id);
+    const ent = new Map(m.entitaeten.map(e => [e.id, e]));
+    m.entitaeten.forEach(e => {
+      const sp = attrVon(e.id).map(a => ({ name: a.name, pk: !!a.schluessel, fk: null }));
+      if (!sp.some(s => s.pk)) warn.push(`„${e.name}“ hat keinen Primärschlüssel – bitte ein Attribut als Schlüssel markieren.`);
+      tab.set(e.id, { name: e.name, spalten: sp });
+    });
+    const schluessel = id => (tab.get(id) || { spalten: [] }).spalten.filter(s => s.pk && !s.fk);
+    const fkName = (ziel, key, refName) => ziel.spalten.some(s => s.name === key) ? refName + key.charAt(0).toUpperCase() + key.slice(1) : key;
+    m.beziehungen.forEach(r => {
+      const A = ent.get(r.a), B = ent.get(r.b); if (!A || !B) return;
+      const va = vielfach(r.kardA), vb = vielfach(r.kardB), rAttr = attrVon(r.id);
+      if (!String(r.kardA || "").trim() || !String(r.kardB || "").trim()) warn.push(`Bei „${r.name}“ fehlt eine Kardinalität.`);
+      if (va && vb) {                                    // n:m → eigene Tabelle
+        const t = { name: r.name || `${A.name}_${B.name}`, spalten: [] };
+        [[A, r.a], [B, r.b]].forEach(([E, id], i) => schluessel(id).forEach(k => {
+          let n = fkName(t, k.name, E.name); if (t.spalten.some(s => s.name === n)) n = n + (i + 1);
+          t.spalten.push({ name: n, pk: true, fk: E.name, gruppe: r.id + ":" + i, bezug: k.name });
+        }));
+        rAttr.forEach(a => t.spalten.push({ name: a.name, pk: !!a.schluessel, fk: null }));
+        tab.set(r.id, t);
+      } else {                                           // 1:n bzw. 1:1 → Fremdschlüssel auf der n-Seite
+        const [ziel, ref] = va && !vb ? [r.a, r.b] : [r.b, r.a];
+        if (!va && !vb && r.a !== r.b) warn.push(`„${r.name}“ ist 1:1 – der Fremdschlüssel steht bei „${ent.get(ziel).name}“, er könnte auch auf der anderen Seite stehen.`);
+        const zt = tab.get(ziel), refE = ent.get(ref);
+        schluessel(ref).forEach(k => zt.spalten.push({ name: fkName(zt, k.name, refE.name), pk: false, fk: refE.name, gruppe: r.id, bezug: k.name }));
+        rAttr.forEach(a => zt.spalten.push({ name: a.name, pk: false, fk: null }));
+      }
+    });
+    // doppelte Tabellen- oder Spaltennamen melden
+    const tabNamen = [...tab.values()].map(t => t.name);
+    [...new Set(tabNamen.filter((n, i) => tabNamen.indexOf(n) !== i))].forEach(n => warn.push(`Der Name „${n}“ kommt mehrfach als Tabelle vor – bitte umbenennen.`));
+    tab.forEach(t => { const sp = t.spalten.map(c => c.name); [...new Set(sp.filter((n, i) => sp.indexOf(n) !== i))].forEach(n => warn.push(`In „${t.name}“ gibt es die Spalte „${n}“ mehrfach.`)); });
+    return { tabellen: [...tab.values()], warn };
+  },
+  html(s, fk) {
+    return s.tabellen.map(t => `<div class="relation"><strong>${esc(t.name)}</strong>(` + t.spalten.map(c => {
+      let n = esc(c.name);
+      if (c.fk) n = fk === "pfeil" ? "↑" + n : fk === "kursiv" ? `<i>${n}</i>` : n + " (FK)";
+      return c.pk ? `<u>${n}</u>` : n;
+    }).join(", ") + ")</div>").join("");
+  },
+  text(s, fk) {
+    return s.tabellen.map(t => `${t.name}(` + t.spalten.map(c => {
+      let n = c.name;
+      if (c.fk) n = fk === "pfeil" ? "↑" + n : fk === "kursiv" ? n : n + " (FK)";
+      return c.pk ? `_${n}_` : n;
+    }).join(", ") + ")").join("\n");
+  },
+  typ(name) {
+    if (/(id|nr|nummer|anzahl|alter|menge|jahr)$/i.test(name)) return "INTEGER";
+    if (/datum|date|tag$/i.test(name)) return "DATE";
+    if (/(preis|betrag|gewicht|note)$/i.test(name)) return "DECIMAL(8,2)";
+    return "VARCHAR(100)";
+  },
+  sql(s) {
+    const n = t => /^[A-Za-z_]\w*$/.test(t) ? t : `"${t.replace(/"/g, '""')}"`;
+    // referenzierte Tabellen zuerst anlegen (sonst lehnt z. B. MySQL/MariaDB die Fremdschlüssel ab)
+    const fertig = new Set(), reihe = [];
+    const besuche = t => { if (fertig.has(t)) return; fertig.add(t);
+      t.spalten.filter(c => c.fk).forEach(c => { const z = s.tabellen.find(x => x.name === c.fk); if (z && z !== t) besuche(z); }); reihe.push(t); };
+    s.tabellen.forEach(besuche);
+    return reihe.map(t => {
+      const z = t.spalten.map(c => `  ${n(c.name)} ${this.typ(c.bezug || c.name)}${c.pk ? " NOT NULL" : ""}`);
+      const p = t.spalten.filter(c => c.pk).map(c => n(c.name));
+      if (p.length) z.push(`  PRIMARY KEY (${p.join(", ")})`);
+      const gruppen = new Map();                        // ein Fremdschlüssel je Beziehung und Seite
+      t.spalten.filter(c => c.fk).forEach(c => { const g = c.gruppe || c.fk, e = gruppen.get(g) || { ref: c.fk, spalten: [], bezug: [] };
+        e.spalten.push(c.name); e.bezug.push(c.bezug || c.name); gruppen.set(g, e); });
+      gruppen.forEach(({ ref, spalten, bezug }) => z.push(`  FOREIGN KEY (${spalten.map(n).join(", ")}) REFERENCES ${n(ref)}(${bezug.map(n).join(", ")})`));
+      return `CREATE TABLE ${n(t.name)} (\n${z.join(",\n")}\n);`;
+    }).join("\n\n");
+  }
+};
+
+/* ------------------------------------------------------------------ Beispiele */
+const E = (id, name, x, y) => ({ id, name, x, y });
+const A = (id, name, an, x, y, schluessel = false) => ({ id, name, an, x, y, schluessel });
+const R = (id, name, a, b, kardA, kardB, x, y) => ({ id, name, a, b, kardA, kardB, x, y });
+const BEISPIELE = {
+  schule: { titel: "Schule", entitaeten: [E("e1", "Klasse", 120, 200), E("e2", "Schueler", 440, 200), E("e3", "Kurs", 760, 200)],
+    beziehungen: [R("r1", "gehört zu", "e1", "e2", "1", "n", 280, 200), R("r2", "belegt", "e2", "e3", "n", "m", 600, 200)],
+    attribute: [A("a1", "Bezeichnung", "e1", 60, 110, true), A("a2", "Raum", "e1", 160, 300), A("a3", "SchuelerID", "e2", 380, 105, true),
+      A("a4", "Name", "e2", 500, 105), A("a5", "Vorname", "e2", 440, 300), A("a6", "KursID", "e3", 720, 105, true), A("a7", "Fach", "e3", 830, 110),
+      A("a8", "Note", "r2", 600, 300)] },
+  bibliothek: { titel: "Bibliothek", entitaeten: [E("e1", "Leser", 120, 220), E("e2", "Buch", 460, 220), E("e3", "Verlag", 800, 220)],
+    beziehungen: [R("r1", "leiht", "e1", "e2", "n", "m", 290, 220), R("r2", "erscheint bei", "e2", "e3", "n", "1", 630, 220)],
+    attribute: [A("a1", "LeserNr", "e1", 70, 125, true), A("a2", "Name", "e1", 160, 320), A("a3", "ISBN", "e2", 410, 125, true), A("a4", "Titel", "e2", 520, 125),
+      A("a5", "Erscheinungsjahr", "e2", 470, 320), A("a6", "VerlagID", "e3", 760, 125, true), A("a7", "Ort", "e3", 850, 320), A("a8", "Ausleihdatum", "r1", 290, 320)] }
+};
+
+/* ------------------------------------------------------------------ Anwendung */
+const App = {
+  m: leer(), auswahl: null, modus: "auswahl",
+
+  init() {
+    Kern.design("btn-design");
+    this.verlauf = new Kern.Verlauf(() => JSON.stringify(this.m), s => { this.m = JSON.parse(s); this.pruefeAuswahl(); this.aktualisiere(); });
+    const g = Kern.speicher.lies(SPEICHER);
+    if (g && (g.format === FORMAT || g.format === ALT_FORMAT)) this.m = this.vervollstaendige(g);
+    this.flaeche = new Kern.Flaeche($("zeichnung"), {
+      modus: () => this.modus,
+      onKlick: z => this.waehle(z ? z.id : null),
+      onDoppel: (z, p) => {
+        if (!z) { this.neueEntitaet(p.x, p.y); return; }
+        this.waehle(z.id); const f = $("eigenschaften").querySelector("input"); if (f) { f.focus(); f.select(); }
+      },
+      onZiehStart: () => this.verlauf.merke(),
+      onZiehen: (z, dx, dy) => {
+        const o = this.objekt(z.id); if (!o) return;
+        o.x += dx; o.y += dy;
+        if (!z.id.startsWith("a:")) this.m.attribute.filter(a => a.an === o.id).forEach(a => { a.x += dx; a.y += dy; });   // Attribute wandern mit
+        this.zeichneNur();
+      },
+      onZiehEnde: () => { [...this.m.entitaeten, ...this.m.beziehungen, ...this.m.attribute].forEach(o => { o.x = Math.round(o.x); o.y = Math.round(o.y); }); this.speichere(); this.knoepfe(); },
+      onVerbinde: (von, nach) => this.verbinde(von, nach),
+      onVerbindeStart: () => this.zeichneNur(),
+      beschreibe: zid => {
+        const o = this.objekt(zid); if (!o) return "";
+        const name = o.name || "ohne Namen";
+        if (zid[0] === "e") return `Entitätstyp ${name}`;
+        if (zid[0] === "a") return `Attribut ${name}${o.schluessel ? ", Primärschlüssel" : ""}`;
+        const e = id => (this.m.entitaeten.find(x => x.id === id) || {}).name || "?";
+        return `Beziehungstyp ${name} zwischen ${e(o.a)} (${o.kardA || "?"}) und ${e(o.b)} (${o.kardB || "?"})`;
+      },
+      onZoom: () => { if (this.auswahl && this.auswahl.startsWith("e:")) this.zeichneNur(); }
+    });
+    this.binde();
+    this.aktualisiere();
+    requestAnimationFrame(() => this.flaeche.einpassen());
+    this.ladeAusLink();
+    window.addEventListener("hashchange", () => this.ladeAusLink());   // Link in schon geöffnetem Tab
+  },
+  vervollstaendige(d) {                         // Daten von außen streng prüfen (Dateien, Links, Speicher)
+    const P = Kern.pruefe, m = leer();
+    d = d && typeof d === "object" ? d : {};
+    m.titel = P.text(d.titel).slice(0, 200); m.fk = P.wahl(d.fk, ["pfeil", "kursiv", "fk"], "pfeil");
+    const ids = new Set(), neu = id => P.id(id) && !ids.has(id) && ids.add(id);
+    m.entitaeten = P.liste(d.entitaeten).filter(e => neu(e.id)).slice(0, 300).map(e => ({ id: e.id, name: P.text(e.name).slice(0, 80), x: P.zahl(e.x), y: P.zahl(e.y) }));
+    const ent = new Set(m.entitaeten.map(e => e.id));
+    m.beziehungen = P.liste(d.beziehungen).filter(b => neu(b.id) && ent.has(b.a) && ent.has(b.b)).slice(0, 300)
+      .map(b => ({ id: b.id, name: P.text(b.name).slice(0, 80), a: b.a, b: b.b, kardA: P.text(b.kardA).slice(0, 12), kardB: P.text(b.kardB).slice(0, 12), x: P.zahl(b.x), y: P.zahl(b.y) }));
+    const besitzer = new Set([...ent, ...m.beziehungen.map(b => b.id)]);
+    m.attribute = P.liste(d.attribute).filter(a => neu(a.id) && besitzer.has(a.an)).slice(0, 2000)
+      .map(a => ({ id: a.id, name: P.text(a.name).slice(0, 80), an: a.an, x: P.zahl(a.x), y: P.zahl(a.y), schluessel: !!a.schluessel }));
+    return m;
+  },
+  objekt(zid) {
+    if (!zid) return null;
+    const [art, id] = [zid[0], zid.slice(2)];
+    const liste = art === "e" ? this.m.entitaeten : art === "r" ? this.m.beziehungen : art === "a" ? this.m.attribute : [];
+    return liste.find(o => o.id === id) || null;
+  },
+  neueId(p) { const alle = [...this.m.entitaeten, ...this.m.beziehungen, ...this.m.attribute]; let n = 1; while (alle.some(x => x.id === p + n)) n++; return p + n; },
+  pruefeAuswahl() { if (this.auswahl && !this.objekt(this.auswahl)) this.auswahl = null; },
+  aendere(f) { this.verlauf.merke(); f(); this.aktualisiere(); },
+  speichere() { Kern.speicher.schreib(SPEICHER, this.m); },
+
+  zeichneNur() {
+    this.flaeche.inhalt(zeichne(this.m, { auswahl: this.auswahl, verbindeVon: this.flaeche.verbindeVon ? this.flaeche.verbindeVon.id : null, skala: this.flaeche.s }));
+    $("modus-hinweis").hidden = this.modus !== "verbinden" && !this.flaeche.verbindeVon;
+    $("modus-hinweis").textContent = this.flaeche.verbindeVon ? "Jetzt den zweiten Entitätstyp antippen" : "Beziehung: von Entitätstyp zu Entitätstyp ziehen oder nacheinander antippen";
+  },
+  aktualisiere() { this.zeichneNur(); this.zeigeEigenschaften(); this.zeigeSchema(); this.knoepfe(); this.speichere(); },
+  knoepfe() {
+    const o = this.objekt(this.auswahl);
+    $("btn-loeschen").disabled = !o;
+    $("btn-attribut").disabled = !o || this.auswahl.startsWith("a:");
+    $("btn-rueck").disabled = !this.verlauf.zurueck.length;
+    $("btn-vor").disabled = !this.verlauf.vor.length;
+    $("btn-verbinden").classList.toggle("aktiv", this.modus === "verbinden");
+  },
+  waehle(zid) { this.auswahl = zid; this.zeichneNur(); this.zeigeEigenschaften(); this.knoepfe(); },
+
+  /* ---------- Bearbeiten */
+  neueEntitaet(x, y) {
+    if (x === undefined) {
+      const mi = this.flaeche.mitte(); x = mi.x; y = mi.y;
+      while (this.m.entitaeten.some(e => Math.abs(e.x - x) < 140 && Math.abs(e.y - y) < 60)) { x += 180; }
+    }
+    let n = 1; while (this.m.entitaeten.some(e => e.name === "Entitaet" + n)) n++;
+    const e = { id: this.neueId("e"), name: "Entitaet" + n, x: Math.round(x), y: Math.round(y) };
+    this.aendere(() => { this.m.entitaeten.push(e); this.auswahl = "e:" + e.id; });
+    const f = $("eigenschaften").querySelector("input"); if (f) { f.focus(); f.select(); }
+  },
+  neuesAttribut(besitzerId, name = "", schluessel = false) {
+    const b = this.objekt(besitzerId); if (!b) return;
+    const vorhandene = this.m.attribute.filter(a => a.an === b.id);
+    const winkel = [-90, -50, -130, -15, -165, 25, 155, 60, 120, 90][vorhandene.length % 10] * Math.PI / 180;
+    const r = besitzerId.startsWith("e:") ? 105 : 95;
+    const a = { id: this.neueId("a"), name: name || "Attribut" + (vorhandene.length + 1), an: b.id,
+      x: Math.round(b.x + Math.cos(winkel) * r * 1.3), y: Math.round(b.y + Math.sin(winkel) * r * 0.85), schluessel: schluessel || (!vorhandene.length && besitzerId.startsWith("e:")) };
+    this.aendere(() => this.m.attribute.push(a));
+    const felder = $("eigenschaften").querySelectorAll(".attr-zeile input[type=text]");
+    if (felder.length) { felder[felder.length - 1].focus(); felder[felder.length - 1].select(); }
+  },
+  verbinde(von, nach) {
+    this.modus = "auswahl";                       // Verbinden gilt nur für einen Übergang
+    const A = this.objekt(von), B = this.objekt(nach);
+    if (!A || !B || !von.startsWith("e:") || !nach.startsWith("e:")) { Kern.meldung("Beziehungen verbinden zwei Entitätstypen."); return; }
+    const r = { id: this.neueId("r"), name: "Beziehung", a: A.id, b: B.id, kardA: "1", kardB: "n",
+      x: A === B ? A.x + 160 : Math.round((A.x + B.x) / 2), y: A === B ? A.y : Math.round((A.y + B.y) / 2) };
+    if (A !== B && this.m.entitaeten.some(e => e !== A && e !== B && Math.abs(e.x - r.x) < 110 && Math.abs(e.y - r.y) < 55)) {
+      const dx = B.x - A.x, dy = B.y - A.y, l = Math.hypot(dx, dy) || 1;     // senkrecht zur Verbindung ausweichen
+      r.x = Math.round(r.x - dy / l * 80); r.y = Math.round(r.y + dx / l * 80);
+    }
+    this.aendere(() => { this.m.beziehungen.push(r); this.auswahl = "r:" + r.id; });
+    const f = $("eigenschaften").querySelector("input"); if (f) { f.focus(); f.select(); }
+  },
+  loesche() {
+    const o = this.objekt(this.auswahl); if (!o) return;
+    const art = this.auswahl[0];
+    this.aendere(() => {
+      if (art === "a") this.m.attribute = this.m.attribute.filter(a => a !== o);
+      if (art === "r") { this.m.beziehungen = this.m.beziehungen.filter(r => r !== o); this.m.attribute = this.m.attribute.filter(a => a.an !== o.id); }
+      if (art === "e") {
+        const weg = new Set([o.id, ...this.m.beziehungen.filter(r => r.a === o.id || r.b === o.id).map(r => r.id)]);
+        this.m.entitaeten = this.m.entitaeten.filter(e => e !== o);
+        this.m.beziehungen = this.m.beziehungen.filter(r => !weg.has(r.id));
+        this.m.attribute = this.m.attribute.filter(a => !weg.has(a.an));
+      }
+      this.auswahl = null;
+    });
+  },
+
+  /* ---------- Eigenschaften */
+  feld(text, wert, setzen, hinweis = "", liste = null) {
+    const h = document.createElement("div"); h.className = "feld";
+    const id = "f" + Math.random().toString(36).slice(2, 8);
+    h.innerHTML = `<label for="${id}">${esc(text)}</label><input id="${id}" type="text" spellcheck="false" autocomplete="off"${liste ? ` list="${liste}"` : ""}>${hinweis ? `<small class="dezent">${hinweis}</small>` : ""}`;
+    const e = h.querySelector("input"); e.value = wert || "";
+    this.bindeEingabe(e, setzen);
+    return h;
+  },
+  bindeEingabe(e, setzen) {
+    let gemerkt = false;
+    e.addEventListener("focus", () => { gemerkt = false; });
+    e.addEventListener("input", () => { if (!gemerkt) { this.verlauf.merke(); gemerkt = true; } setzen(e.value); this.zeichneNur(); this.zeigeSchema(); this.knoepfe(); this.speichere(); });
+    e.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); e.blur(); } });
+  },
+  knopf(text, aktion, titel = "") { const b = document.createElement("button"); b.type = "button"; b.textContent = text; if (titel) b.title = titel; b.addEventListener("click", aktion); return b; },
+  attributListe(besitzerId) {
+    const b = this.objekt(besitzerId), box = document.createElement("div");
+    box.innerHTML = `<label class="feld-titel">Attribute <span class="dezent">(Haken = Schlüssel)</span></label>`;
+    this.m.attribute.filter(a => a.an === b.id).forEach(a => {
+      const z = document.createElement("div"); z.className = "attr-zeile";
+      z.innerHTML = `<input type="checkbox" title="Primärschlüssel" aria-label="Primärschlüssel" ${a.schluessel ? "checked" : ""}><input type="text" aria-label="Name des Attributs" spellcheck="false" autocomplete="off">`;
+      const [haken, eingabe] = z.querySelectorAll("input");
+      eingabe.value = a.name;
+      this.bindeEingabe(eingabe, v => { a.name = v; });
+      haken.addEventListener("change", () => this.aendere(() => { a.schluessel = haken.checked; }));
+      z.appendChild(this.knopf("×", () => this.aendere(() => { this.m.attribute = this.m.attribute.filter(x => x !== a); }), "Attribut löschen"));
+      box.appendChild(z);
+    });
+    box.appendChild(this.knopf("＋ Attribut", () => this.neuesAttribut(besitzerId)));
+    return box;
+  },
+  zeigeEigenschaften() {
+    const p = $("eigenschaften"); p.innerHTML = "";
+    const h = document.createElement("h2"); p.appendChild(h);
+    const o = this.objekt(this.auswahl), art = this.auswahl && this.auswahl[0];
+    const zeile = (...k) => { const z = document.createElement("div"); z.className = "zeile"; k.forEach(x => z.appendChild(x)); p.appendChild(z); };
+    if (o && art === "e") {
+      h.textContent = "Entitätstyp";
+      p.appendChild(this.feld("Name", o.name, v => { o.name = v; }));
+      p.appendChild(this.attributListe(this.auswahl));
+      zeile(this.knopf("Beziehung von hier …", () => { this.flaeche.setzeVerbindeVon({ id: "e:" + o.id }); this.knoepfe(); this.zeichneNur(); }), this.knopf("Löschen", () => this.loesche()));
+    } else if (o && art === "r") {
+      const n = id => (this.m.entitaeten.find(e => e.id === id) || {}).name;
+      h.textContent = "Beziehungstyp";
+      p.appendChild(this.feld("Name", o.name, v => { o.name = v; }));
+      const r = document.createElement("div"); r.className = "zwei-felder";
+      r.appendChild(this.feld(`Kardinalität bei ${n(o.a)}`, o.kardA, v => { o.kardA = v; }, "", "kard-liste"));
+      r.appendChild(this.feld(`Kardinalität bei ${n(o.b)}`, o.kardB, v => { o.kardB = v; }, "", "kard-liste"));
+      p.appendChild(r);
+      const t = document.createElement("p"); t.className = "dezent klein";
+      t.textContent = `Gelesen: Ein(e) ${n(o.a)} … ${o.kardB || "?"} ${n(o.b)} – ein(e) ${n(o.b)} … ${o.kardA || "?"} ${n(o.a)}.`;
+      p.appendChild(t);
+      p.appendChild(this.attributListe(this.auswahl));
+      zeile(this.knopf("Kardinalitäten tauschen", () => this.aendere(() => { [o.kardA, o.kardB] = [o.kardB, o.kardA]; })), this.knopf("Löschen", () => this.loesche()));
+    } else if (o && art === "a") {
+      h.textContent = "Attribut";
+      p.appendChild(this.feld("Name", o.name, v => { o.name = v; }));
+      const l = document.createElement("label"); l.className = "haken";
+      l.innerHTML = `<input type="checkbox" ${o.schluessel ? "checked" : ""}> Primärschlüssel (unterstrichen)`;
+      l.querySelector("input").addEventListener("change", ev => this.aendere(() => { o.schluessel = ev.target.checked; }));
+      p.appendChild(l);
+      zeile(this.knopf("Löschen", () => this.loesche()));
+    } else {
+      h.textContent = "ER-Diagramm";
+      p.appendChild(this.feld("Titel", this.m.titel, v => { this.m.titel = v; }));
+      const t = document.createElement("p"); t.className = "dezent klein";
+      t.innerHTML = "Doppelt auf die Fläche tippen: neuer Entitätstyp. Beziehung: Entitätstyp antippen und am blauen Pfeil zum anderen Entitätstyp ziehen – die Raute entsteht in der Mitte. " +
+        "Attribute über das Feld rechts oder <strong>＋ Attribut</strong> anlegen. Die Kardinalität steht jeweils beim Entitätstyp, zu dem sie gehört (Chen-Notation).";
+      p.appendChild(t);
+    }
+  },
+
+  /* ---------- Schema */
+  zeigeSchema() {
+    const s = Schema.erzeuge(this.m);
+    $("schema").innerHTML = s.tabellen.length ? Schema.html(s, this.m.fk) : '<span class="dezent">Noch keine Entitätstypen.</span>';
+    $("schema-warn").innerHTML = s.warn.map(w => `<li>${esc(w)}</li>`).join("");
+    $("fk-art").value = this.m.fk;
+    if ($("sql-bereich").open) $("sql-text").textContent = Schema.sql(s) || "-- Noch keine Tabellen";
+  },
+  async kopiereSchema() {
+    const s = Schema.erzeuge(this.m);
+    Kern.meldung(await Kern.kopiereFormatiert(`<div style="font-family:Arial,sans-serif">${Schema.html(s, this.m.fk).replace(/<div class="relation">/g, "<p>").replace(/<\/div>/g, "</p>")}</div>`, Schema.text(s, this.m.fk))
+      ? "Schema kopiert – in Word bleiben die Unterstreichungen erhalten." : "Kopieren war nicht möglich.");
+  },
+
+  /* ---------- Dateien */
+  exportBild() { return Kern.bildAus(zeichne(this.m, {})); },
+  neu() {
+    const los = () => this.aendere(() => { const fk = this.m.fk; this.m = leer(); this.m.fk = fk; this.auswahl = null; });
+    if (!this.m.entitaeten.length) return los();
+    Kern.dialog("Neues ER-Diagramm", "<p>Das aktuelle Diagramm wird geleert. Mit „Rückgängig“ holen Sie es zurück.</p>", [{ text: "Abbrechen" }, { text: "Leeren", primaer: true, aktion: los }]);
+  },
+  lade(d, meldung) {
+    if (!d || (d.format !== FORMAT && d.format !== ALT_FORMAT)) throw new Error("Format");
+    const neu = this.vervollstaendige(d);
+    zeichne(neu, {}); Schema.erzeuge(neu);            // Probezeichnung: Fehler hier ändern noch nichts
+    this.aendere(() => { this.m = neu; this.auswahl = null; });
+    requestAnimationFrame(() => this.flaeche.einpassen());
+    if (meldung) Kern.meldung(meldung);
+  },
+  async ladeAusLink() {
+    const t = location.hash.match(/^#e=(.+)$/); if (!t) return;
+    history.replaceState(null, "", location.pathname + location.search);
+    let daten;
+    try { daten = await Kern.dekodiere(t[1]); } catch (e) { Kern.meldung("Der Link enthält kein lesbares ER-Diagramm."); return; }
+    Kern.linkOeffnen(!this.m.entitaeten.length, () => {
+      try { this.lade(daten, "Geteiltes Diagramm geöffnet – „Rückgängig“ stellt Ihr vorheriges wieder her."); }
+      catch (e) { Kern.meldung("Der Link enthält kein lesbares ER-Diagramm."); }
+    });
+  },
+  async teile() {
+    const link = location.origin + location.pathname + "#e=" + await Kern.kodiere(this.m);
+    const ok = await Kern.kopiere(link);
+    Kern.dialog("Link teilen", `<p>${ok ? "Der Link ist kopiert." : "Kopieren Sie den Link:"} Wer ihn öffnet, sieht dieses Diagramm.</p><textarea readonly rows="4" class="link-feld">${esc(link)}</textarea>` +
+      `<p class="dezent klein">Das Diagramm steckt im Link selbst (nach dem #) und wird nie an den Server übertragen.</p>`, [{ text: "Schließen", primaer: true }]);
+  },
+
+  binde() {
+    $("btn-entitaet").addEventListener("click", () => this.neueEntitaet());
+    $("btn-attribut").addEventListener("click", () => { if (this.auswahl && !this.auswahl.startsWith("a:")) this.neuesAttribut(this.auswahl); });
+    $("btn-verbinden").addEventListener("click", () => { this.modus = this.modus === "verbinden" ? "auswahl" : "verbinden"; this.flaeche.setzeVerbindeVon(null); this.knoepfe(); this.zeichneNur(); });
+    $("btn-loeschen").addEventListener("click", () => this.loesche());
+    $("btn-rueck").addEventListener("click", () => this.verlauf.rueckgaengig());
+    $("btn-vor").addEventListener("click", () => this.verlauf.wiederholen());
+    $("btn-neu").addEventListener("click", () => this.neu());
+    $("btn-oeffnen").addEventListener("click", async () => {
+      const d = await Kern.oeffneDatei(".er,.json,application/json"); if (!d) return;
+      try { this.lade(JSON.parse(d.text), `„${d.name}“ geöffnet.`); } catch (e) { Kern.meldung("Diese Datei ist kein ER-Diagramm dieses Editors."); }
+    });
+    $("btn-speichern").addEventListener("click", () => Kern.speichereDatei(Kern.dateiname(this.m.titel || "er-diagramm", "er"), JSON.stringify(this.m, null, 1), "application/json"));
+    $("beispiele").addEventListener("change", ev => {
+      const b = BEISPIELE[ev.target.value]; ev.target.value = "";
+      if (b) this.lade(JSON.parse(JSON.stringify(Object.assign(leer(), b, { fk: this.m.fk }))), "Beispiel geladen – „Rückgängig“ stellt Ihr Diagramm wieder her.");
+    });
+    $("btn-svg").addEventListener("click", () => Kern.exportiereSVG(this.exportBild().svg, Kern.dateiname(this.m.titel || "er-diagramm", "svg")));
+    $("btn-png").addEventListener("click", async () => { const b = this.exportBild(); try { await Kern.exportierePNG(b.svg, b.breite, b.hoehe, Kern.dateiname(this.m.titel || "er-diagramm", "png")); } catch (e) { Kern.meldung("PNG-Export war nicht möglich – bitte SVG verwenden."); } });
+    $("btn-drucken").addEventListener("click", () => {
+      const s = Schema.erzeuge(this.m);
+      $("druck").innerHTML = this.exportBild().svg + `<div class="druck-schema">${Schema.html(s, this.m.fk)}</div>`; window.print();
+    });
+    $("btn-teilen").addEventListener("click", () => this.teile());
+    $("zoom-plus").addEventListener("click", () => this.flaeche.zoom(1.25));
+    $("zoom-minus").addEventListener("click", () => this.flaeche.zoom(0.8));
+    $("zoom-passend").addEventListener("click", () => this.flaeche.einpassen());
+    $("fk-art").addEventListener("change", ev => this.aendere(() => { this.m.fk = ev.target.value; }));
+    $("btn-schema").addEventListener("click", () => this.kopiereSchema());
+    $("sql-bereich").addEventListener("toggle", () => this.zeigeSchema());
+    $("btn-sql").addEventListener("click", async () => Kern.meldung(await Kern.kopiere($("sql-text").textContent) ? "SQL kopiert." : "Kopieren war nicht möglich."));
+    document.addEventListener("keydown", ev => {
+      const imFeld = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);
+      const strg = ev.ctrlKey || ev.metaKey;
+      if (imFeld || document.querySelector("dialog[open]")) return;
+      if (strg && ev.key.toLowerCase() === "z") { ev.preventDefault(); ev.shiftKey ? this.verlauf.wiederholen() : this.verlauf.rueckgaengig(); }
+      else if (strg && ev.key.toLowerCase() === "y") { ev.preventDefault(); this.verlauf.wiederholen(); }
+      else if (ev.key === "Delete" || ev.key === "Backspace") { if (this.auswahl) { ev.preventDefault(); this.loesche(); } }
+      else if (ev.key === "Escape") { this.modus = "auswahl"; this.flaeche.setzeVerbindeVon(null); this.waehle(null); }
+    });
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => App.init());
+</script>
+</body>
+</html>

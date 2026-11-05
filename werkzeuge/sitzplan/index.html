@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<!-- pwa --><script src="pwa.js?v=5fec326322" data-tool="sitzplan" data-name="Sitzplan" data-daten="ja" data-schluessel=""></script><!-- /pwa -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<meta name="robots" content="noindex">
+<title>Sitzplan</title>
+<style>
+:root{--auf-akzent:#fff;--hinter:#f3f5f8;--flaeche:#fff;--text:#1f2933;--dezent:#5f6b7a;--rand:#d6dae0;--rand-feld:#858f9b;--akzent:#1f5f99;--akzent-hell:#e8f0f8;--tisch:#f5ecd9;--tisch-rand:#b89b63}
+[data-design="dunkel"]{--auf-akzent:#0e131c;--hinter:#14181d;--flaeche:#1e242b;--text:#e6e9ed;--dezent:#9aa4b1;--rand:#343c46;--rand-feld:#7d8794;--akzent:#5aa0e6;--akzent-hell:#243447;--tisch:#3a3326;--tisch-rand:#8a7650}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--hinter);color:var(--text);line-height:1.5}
+header{background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf{max-width:1400px;margin:0 auto;padding:10px 20px;display:flex;gap:10px;align-items:center}
+.kopf h1{font-size:1.15rem;margin:0;flex:1}
+.kopf a{color:var(--akzent);text-decoration:none;font-size:.9rem}
+main{max-width:1400px;margin:16px auto;padding:0 20px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+section{background:var(--flaeche);border:1px solid var(--rand);border-radius:8px;padding:14px 18px}
+h2{font-size:1.05rem;margin:0 0 8px}
+button,select,input,textarea{font:inherit;color:var(--text)}
+button{padding:5px 11px;border:1px solid var(--rand-feld);background:var(--flaeche);border-radius:6px;cursor:pointer}
+button:hover{background:var(--akzent-hell)}
+button:disabled{opacity:.5;cursor:default}
+button.primaer{background:var(--akzent);border-color:var(--akzent);color:var(--auf-akzent)}
+select,input[type=text],textarea{padding:5px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche)}
+textarea{width:100%;resize:vertical}
+label{display:inline-flex;gap:6px;align-items:center;max-width:100%;flex-wrap:wrap}
+input,select,textarea{max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;margin:3px}
+input[type=range]{min-height:24px}
+a{color:var(--akzent)}
+.zeile{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}
+.trenner{width:1px;align-self:stretch;background:var(--rand);margin:0 6px}
+.dezent{color:var(--dezent)}.klein{font-size:.88rem}
+[hidden]{display:none!important}
+.arbeitsflaeche{display:grid;grid-template-columns:230px 1fr;gap:16px;align-items:start}
+@media (max-width:820px){.arbeitsflaeche{grid-template-columns:1fr}}
+#unplatziert{min-height:120px;border:2px dashed var(--rand);border-radius:8px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+.name-karte{padding:3px 10px;border-radius:14px;border:1px solid var(--akzent);background:var(--akzent-hell);cursor:grab;touch-action:none;user-select:none}
+.gewaehlt{outline:3px solid #e0a100;outline-offset:1px}
+button.name-karte,.platz button.name{font:inherit;color:inherit;line-height:inherit}
+button.name-karte{padding:3px 10px}
+.platz button.name{border:0;background:transparent;font-size:15px}
+.platz.frei:focus-visible,.griff:focus-visible,.name-karte:focus-visible,.platz .name:focus-visible{outline:3px solid var(--akzent);outline-offset:1px}
+.nur-vorlesen{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.konflikt-hinweis{background:#fdecea;border:1px solid #f1a9a0;color:#7a1f16;padding:6px 10px;border-radius:6px;font-size:.88rem;margin:8px 0}
+.raum-huelle{position:relative;width:100%;overflow:hidden;border:1px solid var(--rand);border-radius:8px;background:var(--flaeche)}
+.raum{position:absolute;left:0;top:0;width:1000px;height:680px;transform-origin:0 0;background-image:radial-gradient(var(--rand) 1px,transparent 1px);background-size:20px 20px}
+.tafel{position:absolute;left:300px;width:400px;height:22px;background:#2f5d45;color:#fff;text-align:center;font-size:14px;line-height:22px;border-radius:3px}
+.tisch{position:absolute;background:var(--tisch);border:2px solid var(--tisch-rand);border-radius:6px}
+.griff{height:18px;display:flex;justify-content:flex-end;background:var(--tisch-rand);cursor:move;touch-action:none;user-select:none}
+.griff button{padding:0 6px;border:none;border-radius:0;background:transparent;color:#fff;font-size:12px;line-height:18px}
+.griff button:hover{background:rgba(0,0,0,.2)}
+.platz{position:absolute;display:flex;align-items:center;justify-content:center;border:1px dashed var(--tisch-rand);font-size:15px;text-align:center;padding:2px;overflow:hidden}
+.platz.frei{color:var(--dezent);font-style:italic;font-size:13px;cursor:pointer}
+.platz .name{cursor:grab;touch-action:none;user-select:none;padding:2px 6px;border-radius:4px;word-break:break-word}
+.platz .name.konflikt{outline:2px solid #c0392b;background:#fdecea;color:#7a1f16}
+.pult-text{display:flex;align-items:center;justify-content:center;height:calc(100% - 18px);font-weight:600}
+.geist{position:fixed;pointer-events:none;transform:translate(-50%,-50%);padding:4px 12px;border-radius:14px;background:var(--akzent);color:var(--auf-akzent);z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+footer{max-width:1400px;margin:0 auto 24px;padding:0 20px;color:var(--dezent);font-size:.85rem;text-align:center}
+footer a{color:inherit}
+#meldung{position:fixed;right:16px;bottom:16px;background:#1f2933;color:#fff;padding:10px 14px;border-radius:6px;max-width:380px;z-index:60}
+#druck-titel{display:none}
+@media print{
+  @page{size:A4 landscape;margin:1cm}
+  :root,[data-design="dunkel"]{--hinter:#fff;--flaeche:#fff;--text:#000;--dezent:#555;--rand:#bbb;--akzent:#1f5f99;--akzent-hell:#eef3f9;--tisch:#faf5ea;--tisch-rand:#b89b63}
+  header,footer,#s-leer,#s-steuerung,#s-hinweis,.seitenleiste,#meldung,.griff button{display:none!important}
+  #druck-titel{display:block;font-size:14pt;font-weight:600;margin:0 0 6pt}
+  main{margin:0;padding:0}
+  section{border:none;padding:0}
+  .arbeitsflaeche{display:block}
+  .raum-huelle{border:none}
+  .raum{background-image:none}
+  .platz.frei{color:transparent}
+  .platz .name.konflikt{outline:none;background:none;color:#000}
+}
+</style>
+<!-- pwa -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181d" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sitzplan">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- /pwa -->
+</head>
+<body>
+<header>
+  <div class="kopf">
+    <h1>Sitzplan</h1>
+    <a id="ruecklink" href="../" hidden>← Übersicht</a>
+    <button type="button" id="btn-design">Dunkel</button>
+  </div>
+</header>
+
+<main>
+  <section id="s-leer" hidden>
+    <h2>Noch keine Klassenliste</h2>
+    <p>Listen – auch aus einem Moodle-Export – legen Sie am bequemsten im Tool „Zufall &amp; Gruppen“ an; sie erscheinen dann automatisch hier. Ein gesicherter Sitzplan lässt sich direkt laden:</p>
+    <div class="zeile"><button type="button" id="btn-laden-leer">Gesicherten Sitzplan laden</button></div>
+    <p>Oder schnell eine Liste eintragen:</p>
+    <div class="zeile"><label>Name der Liste <input type="text" id="l-name" placeholder="z. B. 6a"></label></div>
+    <textarea id="l-namen" rows="8" placeholder="Anna&#10;Ben&#10;…"></textarea>
+    <div class="zeile"><button type="button" class="primaer" id="l-speichern">Liste speichern</button></div>
+  </section>
+
+  <section id="s-steuerung">
+    <div class="zeile">
+      <label>Lerngruppe <select id="liste-wahl"></select></label>
+      <label>Plan <select id="plan-wahl"></select></label>
+      <button type="button" id="plan-neu">Neuer Plan</button>
+      <button type="button" id="plan-umbenennen">Umbenennen</button>
+      <button type="button" id="plan-loeschen">Löschen</button>
+      <span class="trenner"></span>
+      <button type="button" id="btn-sichern" title="Lerngruppe mit allen Plänen als Datei speichern">Sichern</button>
+      <button type="button" id="btn-laden" title="Gesicherte Datei wieder einlesen">Laden</button>
+      <label style="margin-left:auto"><input type="checkbox" id="lehrersicht"> Lehrersicht (Tafel unten)</label>
+    </div>
+    <div class="zeile">
+      <span class="dezent klein">Tisch hinzufügen:</span>
+      <button type="button" data-tisch="einzel">Einzeltisch</button>
+      <button type="button" data-tisch="zweier">Zweiertisch</button>
+      <button type="button" data-tisch="vierer">Vierertisch</button>
+      <button type="button" data-tisch="sechser">Sechsertisch</button>
+      <button type="button" data-tisch="pult">Pult</button>
+      <span class="dezent klein" style="margin-left:12px">Vorlage:</span>
+      <button type="button" id="vorlage-reihen">Reihen</button>
+      <button type="button" id="vorlage-gruppen">Gruppentische</button>
+    </div>
+    <div class="zeile">
+      <button type="button" class="primaer" id="btn-freie">Freie Plätze zufällig füllen</button>
+      <button type="button" id="btn-alle">Alle neu verteilen</button>
+      <button type="button" id="btn-leeren">Alle Plätze leeren</button>
+      <button type="button" id="btn-rueckgaengig" title="Strg+Z">Rückgängig</button>
+      <button type="button" id="btn-drucken">Drucken</button>
+    </div>
+    <input type="file" id="datei" accept=".json,application/json" hidden>
+  </section>
+
+  <div id="druck-titel"></div>
+
+  <section class="arbeitsflaeche">
+    <div class="seitenleiste">
+      <h2>Ohne Platz</h2>
+      <p class="dezent klein" id="zaehler"></p>
+      <div id="konflikt-hinweis" class="konflikt-hinweis" hidden></div>
+      <div id="unplatziert"></div>
+      <p class="dezent klein">Namen auf einen Platz ziehen – oder antippen und dann einen Platz antippen. Zum Entfernen zurück in dieses Feld ziehen. Esc hebt die Auswahl auf.</p>
+    </div>
+    <div id="raum-huelle" class="raum-huelle"><div id="raum" class="raum"></div></div>
+  </section>
+
+  <section id="s-hinweis" class="klein dezent">
+    Tische am farbigen Balken verschieben; ⟳ dreht, ✕ entfernt einen Tisch. Die Einträge „Wer soll nicht zusammenarbeiten?“ aus dem Tool Zufall &amp; Gruppen gelten für denselben Tisch und direkt benachbarte Plätze (daneben, davor, dahinter). Verstöße werden rot markiert.<br>
+    Mit der Tastatur: Namen und Plätze mit Tab ansteuern, die Eingabetaste wählt einen Namen und setzt ihn auf einen freien Platz (oder tauscht mit einem anderen Namen), Entf gibt einen Platz frei; Tische am Balken mit den Pfeiltasten verschieben (mit Umschalt in größeren Schritten).<br>
+    <strong>Speichern:</strong> Änderungen werden automatisch in diesem Browser gespeichert. „Sichern“ legt zusätzlich eine Datei an, die sich später oder auf einem anderen Gerät wieder laden lässt.<br>
+    <strong>Datenschutz:</strong> Namen und Sitzpläne werden nicht übertragen. Gesicherte Dateien enthalten Namen – bitte nur an einem geschützten Ort ablegen, z. B. in der eigenen Nextcloud.
+  </section>
+</main>
+
+<footer>
+  Sitzplan · Version 1.4.1 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+</footer>
+
+<div id="meldung" role="status" hidden></div>
+
+<script>
+"use strict";
+// SPDX-License-Identifier: Apache-2.0
+
+const SPEICHER = "browserwerkzeuge-klassenlisten";   // gemeinsam mit „Zufall & Gruppen“
+const DESIGN = "browserwerkzeuge-theme";
+const ANSICHT = "browserwerkzeuge-sitzplan-lehrersicht";
+const RAUM_B = 1000, RAUM_H = 680, RASTER = 10;
+const SITZ_B = 110, SITZ_H = 52, GRIFF = 18;
+const NACHBAR = 150;       // maximaler Abstand der Platzmitten, ab dem Plätze als benachbart gelten
+const MAX_SCHRITTE = 30;   // Tiefe von „Rückgängig“
+const TYPEN = {
+  einzel:  { drehbar: false, raster: () => [1, 1] },
+  zweier:  { drehbar: true,  raster: d => (d ? [1, 2] : [2, 1]) },
+  vierer:  { drehbar: false, raster: () => [2, 2] },
+  sechser: { drehbar: true,  raster: d => (d ? [2, 3] : [3, 2]) },
+  pult:    { drehbar: true,  raster: () => [0, 0] }
+};
+const $ = id => document.getElementById(id);
+// Der Browserspeicher kann gesperrt sein (z. B. Safari „Alle Cookies blockieren“) – dann ohne Speicher weiterarbeiten
+const speicher = {
+  lies(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  schreib(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+};
+
+// Liest den gemeinsamen Listenspeicher; jede Liste läuft durch pruefeListe (auch Einträge aus „Zufall & Gruppen“)
+const VERBOTENE_NAMEN = new Set(["__proto__", "constructor", "prototype"]);
+function liesSpeicher() {
+  try {
+    const d = JSON.parse(speicher.lies(SPEICHER));
+    if (d && d.listen && typeof d.listen === "object" && !Array.isArray(d.listen)) {
+      const listen = {};
+      for (const [name, l] of Object.entries(d.listen)) {
+        const n = String(name).trim();
+        let geprueft = null;
+        try { geprueft = pruefeListe(l); } catch (e) { /* einzelne unbrauchbare Liste überspringen */ }
+        if (n && !VERBOTENE_NAMEN.has(n) && geprueft) listen[n] = geprueft;
+      }
+      return { version: 1, ...d, aktiv: typeof d.aktiv === "string" ? d.aktiv : "", listen };
+    }
+  } catch (e) { /* beschädigte Daten ignorieren */ }
+  return { version: 1, listen: {}, aktiv: "" };
+}
+// Klassenlisten zurückschreiben. Ist der vorhandene Eintrag unlesbar (beschädigt oder aus einer
+// unbekannten Fassung), wird er vorher unter eigenem Namen aufbewahrt statt überschrieben.
+function schreibeSpeicher(d) {
+  const roh = speicher.lies(SPEICHER);
+  if (roh !== null) {
+    let lesbar = true;
+    try { const alt = JSON.parse(roh); lesbar = !!(alt && typeof alt.listen === "object"); } catch (e) { lesbar = false; }
+    if (!lesbar && !speicher.schreib(SPEICHER + "-unlesbar-" + Date.now(), roh)) return false;
+  }
+  return speicher.schreib(SPEICHER, JSON.stringify(d));
+}
+
+
+function zufallInt(max) {
+  const grenze = Math.floor(0x100000000 / max) * max;
+  const wert = new Uint32Array(1);
+  do { crypto.getRandomValues(wert); } while (wert[0] >= grenze);
+  return wert[0] % max;
+}
+
+function mische(liste) {
+  const a = liste.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = zufallInt(i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function klemme(wert, min, max) { return Math.min(Math.max(wert, min), max); }
+function neueId() { return "t" + Date.now().toString(36) + zufallInt(1e6).toString(36); }
+function platzAnzahl(typ) { const [s, r] = TYPEN[typ].raster(0); return s * r; }
+
+function masse(tisch) {
+  if (tisch.typ === "pult") return tisch.drehung ? { b: 70, h: 160, spalten: 0, reihen: 0 } : { b: 160, h: 70, spalten: 0, reihen: 0 };
+  const [spalten, reihen] = TYPEN[tisch.typ].raster(tisch.drehung);
+  return { b: spalten * SITZ_B, h: reihen * SITZ_H + GRIFF, spalten, reihen };
+}
+
+// Prüft eine Liste aus einer geladenen Datei und bringt sie in eine sichere Form (oder liefert null)
+function pruefeListe(l) {
+  if (!l || typeof l !== "object" || !Array.isArray(l.namen)) return null;
+  const namen = l.namen.filter(n => typeof n === "string" && n.trim());
+  const sitzplaene = (Array.isArray(l.sitzplaene) ? l.sitzplaene : [])
+    .filter(p => p && Array.isArray(p.tische))
+    .map(p => ({
+      name: String(p.name || "Plan"),
+      tische: p.tische.filter(t => t && Object.hasOwn(TYPEN, t.typ)).map(t => {
+        const tisch = { id: String(t.id || neueId()), typ: t.typ, drehung: t.drehung ? 1 : 0, x: 0, y: 0, plaetze: [] };
+        const { b, h } = masse(tisch);
+        tisch.x = klemme(Number(t.x) || 0, 0, RAUM_B - b);
+        tisch.y = klemme(Number(t.y) || 0, 0, RAUM_H - h);
+        tisch.plaetze = Array.from({ length: platzAnzahl(t.typ) }, (_, i) =>
+          (Array.isArray(t.plaetze) && typeof t.plaetze[i] === "string") ? t.plaetze[i] : null);
+        return tisch;
+      })
+    }));
+  return {
+    ...l,
+    namen,
+    nichtZusammen: typeof l.nichtZusammen === "string" ? l.nichtZusammen : "",
+    sitzplaene,
+    aktiverPlan: Number(l.aktiverPlan) || 0
+  };
+}
+
+// Mittelpunkte aller Plätze in Schülersicht-Koordinaten
+function platzMitten(plan) {
+  const mitten = [];
+  plan.tische.forEach((t, ti) => {
+    if (t.typ === "pult") return;
+    const { spalten } = masse(t);
+    t.plaetze.forEach((_, i) => {
+      const spalte = i % spalten, reihe = Math.floor(i / spalten);
+      mitten.push({ ti, i, x: t.x + (spalte + 0.5) * SITZ_B, y: t.y + GRIFF + (reihe + 0.5) * SITZ_H });
+    });
+  });
+  return mitten;
+}
+
+// Verbotene Paare, die am selben Tisch oder auf benachbarten Plätzen sitzen
+function konflikte(mitten, belegung, verbote) {
+  if (!verbote.length) return [];
+  const ort = new Map();
+  mitten.forEach(p => {
+    const name = belegung[p.ti] && belegung[p.ti][p.i];
+    if (name) ort.set(name, p);
+  });
+  return verbote.filter(([a, b]) => {
+    const pa = ort.get(a), pb = ort.get(b);
+    if (!pa || !pb) return false;
+    return pa.ti === pb.ti || Math.hypot(pa.x - pb.x, pa.y - pb.y) <= NACHBAR;
+  });
+}
+
+const App = {
+  daten: { version: 1, listen: {}, aktiv: "" },
+  aktiv: "",
+  auswahl: null,
+  skala: 1,
+  lehrersicht: false,
+  schritte: [],
+  meldungTimer: null,
+
+  init() {
+    this.lade();
+    this.lehrersicht = speicher.lies(ANSICHT) === "1";
+    $("lehrersicht").checked = this.lehrersicht;
+    this.initDesign();
+    this.binde();
+    this.bereinige();
+    this.renderAlles();
+  },
+
+  // ------------------------------------------------ Speicher
+
+  lade() {
+    this.daten = liesSpeicher();
+    if (!Object.hasOwn(this.daten.listen, this.aktiv)) {
+      this.aktiv = Object.hasOwn(this.daten.listen, this.daten.aktiv) ? this.daten.aktiv : (Object.keys(this.daten.listen)[0] || "");
+      this.schritte = [];
+    }
+  },
+
+  schreibe(d) {
+    if (!schreibeSpeicher(d)) this.meldung("Speichern im Browser ist nicht möglich.");
+    this.daten = d;
+  },
+
+  // Schreibt nur die Sitzpläne der aktuellen Liste in den frisch gelesenen Speicher.
+  speichere() {
+    const name = this.aktiv, meine = this.daten.listen[name];
+    if (!meine) return;
+    const d = liesSpeicher();
+    if (!d.listen[name]) {
+      this.meldung("Diese Liste wurde inzwischen in einem anderen Fenster gelöscht.");
+      this.daten = d;
+      this.aktiv = Object.keys(d.listen)[0] || "";
+      this.schritte = [];
+      this.renderAlles();
+      return;
+    }
+    d.listen[name] = { ...d.listen[name], sitzplaene: meine.sitzplaene, aktiverPlan: meine.aktiverPlan };
+    d.aktiv = name;
+    this.schreibe(d);
+  },
+
+  liste() { return this.daten.listen[this.aktiv] || null; },
+
+  plan() {
+    const liste = this.liste();
+    if (!liste) return null;
+    if (!Array.isArray(liste.sitzplaene) || !liste.sitzplaene.length) {
+      liste.sitzplaene = [{ name: "Standard", tische: [] }];
+      liste.aktiverPlan = 0;
+    }
+    if (!(liste.aktiverPlan >= 0 && liste.aktiverPlan < liste.sitzplaene.length)) liste.aktiverPlan = 0;
+    return liste.sitzplaene[liste.aktiverPlan];
+  },
+
+  // Entfernt Namen, die nicht (mehr) in der Liste stehen, und doppelte Belegungen
+  bereinige() {
+    const liste = this.liste();
+    if (!liste || !Array.isArray(liste.sitzplaene)) return;
+    const gueltig = new Set(liste.namen);
+    let geaendert = false;
+    liste.sitzplaene.forEach(plan => {
+      const gesehen = new Set();
+      plan.tische.forEach(t => {
+        t.plaetze = t.plaetze.map(n => {
+          if (n && (!gueltig.has(n) || gesehen.has(n))) { geaendert = true; return null; }
+          if (n) gesehen.add(n);
+          return n;
+        });
+      });
+    });
+    if (geaendert) this.speichere();
+  },
+
+  verbote() {
+    const liste = this.liste();
+    if (!liste) return [];
+    const nachKlein = new Map(liste.namen.map(n => [n.toLowerCase(), n]));
+    const verbote = [];
+    (liste.nichtZusammen || "").split(/\r?\n/).forEach(zeile => {
+      const namen = zeile.split(/[,;]/).map(s => nachKlein.get(s.trim().toLowerCase())).filter(Boolean);
+      for (let i = 0; i < namen.length; i++)
+        for (let j = i + 1; j < namen.length; j++) verbote.push([namen[i], namen[j]]);
+    });
+    return verbote;
+  },
+
+  // ------------------------------------------------ Sichern und Laden als Datei
+
+  sichere() {
+    const liste = this.liste();
+    if (!liste) return;
+    this.plan();
+    const heute = new Date();
+    const datum = `${heute.getFullYear()}-${String(heute.getMonth() + 1).padStart(2, "0")}-${String(heute.getDate()).padStart(2, "0")}`;
+    const inhalt = { art: "browserwerkzeuge-klassenlisten", version: 1, gesichert: datum, listen: { [this.aktiv]: liste } };
+    const dateiname = `Sitzplan_${this.aktiv}_${datum}.json`.replace(/[^A-Za-z0-9ÄÖÜäöüß_.-]+/g, "-");
+    const url = URL.createObjectURL(new Blob([JSON.stringify(inhalt, null, 2)], { type: "application/json" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = dateiname;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);   // großzügig: Safari/iPad beginnt den Download teils verzögert
+    this.meldung("Gesichert. Die Datei enthält Namen – bitte nur an einem geschützten Ort ablegen.");
+  },
+
+  // Liest Sicherungen aus dem Sitzplan und aus „Zufall & Gruppen“ (gleiches Format)
+  async importiere(datei) {
+    let daten;
+    try {
+      daten = JSON.parse(await datei.text());
+    } catch (e) {
+      this.meldung("Die Datei konnte nicht gelesen werden.");
+      return;
+    }
+    const listen = daten && daten.listen && typeof daten.listen === "object"
+      ? Object.entries(daten.listen).map(([n, l]) => [String(n).trim(), pruefeListe(l)]).filter(([n, l]) => n && !VERBOTENE_NAMEN.has(n) && l)
+      : [];
+    if (!listen.length) { this.meldung("Die Datei enthält keinen gültigen Sitzplan."); return; }
+
+    const d = liesSpeicher();
+    const vorhanden = listen.map(([n]) => n).filter(n => d.listen[n]);
+    if (vorhanden.length && !confirm(`Diese Lerngruppe(n) gibt es auf diesem Gerät schon: ${vorhanden.join(", ")}.\nDurch die gesicherte Fassung ersetzen? (Das lässt sich nicht rückgängig machen.)`)) return;
+    listen.forEach(([n, l]) => { d.listen[n] = l; });
+    d.aktiv = listen[0][0];
+    this.schreibe(d);
+    this.aktiv = listen[0][0];
+    this.schritte = [];
+    this.auswahl = null;
+    this.bereinige();
+    this.renderAlles();
+    this.meldung(listen.length === 1 ? `„${listen[0][0]}“ wurde geladen.` : `${listen.length} Lerngruppen wurden geladen.`);
+  },
+
+  // ------------------------------------------------ Rückgängig
+
+  schnappschuss() {
+    const liste = this.liste();
+    if (!liste) return null;
+    this.plan();
+    return JSON.stringify({ sitzplaene: liste.sitzplaene, aktiverPlan: liste.aktiverPlan });
+  },
+
+  legeAb(schnappschuss) {
+    if (!schnappschuss) return;
+    this.schritte.push(schnappschuss);
+    if (this.schritte.length > MAX_SCHRITTE) this.schritte.shift();
+    $("btn-rueckgaengig").disabled = false;
+  },
+
+  merke() { this.legeAb(this.schnappschuss()); },
+
+  rueckgaengig() {
+    const liste = this.liste();
+    const schnappschuss = this.schritte.pop();
+    $("btn-rueckgaengig").disabled = !this.schritte.length;
+    if (!liste || !schnappschuss) return;
+    const alt = JSON.parse(schnappschuss);
+    liste.sitzplaene = alt.sitzplaene;
+    liste.aktiverPlan = alt.aktiverPlan;
+    this.auswahl = null;
+    this.bereinige();
+    this.speichere();
+    this.renderAlles();
+  },
+
+  // ------------------------------------------------ Ereignisse
+
+  binde() {
+    $("liste-wahl").addEventListener("change", e => {
+      this.aktiv = e.target.value;
+      this.auswahl = null;
+      this.schritte = [];
+      const d = liesSpeicher();
+      d.aktiv = this.aktiv;
+      this.schreibe(d);
+      this.bereinige();
+      this.renderAlles();
+    });
+    $("plan-wahl").addEventListener("change", e => {
+      this.merke();
+      this.liste().aktiverPlan = Number(e.target.value);
+      this.auswahl = null;
+      this.speichere();
+      this.renderAlles();
+    });
+    $("plan-neu").addEventListener("click", () => this.neuerPlan());
+    $("plan-umbenennen").addEventListener("click", () => this.planUmbenennen());
+    $("plan-loeschen").addEventListener("click", () => this.planLoeschen());
+    $("btn-sichern").addEventListener("click", () => this.sichere());
+    $("btn-laden").addEventListener("click", () => $("datei").click());
+    $("btn-laden-leer").addEventListener("click", () => $("datei").click());
+    $("datei").addEventListener("change", e => {
+      const datei = e.target.files[0];
+      e.target.value = "";
+      if (datei) this.importiere(datei);
+    });
+    $("lehrersicht").addEventListener("change", e => {
+      this.lehrersicht = e.target.checked;
+      speicher.schreib(ANSICHT, this.lehrersicht ? "1" : "0");
+      this.renderRaum();
+      this.renderDruckTitel();
+    });
+    document.querySelectorAll("[data-tisch]").forEach(b =>
+      b.addEventListener("click", () => this.neuerTisch(b.dataset.tisch)));
+    $("vorlage-reihen").addEventListener("click", () => this.vorlage("reihen"));
+    $("vorlage-gruppen").addEventListener("click", () => this.vorlage("gruppen"));
+    $("btn-freie").addEventListener("click", () => this.verteilen(false));
+    $("btn-alle").addEventListener("click", () => this.verteilen(true));
+    $("btn-leeren").addEventListener("click", () => this.leeren());
+    $("btn-rueckgaengig").addEventListener("click", () => this.rueckgaengig());
+    $("btn-drucken").addEventListener("click", () => window.print());
+    $("l-speichern").addEventListener("click", () => this.schnellListe());
+
+    $("unplatziert").addEventListener("click", e => {
+      if (!e.target.closest(".name-karte") && this.auswahl && this.auswahl.art === "platz") this.entferne(this.auswahl);
+    });
+    document.addEventListener("keydown", e => {
+      const imFeld = ["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName);
+      if (e.key === "Escape" && this.auswahl) {
+        this.auswahl = null;
+        this.renderRaum();
+        this.renderUnplatziert();
+      } else if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === "z" && !imFeld) {
+        e.preventDefault();
+        this.rueckgaengig();
+      }
+    });
+
+    window.addEventListener("resize", () => this.passeSkalaAn());
+    window.addEventListener("beforeprint", () => { this.renderDruckTitel(); this.passeSkalaAn(1); });
+    window.addEventListener("afterprint", () => this.passeSkalaAn());
+    window.addEventListener("storage", e => {
+      if (e.key !== SPEICHER) return;
+      this.lade();
+      this.bereinige();
+      this.renderAlles();
+    });
+
+    $("btn-design").addEventListener("click", () => {
+      const neu = document.documentElement.dataset.design === "dunkel" ? "hell" : "dunkel";
+      this.setzeDesign(neu);
+      speicher.schreib(DESIGN, neu === "dunkel" ? "dark" : "light");
+    });
+  },
+
+  initDesign() {
+    const gespeichert = speicher.lies(DESIGN);
+    const dunkel = gespeichert ? gespeichert === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    this.setzeDesign(dunkel ? "dunkel" : "hell");
+  },
+
+  setzeDesign(design) {
+    document.documentElement.dataset.design = design;
+    $("btn-design").textContent = design === "dunkel" ? "Hell" : "Dunkel";
+  },
+
+  meldung(text) {
+    const m = $("meldung");
+    m.textContent = text;
+    m.hidden = false;
+    clearTimeout(this.meldungTimer);
+    this.meldungTimer = setTimeout(() => { m.hidden = true; }, 5000);
+  },
+
+  // ------------------------------------------------ Darstellung
+
+  renderAlles() {
+    const hatListen = Object.keys(this.daten.listen).length > 0;
+    $("s-leer").hidden = hatListen;
+    $("s-steuerung").hidden = !hatListen;
+    document.querySelector(".arbeitsflaeche").hidden = !hatListen;
+    $("s-hinweis").hidden = !hatListen;
+    $("btn-rueckgaengig").disabled = !this.schritte.length;
+    if (!hatListen) return;
+    this.renderAuswahllisten();
+    this.passeSkalaAn();
+    this.renderRaum();
+    this.renderUnplatziert();
+    this.renderDruckTitel();
+  },
+
+  renderAuswahllisten() {
+    const listenWahl = $("liste-wahl");
+    listenWahl.innerHTML = "";
+    Object.keys(this.daten.listen).sort((a, b) => a.localeCompare(b, "de", { numeric: true }))
+      .forEach(n => listenWahl.add(new Option(n, n)));
+    listenWahl.value = this.aktiv;
+
+    const liste = this.liste();
+    this.plan();
+    const planWahl = $("plan-wahl");
+    planWahl.innerHTML = "";
+    liste.sitzplaene.forEach((p, i) => planWahl.add(new Option(p.name, String(i))));
+    planWahl.value = String(liste.aktiverPlan);
+    $("plan-loeschen").disabled = liste.sitzplaene.length < 2;
+  },
+
+  renderDruckTitel() {
+    const plan = this.plan();
+    if (!plan) return;
+    $("druck-titel").textContent = `Sitzplan ${this.aktiv} – ${plan.name}${this.lehrersicht ? " (Lehrersicht)" : ""} · Stand: ${new Date().toLocaleDateString("de-DE")}`;
+  },
+
+  passeSkalaAn(fest) {
+    const huelle = $("raum-huelle");
+    this.skala = fest || Math.min(1.6, Math.max(0.3, huelle.clientWidth / RAUM_B));
+    $("raum").style.transform = `scale(${this.skala})`;
+    huelle.style.height = Math.round(RAUM_H * this.skala) + "px";
+  },
+
+  // Gespeichert wird immer in Schülersicht (Tafel oben); die Lehrersicht spiegelt nur die Anzeige.
+  zuAnsicht(x, y, b, h) {
+    return this.lehrersicht ? { x: RAUM_B - x - b, y: RAUM_H - y - h } : { x, y };
+  },
+
+  // Name → Liste der Personen, mit denen er entgegen „nicht zusammen“ benachbart sitzt
+  konfliktKarte() {
+    const plan = this.plan();
+    const karte = new Map();
+    if (!plan) return karte;
+    konflikte(platzMitten(plan), plan.tische.map(t => t.plaetze), this.verbote()).forEach(([a, b]) => {
+      if (!karte.has(a)) karte.set(a, []);
+      if (!karte.has(b)) karte.set(b, []);
+      karte.get(a).push(b);
+      karte.get(b).push(a);
+    });
+    return karte;
+  },
+
+  // Kurze Ansage für Screenreader (unsichtbar)
+  ansage(text) {
+    let a = $("ansage");
+    if (!a) { a = document.createElement("div"); a.id = "ansage"; a.className = "nur-vorlesen"; a.setAttribute("aria-live", "polite"); document.body.appendChild(a); }
+    a.textContent = "";
+    setTimeout(() => { a.textContent = text; }, 30);
+  },
+  // Beim Neuzeichnen bleibt der Tastaturfokus auf „demselben“ Ding (Name, Platz oder Tisch)
+  fokusVorher() {
+    const a = document.activeElement;
+    return a && a.dataset && a.dataset.fokus && a.closest("#raum, #unplatziert") ? a.dataset.fokus : null;
+  },
+  fokusNachher(schluessel) {
+    if (!schluessel) return;
+    const el = document.querySelector(`[data-fokus="${CSS.escape(schluessel)}"]`) || document.querySelector(`[data-fokus2="${CSS.escape(schluessel)}"]`);
+    if (el) el.focus({ preventScroll: false });
+  },
+  tischNummer(t) { return this.plan().tische.filter(x => x.typ !== "pult").indexOf(t) + 1; },
+  platzText(t, i) { return t.typ === "pult" ? "Pult" : `Tisch ${this.tischNummer(t)}, Platz ${i + 1}`; },
+
+  renderRaum() {
+    const raum = $("raum"), fokus = this.fokusVorher();
+    raum.innerHTML = "";
+    const tafel = document.createElement("div");
+    tafel.className = "tafel";
+    tafel.textContent = "Tafel";
+    tafel.style.top = this.lehrersicht ? (RAUM_H - 30) + "px" : "8px";
+    raum.appendChild(tafel);
+    const plan = this.plan();
+    if (!plan) return;
+    const karte = this.konfliktKarte();
+    plan.tische.forEach(t => raum.appendChild(this.baueTisch(t, karte)));
+    this.fokusNachher(fokus);
+  },
+
+  baueTisch(t, karte) {
+    const { b, h, spalten, reihen } = masse(t);
+    const pos = this.zuAnsicht(t.x, t.y, b, h);
+    const el = document.createElement("div");
+    el.className = "tisch";
+    Object.assign(el.style, { left: pos.x + "px", top: pos.y + "px", width: b + "px", height: h + "px" });
+
+    const griff = document.createElement("div");
+    griff.className = "griff";
+    // Tastatur: Balken fokussieren, mit den Pfeiltasten verschieben (mit Umschalt in größeren Schritten)
+    const tischName = t.typ === "pult" ? "Pult" : `Tisch ${this.tischNummer(t)}`;
+    griff.tabIndex = 0;
+    griff.dataset.fokus = "tisch:" + t.id;
+    griff.setAttribute("role", "button");
+    griff.setAttribute("aria-label", `${tischName} verschieben – Pfeiltasten, mit Umschalt größere Schritte`);
+    griff.addEventListener("keydown", e => this.tischTaste(e, t));
+    if (TYPEN[t.typ].drehbar) {
+      const drehen = document.createElement("button");
+      drehen.type = "button";
+      drehen.title = "Drehen";
+      drehen.setAttribute("aria-label", tischName + " drehen");
+      drehen.textContent = "⟳";
+      drehen.addEventListener("click", () => this.drehe(t));
+      griff.appendChild(drehen);
+    }
+    const weg = document.createElement("button");
+    weg.type = "button";
+    weg.title = "Tisch entfernen";
+    weg.setAttribute("aria-label", tischName + " entfernen");
+    weg.textContent = "✕";
+    weg.addEventListener("click", () => this.entferneTisch(t));
+    griff.appendChild(weg);
+    griff.addEventListener("pointerdown", e => this.starteTischZiehen(e, t, el));
+    el.appendChild(griff);
+
+    if (t.typ === "pult") {
+      const text = document.createElement("div");
+      text.className = "pult-text";
+      text.textContent = "Pult";
+      el.appendChild(text);
+      return el;
+    }
+
+    t.plaetze.forEach((name, i) => {
+      let spalte = i % spalten, reihe = Math.floor(i / spalten);
+      if (this.lehrersicht) { spalte = spalten - 1 - spalte; reihe = reihen - 1 - reihe; }
+      const platz = document.createElement("div");
+      platz.className = "platz";
+      platz.dataset.tisch = t.id;
+      platz.dataset.index = String(i);
+      Object.assign(platz.style, {
+        left: spalte * SITZ_B + "px", top: GRIFF + reihe * SITZ_H + "px",
+        width: SITZ_B + "px", height: SITZ_H + "px"
+      });
+      if (name) {
+        const schild = document.createElement("button");
+        schild.type = "button";
+        schild.className = "name";
+        const gewaehlt = !!(this.auswahl && this.auswahl.name === name);
+        if (gewaehlt) schild.classList.add("gewaehlt");
+        schild.setAttribute("aria-pressed", gewaehlt ? "true" : "false");
+        let hinweis = "";
+        if (karte.has(name)) {
+          schild.classList.add("konflikt");
+          schild.title = `Sollte nicht neben ${karte.get(name).join(", ")} sitzen`;
+          hinweis = ", " + schild.title;
+        }
+        schild.textContent = name;
+        schild.setAttribute("aria-label", `${name}, ${this.platzText(t, i)}${hinweis}`);
+        schild.dataset.fokus = "name:" + name;
+        schild.dataset.fokus2 = `platz:${t.id}:${i}`;
+        const quelle = { art: "platz", tischId: t.id, index: i, name };
+        schild.addEventListener("pointerdown", e => this.starteNamenZiehen(e, quelle));
+        schild.addEventListener("click", e => { if (e.detail === 0) this.waehleAus(quelle); });   // Tastatur (Maus: siehe pointerdown)
+        schild.addEventListener("keydown", e => {
+          if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); this.entferne(quelle); this.ansage(`${name} hat jetzt keinen Platz.`); }
+        });
+        platz.appendChild(schild);
+      } else {
+        platz.classList.add("frei");
+        platz.textContent = "frei";
+        platz.tabIndex = 0;
+        platz.setAttribute("role", "button");
+        platz.setAttribute("aria-label", `${this.platzText(t, i)}, frei`);
+        platz.dataset.fokus = `platz:${t.id}:${i}`;
+        const setzen = () => {
+          if (!this.auswahl) { this.ansage("Erst einen Namen wählen, dann den Platz."); return; }
+          const name = this.auswahl.name;
+          this.setze(this.auswahl, t.id, i);
+          this.ansage(`${name} sitzt jetzt an ${this.platzText(t, i)}.`);
+        };
+        platz.addEventListener("click", setzen);
+        platz.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setzen(); } });
+      }
+      el.appendChild(platz);
+    });
+    return el;
+  },
+
+  renderUnplatziert() {
+    const ziel = $("unplatziert"), fokus = this.fokusVorher();
+    ziel.innerHTML = "";
+    const liste = this.liste(), plan = this.plan();
+    if (!liste || !plan) return;
+    const gesetzt = new Set(plan.tische.flatMap(t => t.plaetze).filter(Boolean));
+    const offen = liste.namen.filter(n => !gesetzt.has(n));
+    offen.forEach(n => {
+      const karte = document.createElement("button");
+      karte.type = "button";
+      const gewaehlt = !!(this.auswahl && this.auswahl.name === n);
+      karte.className = "name-karte" + (gewaehlt ? " gewaehlt" : "");
+      karte.setAttribute("aria-pressed", gewaehlt ? "true" : "false");
+      karte.setAttribute("aria-label", `${n}, ohne Platz`);
+      karte.textContent = n;
+      karte.dataset.fokus = "name:" + n;
+      karte.addEventListener("pointerdown", e => this.starteNamenZiehen(e, { art: "liste", name: n }));
+      karte.addEventListener("click", e => { if (e.detail === 0) this.waehleAus({ art: "liste", name: n }); });   // Tastatur
+      ziel.appendChild(karte);
+    });
+    this.fokusNachher(fokus);
+    const frei = plan.tische.reduce((s, t) => s + t.plaetze.filter(p => !p).length, 0);
+    $("zaehler").textContent = `${offen.length} ohne Platz · ${frei} freie Plätze`;
+
+    const anzahl = konflikte(platzMitten(plan), plan.tische.map(t => t.plaetze), this.verbote()).length;
+    $("konflikt-hinweis").hidden = !anzahl;
+    $("konflikt-hinweis").textContent = `${anzahl} Konflikt${anzahl === 1 ? "" : "e"} mit „nicht zusammen“ – rot markiert.`;
+  },
+
+  // ------------------------------------------------ Ziehen und Setzen
+
+  starteTischZiehen(e, t, el) {
+    if (e.target.closest("button") || (e.button !== undefined && e.button !== 0)) return;
+    e.preventDefault();
+    const vorher = this.schnappschuss();
+    const start = { x: e.clientX, y: e.clientY, tx: t.x, ty: t.y };
+    const { b, h } = masse(t);
+    const richtung = this.lehrersicht ? -1 : 1;
+    const bewegen = ev => {
+      const dx = (ev.clientX - start.x) / this.skala * richtung;
+      const dy = (ev.clientY - start.y) / this.skala * richtung;
+      t.x = klemme(Math.round((start.tx + dx) / RASTER) * RASTER, 0, RAUM_B - b);
+      t.y = klemme(Math.round((start.ty + dy) / RASTER) * RASTER, 0, RAUM_H - h);
+      const pos = this.zuAnsicht(t.x, t.y, b, h);
+      el.style.left = pos.x + "px";
+      el.style.top = pos.y + "px";
+    };
+    const ende = () => {
+      window.removeEventListener("pointermove", bewegen);
+      window.removeEventListener("pointerup", ende);
+      window.removeEventListener("pointercancel", ende);
+      if (t.x === start.tx && t.y === start.ty) return;
+      this.legeAb(vorher);
+      this.speichere();
+      this.renderRaum();          // Konfliktmarkierungen aktualisieren
+      this.renderUnplatziert();
+    };
+    window.addEventListener("pointermove", bewegen);
+    window.addEventListener("pointerup", ende);
+    window.addEventListener("pointercancel", ende);
+  },
+
+  tischTaste(e, t) {
+    const PFEIL = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+    if (!PFEIL[e.key]) return;
+    e.preventDefault();
+    const { b, h } = masse(t), schritt = RASTER * (e.shiftKey ? 5 : 1), richtung = this.lehrersicht ? -1 : 1;
+    const x = klemme(t.x + PFEIL[e.key][0] * schritt * richtung, 0, RAUM_B - b), y = klemme(t.y + PFEIL[e.key][1] * schritt * richtung, 0, RAUM_H - h);
+    if (x === t.x && y === t.y) { this.ansage("Rand des Raums erreicht."); return; }
+    this.merke();
+    t.x = x; t.y = y;
+    this.speichere();
+    this.renderRaum();
+    this.renderUnplatziert();
+  },
+
+  // Ziehen mit Maus, Stift oder Finger; ohne Bewegung gilt es als Antippen (Auswahl)
+  starteNamenZiehen(e, quelle) {
+    if (e.button !== undefined && e.button !== 0) return;
+    e.preventDefault();
+    const start = { x: e.clientX, y: e.clientY };
+    let geist = null;
+    const bewegen = ev => {
+      if (!geist && Math.hypot(ev.clientX - start.x, ev.clientY - start.y) > 6) {
+        geist = document.createElement("div");
+        geist.className = "geist";
+        geist.textContent = quelle.name;
+        document.body.appendChild(geist);
+      }
+      if (geist) { geist.style.left = ev.clientX + "px"; geist.style.top = ev.clientY + "px"; }
+    };
+    const ende = ev => {
+      window.removeEventListener("pointermove", bewegen);
+      window.removeEventListener("pointerup", ende);
+      window.removeEventListener("pointercancel", ende);
+      if (!geist) {
+        if (ev.type === "pointerup") this.waehleAus(quelle);
+        return;
+      }
+      geist.remove();
+      if (ev.type !== "pointerup") return;
+      const ziel = document.elementFromPoint(ev.clientX, ev.clientY);
+      const platz = ziel && ziel.closest(".platz");
+      if (platz) this.setze(quelle, platz.dataset.tisch, Number(platz.dataset.index));
+      else if (ziel && ziel.closest("#unplatziert") && quelle.art === "platz") this.entferne(quelle);
+    };
+    window.addEventListener("pointermove", bewegen);
+    window.addEventListener("pointerup", ende);
+    window.addEventListener("pointercancel", ende);
+  },
+
+  waehleAus(quelle) {
+    const bisher = this.auswahl;
+    if (bisher && bisher.name === quelle.name) {
+      this.auswahl = null;
+      this.ansage("Auswahl aufgehoben.");
+    } else if (bisher && quelle.art === "platz") {
+      this.setze(bisher, quelle.tischId, quelle.index);   // tauschen bzw. einsetzen
+      this.ansage(`${bisher.name} und ${quelle.name} haben die Plätze getauscht.`);
+      return;
+    } else {
+      this.auswahl = quelle;
+      this.ansage(`${quelle.name} gewählt. Jetzt einen freien Platz oder einen anderen Namen zum Tauschen wählen, Entfernen gibt den Platz frei, Escape bricht ab.`);
+    }
+    this.renderRaum();
+    this.renderUnplatziert();
+  },
+
+  setze(quelle, tischId, index) {
+    const plan = this.plan();
+    const ziel = plan.tische.find(t => t.id === tischId);
+    if (!ziel || index >= ziel.plaetze.length) return;
+    const herkunft = quelle.art === "platz" ? plan.tische.find(t => t.id === quelle.tischId) : null;
+    if (quelle.art === "platz" && (!herkunft || (herkunft === ziel && quelle.index === index))) {
+      this.auswahl = null;
+      this.renderRaum();
+      this.renderUnplatziert();
+      return;
+    }
+    this.merke();
+    const bisher = ziel.plaetze[index];
+    if (herkunft) {
+      herkunft.plaetze[quelle.index] = bisher;   // Tausch; bei freiem Ziel wird der Herkunftsplatz frei
+    } else {
+      plan.tische.forEach(t => { t.plaetze = t.plaetze.map(n => (n === quelle.name ? null : n)); });
+    }
+    ziel.plaetze[index] = quelle.name;
+    this.auswahl = null;
+    this.speichere();
+    this.renderRaum();
+    this.renderUnplatziert();
+  },
+
+  entferne(quelle) {
+    const t = this.plan().tische.find(x => x.id === quelle.tischId);
+    if (!t) return;
+    this.merke();
+    t.plaetze[quelle.index] = null;
+    this.auswahl = null;
+    this.speichere();
+    this.renderRaum();
+    this.renderUnplatziert();
+  },
+
+  // ------------------------------------------------ Tische
+
+  freiePosition(plan, b, h) {
+    const belegt = plan.tische.map(t => ({ ...masse(t), x: t.x, y: t.y }));
+    for (let y = 40; y + h <= RAUM_H; y += 20) {
+      for (let x = 20; x + b <= RAUM_B; x += 20) {
+        const frei = belegt.every(r => x + b + 10 <= r.x || r.x + r.b + 10 <= x || y + h + 10 <= r.y || r.y + r.h + 10 <= y);
+        if (frei) return { x, y };
+      }
+    }
+    return { x: 20, y: 40 };
+  },
+
+  neuerTisch(typ) {
+    const plan = this.plan();
+    if (!plan) return;
+    this.merke();
+    const t = { id: neueId(), typ, drehung: 0, x: 0, y: 0, plaetze: Array(platzAnzahl(typ)).fill(null) };
+    const { b, h } = masse(t);
+    Object.assign(t, this.freiePosition(plan, b, h));
+    plan.tische.push(t);
+    this.speichere();
+    this.renderRaum();
+    this.renderUnplatziert();
+  },
+
+  drehe(t) {
+    this.merke();
+    t.drehung = t.drehung ? 0 : 1;
+    const { b, h } = masse(t);
+    t.x = klemme(t.x, 0, RAUM_B - b);
+    t.y = klemme(t.y, 0, RAUM_H - h);
+    this.speichere();
+    this.renderRaum();
+    this.renderUnplatziert();
+  },
+
+  entferneTisch(t) {
+    if (t.plaetze.some(Boolean) && !confirm("Tisch entfernen? Die Schülerinnen und Schüler kommen zurück in die Liste „Ohne Platz“.")) return;
+    this.merke();
+    const plan = this.plan();
+    plan.tische = plan.tische.filter(x => x.id !== t.id);
+    this.auswahl = null;
+    this.speichere();
+    this.renderRaum();
+    this.renderUnplatziert();
+  },
+
+  vorlage(art) {
+    const liste = this.liste(), plan = this.plan();
+    if (!plan) return;
+    if (plan.tische.length && !confirm("Die Tischanordnung dieses Plans wird ersetzt. Fortfahren? (Rückgängig ist möglich.)")) return;
+    this.merke();
+    const typ = art === "reihen" ? "zweier" : "vierer";
+    const proTisch = platzAnzahl(typ);
+    const anzahl = Math.max(1, Math.ceil(liste.namen.length / proTisch));
+    const { b, h } = masse({ typ, drehung: 0 });
+    const abstandX = art === "reihen" ? 30 : 70;
+    const abstandY = art === "reihen" ? 30 : 50;
+    const startY = 130;
+    let proReihe = 3, passt = false;
+    for (let p = 3; p <= 5; p++) {
+      if (p * b + (p - 1) * abstandX > RAUM_B - 20) break;
+      proReihe = p;
+      if (startY + Math.ceil(anzahl / p) * (h + abstandY) <= RAUM_H) { passt = true; break; }
+    }
+    const breite = proReihe * b + (proReihe - 1) * abstandX;
+    const startX = Math.round((RAUM_B - breite) / 2 / RASTER) * RASTER;
+    plan.tische = [{ id: neueId(), typ: "pult", drehung: 0, x: RAUM_B - 190, y: 45, plaetze: [] }];
+    for (let i = 0; i < anzahl; i++) {
+      const spalte = i % proReihe, reihe = Math.floor(i / proReihe);
+      plan.tische.push({
+        id: neueId(), typ, drehung: 0,
+        x: startX + spalte * (b + abstandX),
+        y: klemme(startY + reihe * (h + abstandY), 0, RAUM_H - h),
+        plaetze: Array(proTisch).fill(null)
+      });
+    }
+    if (!passt) this.meldung("Der Raum ist knapp – einige Tische überlappen. Bitte von Hand nachrücken.");
+    this.auswahl = null;
+    this.speichere();
+    this.renderRaum();
+    this.renderUnplatziert();
+  },
+
+  // ------------------------------------------------ Verteilen
+
+  verteilen(alle) {
+    const liste = this.liste(), plan = this.plan();
+    if (!plan) return;
+    const belegt = plan.tische.some(t => t.plaetze.some(Boolean));
+    if (alle && belegt && !confirm("Alle Plätze neu verteilen? (Rückgängig ist möglich.)")) return;
+
+    const vorher = this.schnappschuss();
+    const basis = plan.tische.map(t => (alle ? t.plaetze.map(() => null) : t.plaetze.slice()));
+    const freiePlaetze = [];
+    basis.forEach((plaetze, ti) => plaetze.forEach((n, i) => { if (!n) freiePlaetze.push([ti, i]); }));
+    const gesetzt = new Set(basis.flat().filter(Boolean));
+    const offen = liste.namen.filter(n => !gesetzt.has(n));
+    if (!offen.length) { this.meldung("Alle haben bereits einen Platz."); return; }
+    if (!freiePlaetze.length) { this.meldung("Es gibt keine freien Plätze – bitte Tische hinzufügen."); return; }
+
+    const verbote = this.verbote();
+    const mitten = platzMitten(plan);
+    let beste = null, besteFehler = Infinity;
+    for (let versuch = 0; versuch < 500 && besteFehler > 0; versuch++) {
+      const belegung = basis.map(p => p.slice());
+      mische(offen).slice(0, freiePlaetze.length).forEach((n, k) => {
+        const [ti, i] = freiePlaetze[k];
+        belegung[ti][i] = n;
+      });
+      const fehler = konflikte(mitten, belegung, verbote).length;
+      if (fehler < besteFehler) { beste = belegung; besteFehler = fehler; }
+    }
+    this.legeAb(vorher);
+    plan.tische.forEach((t, ti) => { t.plaetze = beste[ti]; });
+    this.auswahl = null;
+    this.speichere();
+    this.renderRaum();
+    this.renderUnplatziert();
+
+    const hinweise = [];
+    if (offen.length > freiePlaetze.length) hinweise.push(`${offen.length - freiePlaetze.length} Person(en) haben keinen Platz – es fehlen Tische.`);
+    if (besteFehler > 0) hinweise.push(`Die Wünsche „nicht zusammen“ ließen sich nicht ganz erfüllen (${besteFehler} Konflikt${besteFehler > 1 ? "e" : ""}, rot markiert).`);
+    this.meldung(hinweise.length ? hinweise.join(" ") : "Plätze wurden zufällig verteilt.");
+  },
+
+  leeren() {
+    const plan = this.plan();
+    if (!plan || !confirm("Alle Plätze dieses Plans leeren? Die Tische bleiben stehen.")) return;
+    this.merke();
+    plan.tische.forEach(t => { t.plaetze = t.plaetze.map(() => null); });
+    this.auswahl = null;
+    this.speichere();
+    this.renderRaum();
+    this.renderUnplatziert();
+  },
+
+  // ------------------------------------------------ Pläne und Listen
+
+  neuerPlan() {
+    const liste = this.liste();
+    if (!liste) return;
+    const name = (prompt("Name des neuen Plans (z. B. Klassenarbeit):", `Plan ${liste.sitzplaene.length + 1}`) || "").trim();
+    if (!name) return;
+    this.merke();
+    const vorlage = this.plan();
+    liste.sitzplaene.push({
+      name,
+      tische: vorlage.tische.map(t => ({ ...t, id: neueId(), plaetze: t.plaetze.map(() => null) }))
+    });
+    liste.aktiverPlan = liste.sitzplaene.length - 1;
+    this.auswahl = null;
+    this.speichere();
+    this.renderAlles();
+    this.meldung("Die Tischanordnung wurde übernommen, die Plätze sind leer.");
+  },
+
+  planUmbenennen() {
+    const plan = this.plan();
+    if (!plan) return;
+    const name = (prompt("Neuer Name des Plans:", plan.name) || "").trim();
+    if (!name || name === plan.name) return;
+    this.merke();
+    plan.name = name;
+    this.speichere();
+    this.renderAlles();
+  },
+
+  planLoeschen() {
+    const liste = this.liste();
+    if (!liste || liste.sitzplaene.length < 2) return;
+    if (!confirm(`Plan „${this.plan().name}“ löschen? (Rückgängig ist möglich.)`)) return;
+    this.merke();
+    liste.sitzplaene.splice(liste.aktiverPlan, 1);
+    liste.aktiverPlan = 0;
+    this.auswahl = null;
+    this.speichere();
+    this.renderAlles();
+  },
+
+  schnellListe() {
+    const name = $("l-name").value.trim();
+    const namen = [...new Set($("l-namen").value.split(/\r?\n/).map(s => s.trim()).filter(Boolean))];
+    if (!name || !namen.length) { this.meldung("Bitte einen Namen für die Liste und mindestens einen Schülernamen eingeben."); return; }
+    const d = liesSpeicher();
+    if (d.listen[name] && !confirm(`Eine Liste „${name}“ gibt es schon. Überschreiben?`)) return;
+    d.listen[name] = { namen, nichtZusammen: "", sitzplaene: [{ name: "Standard", tische: [] }], aktiverPlan: 0 };
+    d.aktiv = name;
+    this.schreibe(d);
+    this.aktiv = name;
+    this.schritte = [];
+    this.renderAlles();
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => App.init());
+</script>
+</body>
+</html>

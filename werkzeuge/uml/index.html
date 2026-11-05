@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<!-- UML-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<!-- pwa --><script src="pwa.js?v=9ce5e9a97b" data-tool="uml" data-name="UML-Editor" data-daten="ja" data-schluessel="browserwerkzeuge-uml"></script><!-- /pwa -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UML-Editor</title>
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<style>
+/* Grundlayout der Diagramm-Tools */
+:root{--auf-akzent:#fff;--hinter:#f3f5f8;--flaeche:#fff;--text:#1f2933;--dezent:#5f6b7a;--rand:#d6dae0;--rand-feld:#858f9b;--akzent:#1f5f99;--akzent-hell:#e8f0f8;--linie:#1f2933;--gut:#15803d;--gut-hell:#dcfce7;--schlecht:#b91c1c;--schlecht-hell:#fee2e2;--warn:#b45309}
+[data-design="dunkel"]{--auf-akzent:#0e131c;--hinter:#14181d;--flaeche:#1e242b;--text:#e6e9ed;--dezent:#9aa4b1;--rand:#343c46;--rand-feld:#7d8794;--akzent:#5aa0e6;--akzent-hell:#243447;--linie:#cfd5dc;--gut:#4ade80;--gut-hell:#14361f;--schlecht:#f87171;--schlecht-hell:#3b1717;--warn:#f59e0b}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--hinter);color:var(--text);line-height:1.5}
+header{background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf{max-width:1320px;margin:0 auto;padding:10px 20px;display:flex;gap:10px;align-items:center}
+.kopf h1{font-size:1.15rem;margin:0;flex:1}
+.kopf a{color:var(--akzent);text-decoration:none;font-size:.9rem}
+main{max-width:1320px;margin:16px auto;padding:0 20px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr) 330px;align-items:start}
+section{background:var(--flaeche);border:1px solid var(--rand);border-radius:8px;padding:14px 16px}
+h2{font-size:1.02rem;margin:0 0 8px}
+button,select,input,textarea{font:inherit;color:var(--text)}
+button{padding:5px 10px;border:1px solid var(--rand-feld);background:var(--flaeche);border-radius:6px;cursor:pointer;white-space:nowrap}
+button:hover:not(:disabled){background:var(--akzent-hell)}
+button:disabled{opacity:.45;cursor:default}
+button.primaer,button.aktiv,button.primaer:hover:not(:disabled),button.aktiv:hover:not(:disabled){background:var(--akzent);border-color:var(--akzent);color:var(--auf-akzent)}
+button.primaer:hover:not(:disabled),button.aktiv:hover:not(:disabled){filter:brightness(1.12)}
+aside button{white-space:normal;text-align:left}
+select{padding:5px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche)}
+[hidden]{display:none!important}
+.dezent{color:var(--dezent)}.klein{font-size:.86rem}
+.werkzeuge{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-start}
+.gruppe{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.gruppe>.titel{width:100%;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--dezent)}
+.spalte{display:grid;gap:16px;min-width:0}
+aside{display:grid;gap:16px;position:sticky;top:12px}
+.feld{display:grid;gap:3px;margin:8px 0}
+.feld label{font-size:.88rem;font-weight:600}
+.feld input,.feld textarea,.feld select{width:100%;padding:6px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche);font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:.95rem}
+.feld select{font-family:inherit}
+.feld input:focus,.feld textarea:focus{outline:none;border-color:var(--akzent)}
+.feld small{font-size:.8rem}
+.haken{display:inline-flex;gap:6px;align-items:center;margin:4px 12px 4px 0;font-size:.92rem}
+.zeile{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+details summary{cursor:pointer;font-weight:600}
+pre.code{margin:0;padding:10px 12px;background:var(--hinter);border:1px solid var(--rand);border-radius:6px;overflow:auto;font-size:.88rem;max-height:460px}
+.hinweis{font-size:.82rem;color:var(--dezent);margin:8px 0 0}
+table.tabelle{border-collapse:collapse;font-size:.9rem;margin:6px 0}
+table.tabelle th,table.tabelle td{border:1px solid var(--rand);padding:3px 9px;text-align:center}
+table.tabelle th{background:var(--hinter)}
+.k-dialog{border:1px solid var(--rand);border-radius:10px;padding:18px 20px;max-width:min(520px,calc(100vw - 32px));background:var(--flaeche);color:var(--text)}
+.k-dialog::backdrop{background:rgba(0,0,0,.35)}
+.k-dialog p{margin:6px 0}
+.k-knoepfe{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.link-feld{width:100%;font-family:ui-monospace,monospace;font-size:.8rem;padding:6px;border:1px solid var(--rand);border-radius:6px;background:var(--hinter);word-break:break-all}
+#meldung{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:#1f2933;color:#fff;padding:10px 14px;border-radius:6px;max-width:min(420px,calc(100vw - 32px));z-index:10;box-shadow:0 6px 20px -8px rgba(0,0,0,.5)}
+footer{max-width:1320px;margin:0 auto 24px;padding:0 20px;color:var(--dezent);font-size:.85rem;text-align:center}
+footer a{color:inherit}
+#druck{display:none}
+/* Zeichenfläche (Automat, UML, ER) */
+.leinwand{padding:0;overflow:hidden;position:relative}
+.leinwand svg.zeichnung{display:block;width:100%;height:min(68vh,640px);touch-action:none;user-select:none;-webkit-user-select:none;background:var(--flaeche);background-image:radial-gradient(var(--rand) 1px,transparent 1px);background-size:20px 20px;border-radius:8px;cursor:grab}
+.leinwand .zoom{position:absolute;right:10px;bottom:10px;display:flex;gap:4px}
+.leinwand .zoom button{min-width:34px;background:var(--flaeche)}
+.leinwand .modus-hinweis{position:absolute;left:10px;top:10px;font-size:.85rem;background:var(--akzent);color:var(--auf-akzent);border-radius:6px;padding:3px 10px;pointer-events:none}
+svg.zeichnung .griff{cursor:crosshair}
+svg.zeichnung .griff .griff-kreis{fill:var(--akzent)}
+line.gummiband{stroke:var(--akzent);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
+svg.zeichnung text{pointer-events:none}
+svg.zeichnung [data-ziel] text.a-text,svg.zeichnung [data-ziel] text.u-halo{pointer-events:auto;cursor:pointer}
+@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}aside{position:static;order:2}
+  /* schmal: Eigenschaften direkt unter der Zeichenfläche */
+  .spalte{display:contents}.spalte>*{order:3}.spalte>.leinwand,.spalte>.flaeche,.spalte>.instabil{order:1}}
+@media print{body{background:#fff}header,main,footer,#meldung,.ap-leiste{display:none!important}#druck{display:block}#druck svg{max-width:100%;height:auto}}
+/* Tastaturbedienung: nur vorgelesene Texte, Fokusrahmen auf der Zeichenfläche */
+.nur-vorlesen{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.zeichnung:focus{outline:none}
+.zeichnung:focus-visible{outline:3px solid var(--akzent);outline-offset:2px}
+.tastatur-hilfe{margin:6px 0 0;font-size:.9rem;color:var(--dezent)}
+.tastatur-hilfe summary{cursor:pointer}
+.tastatur-hilfe p{margin:4px 0 0}
+@media print{.tastatur-hilfe{display:none}}
+.tastatur-fokus{fill:none;stroke:var(--akzent);stroke-width:3;stroke-dasharray:7 4;pointer-events:none}
+.tastatur-fokus.verbinden{stroke:var(--gut,#1e9e5a)}
+@media print{.tastatur-fokus{display:none}}
+/* schmale Bildschirme und Zoom: Auswahllisten nie breiter als ihr Platz; Kästchen gut treffbar */
+select{max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px}
+input[type=range]{min-height:24px}
+.gruppe{min-width:0;max-width:100%}
+.gruppe select{min-width:0}
+/* UML */
+svg.zeichnung .u-kasten{fill:var(--flaeche);stroke:var(--linie)}
+svg.zeichnung .u-trenn{stroke:var(--linie)}
+svg.zeichnung .u-text{fill:var(--text)}
+svg.zeichnung .u-halo{fill:var(--text);stroke:var(--flaeche)}
+svg.zeichnung path.u-linie{stroke:var(--linie)}
+svg.zeichnung polygon.u-hohl{fill:var(--flaeche);stroke:var(--linie)}
+svg.zeichnung polygon.u-voll{fill:var(--linie);stroke:var(--linie)}
+svg.zeichnung [data-knoten]{cursor:move}
+svg.zeichnung [data-ziel^="b:"]{cursor:pointer}
+svg.zeichnung .u-kasten.markiert{stroke:var(--akzent);stroke-width:3}
+svg.zeichnung .u-kasten.verbinde{stroke:var(--akzent);stroke-width:3;stroke-dasharray:6 3}
+svg.zeichnung path.markiert{stroke:var(--akzent);stroke-width:2.6}
+svg.zeichnung polygon.markiert{stroke:var(--akzent)}
+.zwei-felder{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;align-items:end}
+.feld textarea{white-space:pre;overflow-x:auto}
+.code-leiste{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:10px 0}
+</style>
+<!-- pwa -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181d" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="UML">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- /pwa -->
+</head>
+<body>
+<header>
+  <div class="kopf">
+    <h1>UML-Editor</h1>
+    <a id="ruecklink" href="../" hidden>← Übersicht</a>
+    <button type="button" id="btn-design">Dunkel</button>
+  </div>
+</header>
+
+<main>
+  <section class="werkzeuge" aria-label="Werkzeuge">
+    <div class="gruppe">
+      <span class="titel">Zeichnen</span>
+      <button type="button" id="btn-klasse" title="Neue Klasse (oder doppelt auf die Fläche tippen)">＋ Klasse</button>
+      <select id="abitur" aria-label="Abiturklasse einfügen"><option value="">Abiturklasse einfügen …</option></select>
+      <button type="button" id="btn-verbinden" title="Beziehungen zeichnen: von Klasse zu Klasse ziehen">→ Beziehung</button>
+      <select id="neue-art" aria-label="Art neuer Beziehungen"></select>
+      <button type="button" id="btn-loeschen" title="Löschen (Entf)">Löschen</button>
+      <button type="button" id="btn-rueck" title="Rückgängig (Strg+Z)">↶</button>
+      <button type="button" id="btn-vor" title="Wiederholen (Strg+Y)">↷</button>
+    </div>
+    <div class="gruppe">
+      <span class="titel">Datei</span>
+      <button type="button" id="btn-neu">Neu</button>
+      <button type="button" id="btn-oeffnen">Öffnen</button>
+      <button type="button" id="btn-speichern">Speichern</button>
+      <select id="beispiele" aria-label="Beispiel laden">
+        <option value="">Beispiele …</option>
+        <option value="praxis">Arztpraxis mit Queue</option>
+        <option value="fahrzeuge">Vererbung (Fahrzeuge)</option>
+        <option value="bibliothek">Bibliothek (Aggregation)</option>
+      </select>
+    </div>
+    <div class="gruppe">
+      <span class="titel">Weitergeben</span>
+      <button type="button" id="btn-svg">SVG</button>
+      <button type="button" id="btn-png">PNG</button>
+      <button type="button" id="btn-drucken">Drucken</button>
+      <button type="button" id="btn-teilen">Link teilen</button>
+    </div>
+  </section>
+
+  <div class="spalte">
+    <section class="leinwand">
+      <svg class="zeichnung" id="zeichnung" role="group" aria-label="Klassendiagramm"><g class="welt"></g></svg>
+      <div class="modus-hinweis" id="modus-hinweis" hidden></div>
+      <div class="zoom"><button type="button" id="zoom-minus" title="Verkleinern">−</button><button type="button" id="zoom-passend" title="Alles zeigen">⤢</button><button type="button" id="zoom-plus" title="Vergrößern">＋</button></div>
+    </section>
+
+    <section>
+      <details id="code-bereich">
+        <summary>Java-Gerüst anzeigen</summary>
+        <div class="code-leiste"><button type="button" id="btn-code-kopieren">Kopieren</button></div>
+        <pre class="code" id="code-text"></pre>
+        <p class="hinweis">Aus Attributen, Methoden, Vererbung und Implementierung entsteht ein Klassengerüst. Rollennamen an gerichteten Beziehungen werden zu Attributen,
+          bei Kardinalität * als <code>List&lt;…&gt;</code> der Abiturklassen. Methodenrümpfe bleiben leer bzw. liefern einen Standardwert.</p>
+      </details>
+    </section>
+  </div>
+
+  <aside>
+    <section id="eigenschaften" aria-live="polite"></section>
+    <section class="klein dezent">
+      <h2 style="color:var(--text)">So geht's</h2>
+      Doppelt auf die Fläche tippen legt eine Klasse an. Attribute und Methoden in UML-Schreibweise eintragen, z. B. <code>- name: String</code> und
+      <code>+ getName(): String</code>. Klassen lassen sich jederzeit verschieben. Für Beziehungen oben die Art wählen, die Klasse antippen und am <strong>blauen Pfeil</strong> zur Zielklasse ziehen.
+      Die Darstellung lässt sich jederzeit zwischen Entwurfs- und Implementationsdiagramm umschalten. Ihr Diagramm wird automatisch in diesem Browser gespeichert.
+    </section>
+  </aside>
+</main>
+
+<footer>
+  UML-Editor · Version 1.3.1 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+</footer>
+
+<div id="druck"></div>
+<div id="meldung" role="status" hidden></div>
+<script>
+/* ==== diagramm-kern: Anfang – gemeinsamer Teil aller Diagramm-Werkzeuge, hier nicht ändern ==== */
+/* Browserwerkzeuge · Diagrammkern · Version 1.6.0 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
+ *
+ * Gemeinsame Bausteine der Diagramm-Tools (Struktogramm, Automat, UML …):
+ * Design, Meldungen, Rückgängig, Dateien, SVG/PNG-Export, Teilen per Link, Textmessung.
+ * Alles läuft lokal im Browser – es wird nichts an einen Server geschickt.
+ * Der Kern steht in jedem Diagramm-Werkzeug zwischen den Markierungen „diagramm-kern“ und ist überall gleich.
+ * Änderungen bitte nicht in einem einzelnen Werkzeug vornehmen, sondern als Issue melden.
+ */
+"use strict";
+const Kern = (() => {
+  const $ = id => document.getElementById(id);
+  const DESIGN = "browserwerkzeuge-theme";                    // gemeinsam mit allen Tools: "dark" / "light"
+  const istIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  const esc = t => String(t).replace(/[&<>"']/g, z => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[z]));
+
+  /* ---------------------------------------------------------------- Design */
+  function design(knopfId) {
+    const setze = d => {
+      document.documentElement.dataset.design = d;
+      if ($(knopfId)) $(knopfId).textContent = d === "dunkel" ? "Hell" : "Dunkel";
+    };
+    let gespeichert = null;
+    try { gespeichert = localStorage.getItem(DESIGN); } catch (e) { /* ohne Speicher */ }
+    const system = matchMedia("(prefers-color-scheme: dark)");
+    setze((gespeichert ? gespeichert === "dark" : system.matches) ? "dunkel" : "hell");
+    system.addEventListener("change", ev => {                 // Systemdesign folgen, solange nichts gewählt wurde
+      let gewaehlt = null; try { gewaehlt = localStorage.getItem(DESIGN); } catch (e) { /* ohne Speicher */ }
+      if (!gewaehlt) setze(ev.matches ? "dunkel" : "hell");
+    });
+    if ($(knopfId)) $(knopfId).addEventListener("click", () => {
+      const neu = document.documentElement.dataset.design === "dunkel" ? "hell" : "dunkel";
+      setze(neu);
+      try { localStorage.setItem(DESIGN, neu === "dunkel" ? "dark" : "light"); } catch (e) { /* ohne Folgen */ }
+    });
+  }
+
+  /* ---------------------------------------------------------------- Geladene Daten bereinigen
+   * Dateien und geteilte Links stammen von außen: Texte bleiben Texte, Zahlen Zahlen, IDs harmlos. */
+  const pruefe = {
+    text: v => typeof v === "string" ? v.slice(0, 5000) : v == null ? "" : String(v).slice(0, 5000),
+    zahl: (v, d = 0, min = -1e6, max = 1e6) => { const n = +v; return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : d; },
+    id: v => typeof v === "string" && /^[\w-]{1,40}$/.test(v),
+    wahl: (v, erlaubt, d) => erlaubt.includes(v) ? v : d,
+    liste: v => Array.isArray(v) ? v.filter(x => x && typeof x === "object") : []
+  };
+
+  /* ---------------------------------------------------------------- Meldung */
+  let meldungTimer = null;
+  function meldung(text) {
+    let m = $("meldung");
+    if (!m) { m = document.createElement("div"); m.id = "meldung"; m.setAttribute("role", "status"); document.body.appendChild(m); }
+    m.textContent = text; m.hidden = false;
+    clearTimeout(meldungTimer);
+    meldungTimer = setTimeout(() => { m.hidden = true; }, 3500);
+  }
+
+  // Kurze Ansage für Screenreader (unsichtbar), z. B. welches Element gerade gewählt ist
+  let ansageTimer = null;
+  function ansage(text) {
+    let a = $("k-ansage");
+    if (!a) {
+      a = document.createElement("div"); a.id = "k-ansage"; a.className = "nur-vorlesen";
+      a.setAttribute("aria-live", "polite"); a.setAttribute("aria-atomic", "true"); document.body.appendChild(a);
+    }
+    clearTimeout(ansageTimer);
+    a.textContent = "";                              // gleicher Text zweimal hintereinander wird sonst nicht vorgelesen
+    ansageTimer = setTimeout(() => { a.textContent = text; }, 30);
+  }
+
+  /* ---------------------------------------------------------------- Rückgängig / Wiederholen */
+  class Verlauf {
+    constructor(holen, setzen, max = 200) { this.holen = holen; this.setzen = setzen; this.max = max; this.zurueck = []; this.vor = []; }
+    merke() {                                    // VOR einer Änderung aufrufen
+      const stand = this.holen();
+      if (this.zurueck[this.zurueck.length - 1] === stand) return;
+      this.zurueck.push(stand);
+      if (this.zurueck.length > this.max) this.zurueck.shift();
+      this.vor = [];
+    }
+    rueckgaengig() { if (!this.zurueck.length) return false; this.vor.push(this.holen()); this.setzen(this.zurueck.pop()); return true; }
+    wiederholen() { if (!this.vor.length) return false; this.zurueck.push(this.holen()); this.setzen(this.vor.pop()); return true; }
+    leeren() { this.zurueck = []; this.vor = []; }
+  }
+
+  /* ---------------------------------------------------------------- Speicher */
+  let speicherGewarnt = false;                      // Hinweis auf Speicherprobleme nur einmal je Sitzung
+  const benutzt = new Set();                         // Einträge, die dieser Tab liest oder schreibt
+  // Derselbe Eintrag in einem anderen Tab geändert: Hinweis, statt beim nächsten Speichern stillschweigend zu überschreiben
+  window.addEventListener("storage", e => {
+    if (e.key && benutzt.has(e.key))
+      meldung("Dieses Diagramm wurde in einem anderen Tab geändert. Zum Übernehmen die Seite neu laden – sonst überschreibt dieser Tab den Stand beim nächsten Speichern.");
+  });
+  const speicher = {
+    lies(schluessel) { benutzt.add(schluessel); try { return JSON.parse(localStorage.getItem(schluessel)); } catch (e) { return null; } },
+    schreib(schluessel, wert) {
+      benutzt.add(schluessel);
+      try { localStorage.setItem(schluessel, JSON.stringify(wert)); speicherGewarnt = false; return true; }
+      catch (e) {
+        if (!speicherGewarnt) {
+          speicherGewarnt = true;
+          meldung("Achtung: Der Stand kann in diesem Browser nicht gespeichert werden (Speicher voll oder gesperrt). Bitte über „Speichern“ als Datei sichern.");
+        }
+        return false;
+      }
+    }
+  };
+
+  /* ---------------------------------------------------------------- Dateien */
+  async function speichereDatei(name, inhalt, typ) {
+    const datei = new File([inhalt], name, { type: typ });
+    if (istIOS && navigator.canShare && navigator.canShare({ files: [datei] })) {
+      try { await navigator.share({ files: [datei], title: name }); return; }
+      catch (e) { if (e && e.name === "AbortError") return; }
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(datei); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+  }
+
+  function oeffneDatei(accept) {
+    return new Promise(fertig => {
+      const e = document.createElement("input");
+      e.type = "file"; e.accept = istIOS ? "" : accept;      // iOS kennt eigene Dateiendungen nicht und graut sie sonst aus
+      e.addEventListener("change", async () => {
+        const d = e.files && e.files[0];
+        fertig(d ? { name: d.name, text: await d.text() } : null);
+      });
+      e.click();
+    });
+  }
+
+  function dateiname(text, endung) {
+    const basis = String(text || "").replace(/\(.*$/, "").trim()
+      .replace(/[äÄ]/g, "ae").replace(/[öÖ]/g, "oe").replace(/[üÜ]/g, "ue").replace(/ß/g, "ss")
+      .replace(/[^\w-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+    return (basis || "diagramm") + "." + endung;
+  }
+
+  /* ---------------------------------------------------------------- Export */
+  function exportiereSVG(svgText, name) {
+    return speichereDatei(name, '<?xml version="1.0" encoding="UTF-8"?>\n' + svgText, "image/svg+xml");
+  }
+
+  function svgZuCanvas(svgText, breite, hoehe, skala = 2) {
+    return new Promise((fertig, fehler) => {
+      const bild = new Image();
+      bild.onload = () => {
+        const c = document.createElement("canvas");
+        c.width = Math.ceil(breite * skala); c.height = Math.ceil(hoehe * skala);
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(bild, 0, 0, c.width, c.height);
+        fertig(c);
+      };
+      bild.onerror = () => fehler(new Error("SVG konnte nicht gezeichnet werden"));
+      bild.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgText);
+    });
+  }
+
+  async function exportierePNG(svgText, breite, hoehe, name) {
+    const c = await svgZuCanvas(svgText, breite, hoehe, 2);
+    const blob = await new Promise(f => c.toBlob(f, "image/png"));
+    return speichereDatei(name, blob, "image/png");
+  }
+
+  async function kopiere(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch (e) {
+      const t = document.createElement("textarea");
+      t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch (e2) { ok = false; }
+      t.remove(); return ok;
+    }
+  }
+
+  /* ---------------------------------------------------------------- Teilen per Link
+   * Der Inhalt steckt komprimiert im #-Teil der Adresse. Dieser Teil wird vom Browser
+   * nie an den Server geschickt – geteilt wird also nur zwischen den Geräten. */
+  const b64url = bytes => { let s = ""; bytes.forEach(b => { s += String.fromCharCode(b); }); return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); };
+  const vonB64url = text => { const s = atob(text.replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(s, z => z.charCodeAt(0)); };
+
+  async function strom(bytes, art) {
+    const s = new Blob([bytes]).stream().pipeThrough(art);
+    return new Uint8Array(await new Response(s).arrayBuffer());
+  }
+
+  async function kodiere(objekt) {
+    const roh = new TextEncoder().encode(JSON.stringify(objekt));
+    if (typeof CompressionStream === "function") {
+      try { return "z" + b64url(await strom(roh, new CompressionStream("deflate-raw"))); } catch (e) { /* unkomprimiert */ }
+    }
+    return "j" + b64url(roh);
+  }
+
+  // Entpacken mit Obergrenze: Ein kurzer Link darf nicht zu Hunderten Megabyte aufgeblasen werden
+  const MAX_ENTPACKT = 8 * 1024 * 1024;
+  async function entpacke(bytes) {
+    const leser = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw")).getReader();
+    const teile = []; let laenge = 0;
+    for (;;) {
+      const { done, value } = await leser.read();
+      if (done) break;
+      laenge += value.length;
+      if (laenge > MAX_ENTPACKT) { leser.cancel().catch(() => {}); throw new Error("Link zu groß"); }
+      teile.push(value);
+    }
+    const roh = new Uint8Array(laenge); let pos = 0;
+    for (const t of teile) { roh.set(t, pos); pos += t.length; }
+    return roh;
+  }
+
+  async function dekodiere(text) {
+    const art = text[0], daten = vonB64url(text.slice(1));
+    const roh = art === "z" ? await entpacke(daten) : daten;
+    if (roh.length > MAX_ENTPACKT) throw new Error("Link zu groß");
+    return JSON.parse(new TextDecoder().decode(roh));
+  }
+
+  /* ---------------------------------------------------------------- Textmessung & Umbruch */
+  const messCanvas = document.createElement("canvas").getContext("2d");
+  function textBreite(text, schrift) { messCanvas.font = schrift; return messCanvas.measureText(text).width; }
+
+  function umbrechen(text, breite, schrift) {
+    const zeilen = [];
+    String(text || "").split("\n").forEach(absatz => {
+      const woerter = absatz.split(/(\s+)/).filter(w => w.length);
+      let zeile = "";
+      woerter.forEach(wort => {
+        const probe = zeile + wort;
+        if (!zeile || textBreite(probe.trimEnd(), schrift) <= breite) { zeile = probe; return; }
+        zeilen.push(zeile.trimEnd());
+        zeile = /^\s+$/.test(wort) ? "" : wort;
+        // sehr lange Wörter hart trennen
+        while (textBreite(zeile, schrift) > breite && zeile.length > 1) {
+          let n = zeile.length - 1;
+          while (n > 1 && textBreite(zeile.slice(0, n), schrift) > breite) n--;
+          zeilen.push(zeile.slice(0, n)); zeile = zeile.slice(n);
+        }
+      });
+      zeilen.push(zeile.trimEnd());
+    });
+    return zeilen.length ? zeilen : [""];
+  }
+
+  /* ---------------------------------------------------------------- Dialog */
+  function dialog(titel, html, aktionen) {
+    const d = document.createElement("dialog");
+    d.className = "k-dialog";
+    d.innerHTML = `<h2>${esc(titel)}</h2>${html}<div class="k-knoepfe"></div>`;
+    aktionen.forEach(a => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = a.text;
+      if (a.primaer) b.className = "primaer";
+      b.addEventListener("click", () => { d.close(); if (a.aktion) a.aktion(d); });
+      d.querySelector(".k-knoepfe").appendChild(b);
+    });
+    d.addEventListener("close", () => d.remove());
+    document.body.appendChild(d);
+    if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+    return d;
+  }
+
+  /* ---------------------------------------------------------------- Zeichenfläche (Automat, UML, ER …)
+   * <svg> mit <g class="welt">. Elemente mit data-ziel="…" sind antippbar, zusätzlich
+   * data-knoten (verbindbar) und data-ziehbar (verschiebbar). Hintergrund ziehen = verschieben,
+   * Mausrad oder zwei Finger = zoomen. Verbinden: am Griff (data-griff="Knoten-ID") zum Ziel ziehen
+   * oder Griff und dann Ziel antippen; im Modus „verbinden“ geht das auch direkt vom Knoten aus.
+   * Tastatur (Fläche fokussiert): Pfeiltasten wählen das nächste Element in dieser Richtung, Bild↑/Bild↓ der Reihe
+   * nach (auch Verbindungen), Umschalt+Pfeil verschiebt, Eingabe bearbeitet, V verbindet, N legt neu an,
+   * + / − / 0 zoomen bzw. passen ein, Entf löscht (im Tool), Esc bricht ab. */
+  class Flaeche {
+    constructor(svg, o) {
+      this.svg = svg; this.o = o; this.tx = 40; this.ty = 40; this.s = 1;
+      this.welt = svg.querySelector(".welt");
+      this.band = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      this.band.setAttribute("class", "gummiband"); this.band.style.display = "none";
+      svg.appendChild(this.band);
+      this.zeiger = new Map(); this.aktion = null; this.letzterKlick = null; this.verbindeVon = null;
+      svg.addEventListener("pointerdown", e => { this.mitTastatur = false; this.zeigeFokus(); this.runter(e); });
+      svg.addEventListener("pointermove", e => this.bewege(e));
+      svg.addEventListener("pointerup", e => this.hoch(e));
+      svg.addEventListener("pointercancel", e => {
+        this.zeiger.delete(e.pointerId);
+        if (this.aktion && this.aktion.bewegt && this.aktion.art === "ziehen" && this.o.onZiehEnde) this.o.onZiehEnde(this.aktion.ziel);
+        this.aktion = null; this.pinch = null; this.band.style.display = "none";
+      });
+      // Mausrad/Trackpad: mit Strg (oder Trackpad-Pinch) zoomen, sonst verschieben
+      svg.addEventListener("wheel", e => {
+        e.preventDefault();
+        const faktor = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+        if (e.ctrlKey || e.metaKey) this.zoom(Math.exp(-e.deltaY * faktor * 0.01), e.clientX, e.clientY);
+        else { this.tx -= e.deltaX * faktor; this.ty -= e.deltaY * faktor; this.setze(); }
+      }, { passive: false });
+      this.richteTastaturEin();
+      this.setze();
+    }
+    setze() {
+      this.welt.setAttribute("transform", `translate(${this.tx} ${this.ty}) scale(${this.s})`);
+      if (this.s !== this.letzteS) { this.letzteS = this.s; if (this.o.onZoom) this.o.onZoom(this.s); }
+      this.zeigeFokus();
+    }
+    inhalt(html) { this.welt.innerHTML = html; this.zeigeFokus(); }
+    punkt(cx, cy) { const r = this.svg.getBoundingClientRect(); return { x: (cx - r.left - this.tx) / this.s, y: (cy - r.top - this.ty) / this.s }; }
+    zoom(f, cx, cy) {
+      const r = this.svg.getBoundingClientRect();
+      if (cx === undefined) { cx = r.left + r.width / 2; cy = r.top + r.height / 2; }
+      const neu = Math.min(4, Math.max(0.2, this.s * f)), px = cx - r.left, py = cy - r.top;
+      this.tx = px - (px - this.tx) * neu / this.s; this.ty = py - (py - this.ty) * neu / this.s; this.s = neu; this.setze();
+    }
+    einpassen(rand = 30) {
+      const b = this.welt.getBBox(), r = this.svg.getBoundingClientRect();
+      if (!b.width || !r.width) { this.tx = 40; this.ty = 40; this.s = 1; return this.setze(); }
+      this.s = Math.min(1.5, (r.width - 2 * rand) / b.width, (r.height - 2 * rand) / b.height);
+      this.tx = (r.width - b.width * this.s) / 2 - b.x * this.s; this.ty = (r.height - b.height * this.s) / 2 - b.y * this.s; this.setze();
+    }
+    mitte() { const r = this.svg.getBoundingClientRect(); return this.punkt(r.left + r.width / 2, r.top + r.height / 2); }
+    ziel(el) {
+      const t = el && el.closest && el.closest("[data-ziel]");
+      return t ? { id: t.dataset.ziel, knoten: t.hasAttribute("data-knoten"), ziehbar: t.hasAttribute("data-ziehbar"), el: t } : null;
+    }
+    knotenMitte(z) {
+      const el = this.welt.querySelector(`[data-ziel="${CSS.escape(z.id)}"]`) || this.welt.querySelector(`[data-griff="${CSS.escape(z.id)}"]`);
+      if (!el) return null; const b = el.getBBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+    }
+    naechsterGriff(cx, cy, max) {
+      let best = null;
+      this.welt.querySelectorAll("[data-griff]").forEach(el => {
+        const b = el.getBoundingClientRect(), d = Math.hypot(b.left + b.width / 2 - cx, b.top + b.height / 2 - cy);
+        if (d <= max && (!best || d < best.abstand)) best = { el, abstand: d };
+      });
+      return best;
+    }
+    setzeVerbindeVon(z) { this.verbindeVon = z; if (this.o.onVerbindeStart) this.o.onVerbindeStart(z); }
+    runter(e) {
+      if (e.button > 0) return;
+      this.svg.setPointerCapture(e.pointerId);
+      this.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.zeiger.size === 2) {
+        const [a, b] = [...this.zeiger.values()];
+        this.pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), s: this.s, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, tx: this.tx, ty: this.ty };
+        if (this.aktion && this.aktion.bewegt && this.aktion.art === "ziehen" && this.o.onZiehEnde) this.o.onZiehEnde(this.aktion.ziel);
+        this.aktion = null; this.band.style.display = "none"; return;
+      }
+      let griff = e.target.closest && e.target.closest("[data-griff]");
+      if (!griff && e.pointerType !== "mouse") {                // Finger: nahe Anschlüsse großzügig treffen
+        const nah = this.naechsterGriff(e.clientX, e.clientY, 22);
+        if (nah && (!this.ziel(e.target) || nah.abstand <= 12)) griff = nah.el;
+      }
+      const z = griff ? { id: griff.dataset.griff, knoten: true, ziehbar: false, griff: true } : this.ziel(e.target);
+      const modus = this.o.modus ? this.o.modus() : "auswahl";
+      const art = griff || (modus === "verbinden" && z && z.knoten) ? "verbinden" : z && z.ziehbar ? "ziehen" : "schieben";
+      this.aktion = { art, ziel: z, sx: e.clientX, sy: e.clientY, tx: this.tx, ty: this.ty, bewegt: false, letzte: this.punkt(e.clientX, e.clientY) };
+    }
+    bewege(e) {
+      if (!this.zeiger.has(e.pointerId)) return;
+      this.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.pinch && this.zeiger.size === 2) {
+        const [a, b] = [...this.zeiger.values()], p = this.pinch, r = this.svg.getBoundingClientRect();
+        const neu = Math.min(4, Math.max(0.2, p.s * Math.hypot(a.x - b.x, a.y - b.y) / (p.d || 1)));
+        const mx = (a.x + b.x) / 2 - r.left, my = (a.y + b.y) / 2 - r.top, m0x = p.mx - r.left, m0y = p.my - r.top;
+        this.tx = mx - (m0x - p.tx) * neu / p.s; this.ty = my - (m0y - p.ty) * neu / p.s; this.s = neu; this.setze(); return;
+      }
+      const a = this.aktion; if (!a) return;
+      if (!a.bewegt && Math.hypot(e.clientX - a.sx, e.clientY - a.sy) < 5) return;
+      if (!a.bewegt) { a.bewegt = true; if (a.art === "ziehen" && this.o.onZiehStart) this.o.onZiehStart(a.ziel); }
+      if (a.art === "ziehen") {
+        const p = this.punkt(e.clientX, e.clientY);
+        this.o.onZiehen(a.ziel, p.x - a.letzte.x, p.y - a.letzte.y, p); a.letzte = p;
+      } else if (a.art === "schieben") {
+        this.tx = a.tx + e.clientX - a.sx; this.ty = a.ty + e.clientY - a.sy; this.setze();
+      } else if (a.art === "verbinden") {
+        const m = this.knotenMitte(a.ziel), p = this.punkt(e.clientX, e.clientY);
+        if (!m) return;
+        const t = v => v * this.s;
+        this.band.setAttribute("x1", t(m.x) + this.tx); this.band.setAttribute("y1", t(m.y) + this.ty);
+        this.band.setAttribute("x2", t(p.x) + this.tx); this.band.setAttribute("y2", t(p.y) + this.ty);
+        this.band.style.display = "";
+      }
+    }
+    hoch(e) {
+      this.zeiger.delete(e.pointerId);
+      if (this.pinch) { if (!this.zeiger.size) this.pinch = null; this.aktion = null; return; }
+      const a = this.aktion; this.aktion = null; if (!a) return;
+      const p = this.punkt(e.clientX, e.clientY);
+      if (!a.bewegt) {                               // Antippen (mit eigener Doppelklick-Erkennung)
+        const jetzt = performance.now(), l = this.letzterKlick;
+        const doppel = l && jetzt - l.t < 400 && Math.hypot(e.clientX - l.x, e.clientY - l.y) < 12 && (l.id || "") === (a.ziel ? a.ziel.id : "");
+        this.letzterKlick = doppel ? null : { t: jetzt, x: e.clientX, y: e.clientY, id: a.ziel ? a.ziel.id : "" };
+        const modus = this.o.modus ? this.o.modus() : "auswahl";
+        if (a.ziel && a.ziel.griff) {                                         // Griff antippen
+          if (this.verbindeVon && this.verbindeVon.id !== a.ziel.id) { const von = this.verbindeVon; this.setzeVerbindeVon(null); this.o.onVerbinde(von.id, a.ziel.id); }
+          else this.setzeVerbindeVon(this.verbindeVon ? null : a.ziel);          // erneut antippen = abbrechen
+          return;
+        }
+        if ((modus === "verbinden" || this.verbindeVon) && a.ziel && a.ziel.knoten) {
+          if (this.verbindeVon) { const von = this.verbindeVon; this.setzeVerbindeVon(null); this.o.onVerbinde(von.id, a.ziel.id); }
+          else this.setzeVerbindeVon(a.ziel);
+          return;
+        }
+        if (this.verbindeVon) { this.setzeVerbindeVon(null); if (!a.ziel) return; }   // abbrechen
+        this.fokus = a.ziel ? a.ziel.id : null;
+        if (doppel && this.o.onDoppel) this.o.onDoppel(a.ziel, p);
+        else if (this.o.onKlick) this.o.onKlick(a.ziel, p);
+        return;
+      }
+      if (a.art === "ziehen" && this.o.onZiehEnde) this.o.onZiehEnde(a.ziel);
+      if (a.art === "verbinden") {
+        this.band.style.display = "none";
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        let g = el && el.closest && el.closest("[data-griff]");
+        if (!g && e.pointerType !== "mouse" && !(this.ziel(el) || {}).knoten) { const nah = this.naechsterGriff(e.clientX, e.clientY, 22); if (nah) g = nah.el; }
+        const unten = g ? { id: g.dataset.griff, knoten: true } : this.ziel(el);
+        if (unten && unten.knoten) { this.setzeVerbindeVon(null); this.o.onVerbinde(a.ziel.id, unten.id); }
+      }
+    }
+
+    /* ---------- Tastatur */
+    richteTastaturEin() {
+      const svg = this.svg;
+      this.fokus = null; this.mitTastatur = false; this.tVerbinden = null;
+      svg.setAttribute("tabindex", "0");
+      svg.setAttribute("role", "application");
+      svg.setAttribute("aria-roledescription", "Zeichenfläche");
+      // Sichtbare Kurzhilfe unter der Fläche (zugeklappt); Screenreader bekommen den Text als Beschreibung
+      const kasten = document.createElement("details"), titel = document.createElement("summary");
+      kasten.className = "tastatur-hilfe"; titel.textContent = "Bedienung mit der Tastatur";
+      const hilfe = document.createElement("p");
+      hilfe.id = (svg.id || "flaeche") + "-tastatur";
+      hilfe.textContent = "Pfeiltasten: Element wählen. Bild auf, Bild ab: alle Elemente der Reihe nach. Umschalt und Pfeiltaste: verschieben. " +
+        "Eingabetaste: bearbeiten. V: verbinden. N: neues Element. Entfernen: löschen. Plus, Minus, Null: zoomen. " +
+        "Escape: abbrechen oder aus den Eigenschaften zurück zur Zeichenfläche.";
+      kasten.append(titel, hilfe);
+      (svg.closest(".leinwand") || svg).after(kasten);
+      svg.setAttribute("aria-describedby", hilfe.id);
+      this.ring = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      this.ring.setAttribute("class", "tastatur-fokus"); this.ring.setAttribute("rx", "6"); this.ring.style.display = "none";
+      svg.appendChild(this.ring);
+      svg.addEventListener("keydown", e => this.taste(e));
+      svg.addEventListener("focus", () => { if (this.mitTastatur) this.zeigeFokus(); });
+      svg.addEventListener("blur", () => { this.ring.style.display = "none"; });
+      // Esc in einem Eingabefeld der Eigenschaften führt zurück auf die Zeichenfläche
+      document.addEventListener("keydown", e => {
+        if (e.key !== "Escape" || !this.mitTastatur || document.querySelector("dialog[open]")) return;
+        const a = document.activeElement;
+        if (a && a !== svg && a.closest && a.closest("#eigenschaften")) { e.preventDefault(); e.stopPropagation(); svg.focus(); this.zeigeFokus(); }
+      }, true);
+    }
+    // Was gerade mit der Tastatur erreichbar ist: Elemente – beim Verbinden Knoten und Anschlüsse
+    tZiele() {
+      const liste = [], gesehen = new Set();
+      const dazu = (el, id, knoten, ziehbar, griff) => { if (id && !gesehen.has(id)) { gesehen.add(id); liste.push({ el, id, knoten, ziehbar, griff }); } };
+      const v = this.tVerbinden;
+      if (v && v.schritt === "von") {
+        v.anschluesse.forEach(id => { const el = this.welt.querySelector(`[data-griff="${CSS.escape(id)}"]`); if (el) dazu(el, id, true, false, true); });
+        return liste;
+      }
+      this.welt.querySelectorAll("[data-ziel], [data-griff]").forEach(el => {
+        if (el.hasAttribute("data-griff")) { if (v && this.o.anschluesse) dazu(el, el.dataset.griff, true, false, true); return; }
+        if (v && !el.hasAttribute("data-knoten")) return;
+        dazu(el, el.dataset.ziel, el.hasAttribute("data-knoten"), el.hasAttribute("data-ziehbar"), false);
+      });
+      return liste;
+    }
+    tElement(id) {
+      if (!id) return null;
+      return this.welt.querySelector(`[data-ziel="${CSS.escape(id)}"]`) || this.welt.querySelector(`[data-griff="${CSS.escape(id)}"]`);
+    }
+    zeigeFokus() {
+      if (!this.ring) return;
+      const el = this.mitTastatur && document.activeElement === this.svg ? this.tElement(this.fokus) : null;
+      if (!el) { this.ring.style.display = "none"; return; }
+      const r = el.getBoundingClientRect(), f = this.svg.getBoundingClientRect(), rand = 5;
+      this.ring.setAttribute("x", r.left - f.left - rand); this.ring.setAttribute("y", r.top - f.top - rand);
+      this.ring.setAttribute("width", r.width + 2 * rand); this.ring.setAttribute("height", r.height + 2 * rand);
+      this.ring.classList.toggle("verbinden", !!this.tVerbinden);
+      this.ring.style.display = "";
+    }
+    beschreibe(id) {
+      const text = this.o.beschreibe ? this.o.beschreibe(id) : "";
+      if (text) return text;
+      const el = this.tElement(id);
+      return (el && (el.getAttribute("aria-label") || el.textContent.replace(/\s+/g, " ").trim())) || "Element";
+    }
+    // Ausgewähltes Element sichtbar machen, falls es außerhalb liegt
+    insBild(el) {
+      const r = el.getBoundingClientRect(), f = this.svg.getBoundingClientRect();
+      if (r.left >= f.left && r.right <= f.right && r.top >= f.top && r.bottom <= f.bottom) return;
+      this.tx += f.left + f.width / 2 - (r.left + r.width / 2); this.ty += f.top + f.height / 2 - (r.top + r.height / 2); this.setze();
+    }
+    tWaehle(z, ansagen = true) {
+      this.fokus = z ? z.id : null;
+      if (!this.tVerbinden) {
+        const waehle = this.o.onWaehle || this.o.onKlick;
+        if (waehle) waehle(z ? { id: z.id, knoten: z.knoten, ziehbar: z.ziehbar, el: z.el } : null, this.mitte());
+      }
+      const el = this.tElement(this.fokus);
+      if (el) this.insBild(el);
+      this.zeigeFokus();
+      if (ansagen && z) ansage((this.tVerbinden ? (this.tVerbinden.schritt === "von" ? "Anschluss: " : "Verbinden mit: ") : "") + this.beschreibe(z.id));
+    }
+    tNaechstes(richtung) {                           // richtung: [dx, dy] für Pfeiltasten, +1/−1 für Bild↑/↓
+      const ziele = this.tZiele();
+      if (!ziele.length) { ansage(this.tVerbinden ? "Kein mögliches Ziel." : "Die Zeichenfläche ist leer. N legt ein neues Element an."); return; }
+      const i = ziele.findIndex(z => z.id === this.fokus);
+      if (i < 0) { this.tWaehle(ziele[0]); return; }
+      if (typeof richtung === "number") { this.tWaehle(ziele[(i + richtung + ziele.length) % ziele.length]); return; }
+      const mitte = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+      const [cx, cy] = mitte(ziele[i].el), [dx, dy] = richtung;
+      let best = null;
+      ziele.forEach((z, j) => {
+        if (j === i) return;
+        const [x, y] = mitte(z.el), vor = (x - cx) * dx + (y - cy) * dy, quer = Math.abs((x - cx) * dy - (y - cy) * dx);
+        if (vor <= 1) return;
+        const wert = vor + 2 * quer;
+        if (!best || wert < best.wert) best = { z, wert };
+      });
+      if (best) this.tWaehle(best.z); else ansage("In dieser Richtung liegt kein weiteres Element.");
+    }
+    taste(e) {
+      if (e.target !== this.svg || e.ctrlKey || e.metaKey) return;   // Strg-Kürzel (Rückgängig …) erledigt das Tool
+      this.mitTastatur = true;
+      const k = e.key, PFEIL = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+      const z = this.tZiele().find(x => x.id === this.fokus) || null;
+      let fertig = true;
+      if (PFEIL[k] && e.shiftKey) {                  // verschieben
+        if (z && z.ziehbar && !this.tVerbinden) {
+          const schritt = (e.altKey ? 2 : 20) / this.s, [dx, dy] = PFEIL[k];
+          if (this.o.onZiehStart) this.o.onZiehStart(z);
+          this.o.onZiehen(z, dx * schritt, dy * schritt, null);
+          if (this.o.onZiehEnde) this.o.onZiehEnde(z);
+          this.zeigeFokus();
+        } else ansage(z ? "Dieses Element lässt sich nicht verschieben." : "Kein Element gewählt.");
+      } else if (PFEIL[k]) this.tNaechstes(PFEIL[k]);
+      else if (k === "PageDown") this.tNaechstes(1);
+      else if (k === "PageUp") this.tNaechstes(-1);
+      else if (k === "Home" || k === "End") { const l = this.tZiele(); if (l.length) this.tWaehle(l[k === "Home" ? 0 : l.length - 1]); }
+      else if (k === "Enter" || k === " ") {
+        if (this.tVerbinden) this.tBestaetige(z);
+        else if (z && this.o.onDoppel) this.o.onDoppel(z, this.mitte());
+        else if (!z) this.tNaechstes(1);
+      } else if (k === "F2") { if (z && this.o.onDoppel && !this.tVerbinden) this.o.onDoppel(z, this.mitte()); }
+      else if (k.toLowerCase() === "v" && !e.altKey) this.tVerbindeStart(z);
+      else if (k.toLowerCase() === "n" && !e.altKey && !this.tVerbinden) {
+        if (this.o.onDoppel && this.o.neuMitTastatur !== false) {
+          const vorher = new Set(this.tZiele().map(x => x.id));
+          this.o.onDoppel(null, this.mitte());
+          const neu = this.tZiele().find(x => !vorher.has(x.id));
+          if (neu) { this.fokus = neu.id; this.zeigeFokus(); ansage("Neu: " + this.beschreibe(neu.id)); }
+        } else ansage("Neue Elemente über die Knöpfe über der Zeichenfläche einfügen.");
+      } else if (k === "+" || k === "=") { this.zoom(1.25); ansage(`Zoom ${Math.round(this.s * 100)} Prozent`); }
+      else if (k === "-") { this.zoom(0.8); ansage(`Zoom ${Math.round(this.s * 100)} Prozent`); }
+      else if (k === "0") { this.einpassen(); ansage("Ganzes Diagramm eingepasst"); }
+      else if (k === "Escape") {
+        if (this.tVerbinden) { this.tVerbinden = null; this.setzeVerbindeVon(null); ansage("Verbinden abgebrochen"); this.zeigeFokus(); }
+        else { this.fokus = null; this.zeigeFokus(); fertig = false; }          // Esc auch an das Tool (Auswahl aufheben)
+      } else fertig = false;                                                 // Entf, Rückgängig usw. erledigt das Tool
+      if (fertig) { e.preventDefault(); e.stopPropagation(); }
+    }
+    tVerbindeStart(z) {
+      if (this.tVerbinden) return;
+      if (!z) { ansage("Erst ein Element wählen, dann V drücken."); return; }
+      const anschluesse = this.o.anschluesse ? this.o.anschluesse(z.id) : null;
+      if (anschluesse && anschluesse.length) {     // z. B. Schaltung: erst den Anschluss am Element wählen
+        this.tVerbinden = { schritt: "von", anschluesse, element: z.id };
+        ansage("Verbinden: Anschluss mit den Pfeiltasten wählen, mit der Eingabetaste bestätigen. Escape bricht ab.");
+        this.tWaehle(this.tZiele()[0]);
+        return;
+      }
+      if (!z.knoten) { ansage("Dieses Element lässt sich nicht verbinden."); return; }
+      this.tVerbinden = { schritt: "nach", von: z.id };
+      this.setzeVerbindeVon({ id: z.id, knoten: true });
+      ansage(`Verbinden von ${this.beschreibe(z.id)}: Ziel mit den Pfeiltasten wählen, mit der Eingabetaste bestätigen. Escape bricht ab.`);
+      this.zeigeFokus();
+    }
+    tBestaetige(z) {
+      const v = this.tVerbinden;
+      if (!z) { ansage("Kein Ziel gewählt."); return; }
+      if (v.schritt === "von") {
+        this.tVerbinden = { schritt: "nach", von: z.id };
+        this.setzeVerbindeVon({ id: z.id, knoten: true, griff: true });
+        ansage(`Verbinden von ${this.beschreibe(z.id)}: Ziel wählen und mit der Eingabetaste bestätigen.`);
+        this.zeigeFokus();
+        return;
+      }
+      this.tVerbinden = null;
+      this.setzeVerbindeVon(null);
+      const vorher = new Set(this.tZiele().map(x => x.id));
+      this.o.onVerbinde(v.von, z.id);
+      const neu = this.tZiele().find(x => !vorher.has(x.id));
+      if (neu) { this.fokus = neu.id; ansage("Verbunden: " + this.beschreibe(neu.id)); }
+      else ansage("Verbunden.");
+      this.zeigeFokus();
+    }
+  }
+
+  // Export: Inhalt messen und als eigenständiges SVG (weißer Hintergrund) verpacken
+  function bildAus(inhalt, rand = 16) {
+    const ns = "http://www.w3.org/2000/svg";
+    const mess = document.createElementNS(ns, "svg");
+    mess.setAttribute("style", "position:absolute;left:-10000px;top:0;width:10px;height:10px;visibility:hidden");
+    mess.innerHTML = `<g>${inhalt}</g>`;
+    document.body.appendChild(mess);
+    const b = mess.firstChild.getBBox(); mess.remove();
+    const x = Math.floor(b.x - rand), y = Math.floor(b.y - rand), w = Math.ceil(b.width + 2 * rand), h = Math.ceil(b.height + 2 * rand);
+    const sauber = inhalt.replace(/<g data-griff=[\s\S]*?<\/g>/g, "")
+      .replace(/<(?:path|rect|circle)\b[^>]*(?:stroke|fill)="transparent"[^>]*\/>/g, "")      // unsichtbare Trefferflächen
+      .replace(/ (class|data-[\w-]+)="[^"]*"/g, "").replace(/ data-(knoten|ziehbar)(?=[ >\/])/g, "");
+    return { breite: w, hoehe: h,
+      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${x} ${y} ${w} ${h}">` +
+           `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff"/>${sauber}</svg>` };
+  }
+
+  // Zwei Formate in die Zwischenablage (z. B. unterstrichene Schlüssel für Word)
+  async function kopiereFormatiert(html, text) {
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], { type: "text/html" }), "text/plain": new Blob([text], { type: "text/plain" }) })]);
+      return true;
+    } catch (e) { return kopiere(text); }
+  }
+
+  // Blauer Verbinden-Griff; wächst beim Herauszoomen mit, damit er mit dem Finger treffbar bleibt
+  function griff(id, x, y, skala = 1) {
+    const r = Math.max(12, 13 / skala), t = Math.max(r, 22 / skala), k = r / 12, n = v => (+v).toFixed(1);
+    return `<g data-griff="${esc(id)}" class="griff"><circle cx="${n(x)}" cy="${n(y)}" r="${n(t)}" fill="transparent" class="griff-treffer"/>` +
+      `<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="#1f5f99" class="griff-kreis"/>` +
+      `<path d="M${n(x - 5 * k)} ${n(y)}h${n(10 * k)}m${n(-4 * k)} ${n(-4 * k)}l${n(4 * k)} ${n(4 * k)}-${n(4 * k)} ${n(4 * k)}" fill="none" stroke="#fff" stroke-width="${n(2.2 * k)}" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  }
+
+  // Geteilten Link öffnen: Wenn schon etwas gezeichnet ist, vorher fragen
+  function linkOeffnen(istLeer, oeffnen, verwerfen) {
+    if (istLeer) { oeffnen(); return; }
+    dialog("Geteilten Link öffnen?", "<p>Der Link enthält ein Diagramm. Es ersetzt Ihr aktuelles Diagramm in diesem Browser.</p>" +
+      "<p class=\"dezent klein\">Tipp: Wenn Sie Ihr aktuelles Diagramm behalten möchten, speichern Sie es vorher als Datei.</p>",
+      [{ text: "Nicht öffnen", aktion: verwerfen }, { text: "Öffnen", primaer: true, aktion: oeffnen }]);
+  }
+
+  return { $, esc, istIOS, pruefe, linkOeffnen, griff, design, meldung, ansage, Verlauf, speicher, speichereDatei, oeffneDatei, dateiname, Flaeche, bildAus, kopiereFormatiert,
+           exportiereSVG, exportierePNG, kopiere, kodiere, dekodiere, textBreite, umbrechen, dialog };
+})();
+/* ==== diagramm-kern: Ende ==== */
+</script>
+<script>
+/* UML-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
+ * UML-Klassendiagramme als Entwurfs- oder Implementationsdiagramm zeichnen, Abiturklassen (NRW) als Vorlagen,
+ * Export als SVG/PNG und Java-Gerüst. Alles bleibt im Browser.
+ */
+"use strict";
+const { $, esc } = Kern;
+const SPEICHER = "browserwerkzeuge-uml";
+const FORMAT = "browserwerkzeuge-uml";
+const ALT_FORMAT = "anton-uml";                 // Dateien, Links und Speicher aus Version 1.x – werden weiter gelesen
+const FONT_PX = 14, ZH = 18, PAD = 6, MINB = 140;
+const SCHRIFT = `${FONT_PX}px Arial, Helvetica, sans-serif`;
+const SVGSCHRIFT = 'font-family="Arial, Helvetica, sans-serif"';
+
+const ARTEN = {
+  assoziation:     { name: "Assoziation",               strich: false, ende: "",          anfang: "" },
+  gerichtet:       { name: "Gerichtete Assoziation",    strich: false, ende: "offen",     anfang: "" },
+  aggregation:     { name: "Aggregation (◇ am Ganzen)", strich: false, ende: "",          anfang: "raute" },
+  komposition:     { name: "Komposition (◆ am Ganzen)", strich: false, ende: "",          anfang: "raute-voll" },
+  vererbung:       { name: "Vererbung (→ Oberklasse)",  strich: false, ende: "dreieck",   anfang: "" },
+  implementierung: { name: "Implementierung (→ Interface)", strich: true, ende: "dreieck", anfang: "" },
+  abhaengigkeit:   { name: "Abhängigkeit",              strich: true,  ende: "offen",     anfang: "" }
+};
+
+const leer = () => ({ format: FORMAT, version: 1, titel: "", ansicht: "implementation", klassen: [], beziehungen: [] });
+
+/* ------------------------------------------------------------------ Abiturklassen (Dokumentation NRW, Stand 10/2021) */
+const ABI = {
+  "Queue<ContentType>": ["", "+ Queue()\n+ isEmpty(): boolean\n+ enqueue(pContent: ContentType): void\n+ dequeue(): void\n+ front(): ContentType"],
+  "Stack<ContentType>": ["", "+ Stack()\n+ isEmpty(): boolean\n+ push(pContent: ContentType): void\n+ pop(): void\n+ top(): ContentType"],
+  "List<ContentType>": ["", "+ List()\n+ isEmpty(): boolean\n+ hasAccess(): boolean\n+ next(): void\n+ toFirst(): void\n+ toLast(): void\n+ getContent(): ContentType\n+ setContent(pContent: ContentType): void\n+ append(pContent: ContentType): void\n+ insert(pContent: ContentType): void\n+ concat(pList: List<ContentType>): void\n+ remove(): void"],
+  "BinaryTree<ContentType>": ["", "+ BinaryTree()\n+ BinaryTree(pContent: ContentType)\n+ BinaryTree(pContent: ContentType, pLeftTree: BinaryTree<ContentType>, pRightTree: BinaryTree<ContentType>)\n+ isEmpty(): boolean\n+ setContent(pContent: ContentType): void\n+ getContent(): ContentType\n+ setLeftTree(pTree: BinaryTree<ContentType>): void\n+ setRightTree(pTree: BinaryTree<ContentType>): void\n+ getLeftTree(): BinaryTree<ContentType>\n+ getRightTree(): BinaryTree<ContentType>"],
+  "BinarySearchTree<ContentType extends ComparableContent<ContentType>>": ["", "+ BinarySearchTree()\n+ isEmpty(): boolean\n+ insert(pContent: ContentType): void\n+ search(pContent: ContentType): ContentType\n+ remove(pContent: ContentType): void\n+ getContent(): ContentType\n+ getLeftTree(): BinarySearchTree<ContentType>\n+ getRightTree(): BinarySearchTree<ContentType>"],
+  "ComparableContent<ContentType>": ["", "+ isGreater(pComparableContent: ContentType): boolean\n+ isEqual(pComparableContent: ContentType): boolean\n+ isLess(pComparableContent: ContentType): boolean", "interface"],
+  "Graph": ["", "+ Graph()\n+ addVertex(pVertex: Vertex): void\n+ addEdge(pEdge: Edge): void\n+ removeVertex(pVertex: Vertex): void\n+ removeEdge(pEdge: Edge): void\n+ getVertex(pID: String): Vertex\n+ getVertices(): List<Vertex>\n+ getNeighbours(pVertex: Vertex): List<Vertex>\n+ getEdges(): List<Edge>\n+ getEdges(pVertex: Vertex): List<Edge>\n+ getEdge(pVertex: Vertex, pAnotherVertex: Vertex): Edge\n+ setAllVertexMarks(pMark: boolean): void\n+ allVerticesMarked(): boolean\n+ setAllEdgeMarks(pMark: boolean): void\n+ allEdgesMarked(): boolean\n+ isEmpty(): boolean"],
+  "Vertex": ["", "+ Vertex(pID: String)\n+ getID(): String\n+ setMark(pMark: boolean): void\n+ isMarked(): boolean"],
+  "Edge": ["", "+ Edge(pVertex: Vertex, pAnotherVertex: Vertex, pWeight: double)\n+ setWeight(pWeight: double): void\n+ getWeight(): double\n+ getVertices(): Vertex[]\n+ setMark(pMark: boolean): void\n+ isMarked(): boolean"],
+  "Client": ["", "+ Client(pServerIP: String, pServerPort: int)\n+ isConnected(): boolean\n+ send(pMessage: String): void\n+ close(): void\n+ processMessage(pMessage: String): void {abstract}", "abstrakt"],
+  "Server": ["", "+ Server(pPort: int)\n+ isOpen(): boolean\n+ isConnectedTo(pClientIP: String, pClientPort: int): boolean\n+ send(pClientIP: String, pClientPort: int, pMessage: String): void\n+ sendToAll(pMessage: String): void\n+ closeConnection(pClientIP: String, pClientPort: int): void\n+ close(): void\n+ processNewConnection(pClientIP: String, pClientPort: int): void {abstract}\n+ processMessage(pClientIP: String, pClientPort: int, pMessage: String): void {abstract}\n+ processClosingConnection(pClientIP: String, pClientPort: int): void {abstract}", "abstrakt"],
+  "Connection": ["", "+ Connection(pServerIP: String, pServerPort: int)\n+ send(pMessage: String): void\n+ receive(): String\n+ close(): void"],
+  "DatabaseConnector": ["", "+ DatabaseConnector(pIP: String, pPort: int, pDatabase: String, pUsername: String, pPassword: String)\n+ executeStatement(pSQLStatement: String): void\n+ getCurrentQueryResult(): QueryResult\n+ getErrorMessage(): String\n+ close(): void"],
+  "QueryResult": ["", "+ getData(): String[][]\n+ getColumnNames(): String[]\n+ getColumnTypes(): String[]\n+ getRowCount(): int\n+ getColumnCount(): int"]
+};
+
+/* ------------------------------------------------------------------ Mitglieder lesen */
+const Mitglied = {
+  // "- name: String", "+ getName(): String", "+ setName(pName: String): void {abstract}"
+  lies(zeile) {
+    const abstrakt = /\{abstract\}\s*$/i.test(zeile);
+    const z = zeile.replace(/\{abstract\}\s*$/i, "").trim();
+    const m = z.match(/^([+\-#~])?\s*([\wÄÖÜäöüß$]+)\s*(?:\((.*)\))?\s*(?::\s*(.+))?$/);
+    if (!m) return { roh: z, abstrakt };
+    return { sicht: m[1] || "", name: m[2], methode: m[3] !== undefined, params: (m[3] || "").trim(), typ: (m[4] || "").trim(), abstrakt, roh: z };
+  },
+  params(text) {                                       // "pA: int, pB: List<X>" → [{name, typ}]
+    const teile = []; let tiefe = 0, akt = "";
+    for (const c of text) { if (c === "<") tiefe++; if (c === ">") tiefe--; if (c === "," && !tiefe) { teile.push(akt); akt = ""; } else akt += c; }
+    if (akt.trim()) teile.push(akt);
+    return teile.map(t => { const [n, ...r] = t.split(":"); return { name: n.trim(), typ: r.join(":").trim() }; });
+  },
+  entwurf(zeile) {                                     // ohne Sichtbarkeit und Datentypen
+    const m = this.lies(zeile);
+    if (!m.name) return m.roh;
+    return m.methode ? `${m.name}(${this.params(m.params).map(p => p.name).join(", ")})` : m.name;
+  }
+};
+
+/* ------------------------------------------------------------------ Größen und Zeichnen */
+const zeilen = t => String(t || "").split("\n").map(z => z.trimEnd()).filter(z => z.trim());
+function inhalt(k, ansicht) {
+  const f = ansicht === "entwurf" ? z => Mitglied.entwurf(z) : z => z.replace(/\s*\{abstract\}\s*$/i, "");
+  return { attr: zeilen(k.attribute).map(z => ({ t: f(z), abstrakt: false })),
+           meth: zeilen(k.methoden).map(z => ({ t: f(z), abstrakt: /\{abstract\}\s*$/i.test(z) })) };
+}
+function kasten(k, ansicht) {
+  const i = inhalt(k, ansicht);
+  const kopf = [...(k.art === "interface" ? ["«interface»"] : k.art === "abstrakt" ? ["«abstract»"] : []), k.name || "Klasse"];
+  const breite = Math.max(MINB, ...kopf.map(t => Kern.textBreite(t, "bold " + SCHRIFT) + 2 * PAD + 8),
+    ...[...i.attr, ...i.meth].map(z => Kern.textBreite(z.t, SCHRIFT) + 2 * PAD + 4));
+  const kh = kopf.length * ZH + 2 * PAD, ah = Math.max(1, i.attr.length) * ZH + PAD, mh = Math.max(1, i.meth.length) * ZH + PAD;
+  return { w: Math.ceil(breite), h: kh + ah + mh, kh, ah, mh, kopf, i };
+}
+function randpunkt(k, g, zx, zy) {                    // Schnittpunkt der Linie Mitte→(zx,zy) mit dem Kasten
+  const cx = k.x + g.w / 2, cy = k.y + g.h / 2, dx = zx - cx, dy = zy - cy;
+  if (!dx && !dy) return [cx, cy];
+  const t = Math.min(dx ? (g.w / 2) / Math.abs(dx) : Infinity, dy ? (g.h / 2) / Math.abs(dy) : Infinity);
+  return [cx + dx * t, cy + dy * t];
+}
+const zahl = v => v.toFixed(1);
+function spitze(art, x, y, ux, uy, kl) {               // Ende bei (x,y), Richtung (ux,uy) zeigt auf den Kasten
+  const nx = -uy, ny = ux;
+  if (art === "offen") return `<path d="M${zahl(x - ux * 13 + nx * 6)} ${zahl(y - uy * 13 + ny * 6)} L${zahl(x)} ${zahl(y)} L${zahl(x - ux * 13 - nx * 6)} ${zahl(y - uy * 13 - ny * 6)}" fill="none" stroke="#000" stroke-width="1.5" class="${kl}"/>`;
+  if (art === "dreieck") return `<polygon points="${zahl(x)},${zahl(y)} ${zahl(x - ux * 16 + nx * 9)},${zahl(y - uy * 16 + ny * 9)} ${zahl(x - ux * 16 - nx * 9)},${zahl(y - uy * 16 - ny * 9)}" fill="#fff" stroke="#000" stroke-width="1.5" class="u-hohl ${kl}"/>`;
+  if (art === "raute" || art === "raute-voll") {
+    const voll = art === "raute-voll";
+    return `<polygon points="${zahl(x)},${zahl(y)} ${zahl(x - ux * 11 + nx * 6)},${zahl(y - uy * 11 + ny * 6)} ${zahl(x - ux * 22)},${zahl(y - uy * 22)} ${zahl(x - ux * 11 - nx * 6)},${zahl(y - uy * 11 - ny * 6)}" fill="${voll ? "#000" : "#fff"}" stroke="#000" stroke-width="1.5" class="${voll ? "u-voll" : "u-hohl"} ${kl}"/>`;
+  }
+  return "";
+}
+function text(x, y, t, anker = "middle", kl = "u-text", extra = "") {
+  return `<text x="${zahl(x)}" y="${zahl(y)}" ${SVGSCHRIFT} font-size="${FONT_PX}" text-anchor="${anker}" fill="#000" class="${kl}"${extra}>${esc(t)}</text>`;
+}
+function halo(x, y, t, anker = "middle") {
+  return `<text x="${zahl(x)}" y="${zahl(y)}" ${SVGSCHRIFT} font-size="13" text-anchor="${anker}" dominant-baseline="middle" fill="#000" stroke="#fff" stroke-width="4" paint-order="stroke" class="u-halo">${esc(t)}</text>`;
+}
+
+function zeichne(m, z = {}) {
+  const groessen = new Map(m.klassen.map(k => [k.id, kasten(k, m.ansicht)]));
+  const pos = new Map(m.klassen.map(k => [k.id, k]));
+  const teile = [];
+  // Beziehungen: parallele Linien zwischen denselben Klassen leicht versetzen
+  const paare = new Map();
+  m.beziehungen.forEach(b => { const s = [b.von, b.nach].sort().join("|"); paare.set(s, [...(paare.get(s) || []), b.id]); });
+  m.beziehungen.forEach(b => {
+    const ka = pos.get(b.von), kb = pos.get(b.nach); if (!ka || !kb) return;
+    const ga = groessen.get(b.von), gb = groessen.get(b.nach), art = ARTEN[b.art] || ARTEN.assoziation;
+    const kl = "u-linie" + (z.auswahl === "b:" + b.id ? " markiert" : "");
+    let d, s, e, ux, uy;
+    if (ka === kb) {                                    // reflexive Beziehung: Bogen oben rechts
+      const x = ka.x + ga.w, y = ka.y;
+      s = [x - 30, y]; e = [x, y + 24];
+      d = `M${zahl(s[0])} ${zahl(s[1])} C${zahl(s[0])} ${zahl(y - 46)} ${zahl(x + 46)} ${zahl(e[1])} ${zahl(e[0])} ${zahl(e[1])}`;
+      ux = -1; uy = 0;
+      teile.push(`<g data-ziel="b:${b.id}"><path d="${d}" fill="none" stroke="transparent" stroke-width="14"/><path d="${d}" fill="none" stroke="#000" stroke-width="1.5"${art.strich ? ' stroke-dasharray="6 4"' : ""} class="${kl}"/>` +
+        spitze(art.ende, e[0], e[1], ux, uy, kl) + spitze(art.anfang, s[0], s[1], 0, 1, kl) +
+        (b.beschriftung ? halo(x + 30, y - 26, b.beschriftung) : "") + (b.kardNach ? halo(e[0] + 10, e[1] + 12, b.kardNach, "start") : "") + (b.kardVon ? halo(s[0] - 14, s[1] - 12, b.kardVon, "end") : "") + "</g>");
+      return;
+    }
+    const liste = paare.get([b.von, b.nach].sort().join("|")), nr = liste.indexOf(b.id), versatz = (nr - (liste.length - 1) / 2) * 18;
+    const ca = [ka.x + ga.w / 2, ka.y + ga.h / 2], cb = [kb.x + gb.w / 2, kb.y + gb.h / 2];
+    const L = Math.hypot(cb[0] - ca[0], cb[1] - ca[1]) || 1;
+    const vx = (cb[0] - ca[0]) / L, vy = (cb[1] - ca[1]) / L, px = -vy * versatz, py = vx * versatz;
+    s = randpunkt(ka, ga, cb[0] + px, cb[1] + py); e = randpunkt(kb, gb, ca[0] + px, ca[1] + py);
+    s = [s[0] + px, s[1] + py]; e = [e[0] + px, e[1] + py];
+    ux = vx; uy = vy;
+    d = `M${zahl(s[0])} ${zahl(s[1])} L${zahl(e[0])} ${zahl(e[1])}`;
+    const nx = -uy, ny = ux, seite = ny > 0 ? -1 : 1;
+    let g = `<g data-ziel="b:${b.id}"><path d="${d}" fill="none" stroke="transparent" stroke-width="14"/>` +
+      `<path d="${d}" fill="none" stroke="#000" stroke-width="1.5"${art.strich ? ' stroke-dasharray="6 4"' : ""} class="${kl}"/>` +
+      spitze(art.ende, e[0], e[1], ux, uy, kl) + spitze(art.anfang, s[0], s[1], -ux, -uy, kl);
+    if (b.beschriftung) {                              // Rollenname gehört ans Ende, auf die andere Seite als die Kardinalität
+      const amEnde = ["gerichtet", "aggregation", "komposition", "assoziation"].includes(b.art);
+      const lx = amEnde ? e[0] - ux * 34 + nx * 13 * seite : (s[0] + e[0]) / 2 + nx * 12 * seite;
+      const ly = amEnde ? e[1] - uy * 34 + ny * 13 * seite : (s[1] + e[1]) / 2 + ny * 12 * seite;
+      g += halo(lx, ly, b.beschriftung);
+    }
+    if (b.kardVon) g += halo(s[0] + ux * 30 - nx * 12 * seite, s[1] + uy * 30 - ny * 12 * seite, b.kardVon);
+    if (b.kardNach) g += halo(e[0] - ux * 30 - nx * 12 * seite, e[1] - uy * 30 - ny * 12 * seite, b.kardNach);
+    teile.push(g + "</g>");
+  });
+  // Klassen
+  m.klassen.forEach(k => {
+    const g = groessen.get(k.id), x = k.x, y = k.y;
+    const kl = "u-kasten" + (z.auswahl === "k:" + k.id ? " markiert" : "") + (z.verbindeVon === "k:" + k.id ? " verbinde" : "");
+    let s = `<g data-ziel="k:${k.id}" data-knoten data-ziehbar>` +
+      `<rect x="${x}" y="${y}" width="${g.w}" height="${g.h}" fill="#fff" stroke="#000" stroke-width="1.5" class="${kl}"/>` +
+      `<line x1="${x}" y1="${y + g.kh}" x2="${x + g.w}" y2="${y + g.kh}" stroke="#000" stroke-width="1.2" class="u-trenn"/>` +
+      `<line x1="${x}" y1="${y + g.kh + g.ah}" x2="${x + g.w}" y2="${y + g.kh + g.ah}" stroke="#000" stroke-width="1.2" class="u-trenn"/>`;
+    g.kopf.forEach((t, i) => {
+      const name = i === g.kopf.length - 1;
+      s += text(x + g.w / 2, y + PAD + i * ZH + ZH * 0.75, t, "middle", "u-text",
+        name ? ` font-weight="bold"${k.art === "abstrakt" || k.art === "interface" ? ' font-style="italic"' : ""}` : ' font-size="12"');
+    });
+    g.i.attr.forEach((a, i) => { s += text(x + PAD, y + g.kh + PAD / 2 + i * ZH + ZH * 0.75, a.t, "start"); });
+    g.i.meth.forEach((a, i) => { s += text(x + PAD, y + g.kh + g.ah + PAD / 2 + i * ZH + ZH * 0.75, a.t, "start", "u-text", a.abstrakt ? ' font-style="italic"' : ""); });
+    teile.push(s + "</g>");
+  });
+  const sel = m.klassen.find(k => z.auswahl === "k:" + k.id);
+  const f = v => v.toFixed(1);
+  if (sel) { const g = groessen.get(sel.id), k = Math.min(1.6, Math.max(1, 1 / (z.skala || 1))); teile.push(Kern.griff("k:" + sel.id, sel.x + g.w + 6 * k, sel.y - 6 * k, z.skala || 1)); }
+  if (m.titel.trim() && m.klassen.length) {
+    const minX = Math.min(...m.klassen.map(k => k.x)), minY = Math.min(...m.klassen.map(k => k.y));
+    teile.push(`<text x="${minX}" y="${minY - 22}" ${SVGSCHRIFT} font-size="16" font-weight="bold" fill="#000" class="u-text">${esc(m.titel)}</text>`);
+  }
+  return teile.join("");
+}
+
+/* ------------------------------------------------------------------ Java-Gerüst */
+const Java = {
+  sicht: { "+": "public", "-": "private", "#": "protected", "~": "" },
+  standard(typ) {
+    if (/^(int|long|short|byte)$/.test(typ)) return "0";
+    if (/^(double|float)$/.test(typ)) return "0.0";
+    if (typ === "boolean") return "false";
+    if (typ === "char") return "' '";
+    return "null";
+  },
+  vielfach(k) {                                   // „*“, „n“, „1..*“, „0..10“, „3“ … = mehrere
+    const t = String(k || "").trim().toLowerCase(); if (!t) return false;
+    const ober = t.includes("..") ? t.split("..").pop().trim() : t;
+    return /^[*nm]$/.test(ober) || (/^\d+$/.test(ober) && +ober > 1);
+  },
+  erzeuge(m) {
+    const name = id => (m.klassen.find(k => k.id === id) || {}).name || "Object";
+    const grund = n => String(n).replace(/<.*$/, "").trim();
+    const abi = new Set(Object.keys(ABI).map(grund));
+    return m.klassen.map(k => {
+      if (abi.has(grund(k.name))) return `// ${k.name}: Abiturklasse – liegt bereits vor und wird nicht neu geschrieben.`;
+      const ober = m.beziehungen.filter(b => b.von === k.id && b.art === "vererbung").map(b => name(b.nach));
+      const schnitt = m.beziehungen.filter(b => b.von === k.id && b.art === "implementierung").map(b => name(b.nach));
+      const istI = k.art === "interface";
+      const abstrakteMethode = zeilen(k.methoden).some(z => /\{abstract\}\s*$/i.test(z));
+      const abstrakt = k.art === "abstrakt" || (!istI && abstrakteMethode);
+      const kopf = `public ${abstrakt && !istI ? "abstract " : ""}${istI ? "interface" : "class"} ${k.name || "Klasse"}` +
+        (ober.length ? ` extends ${istI ? ober.join(", ") : ober[0]}` : "") + (schnitt.length && !istI ? ` implements ${schnitt.join(", ")}` : "");
+      const aus = [];
+      if (!istI && ober.length > 1) aus.push(`// Hinweis: Java erlaubt nur eine Oberklasse – ${ober.slice(1).join(", ")} wurde weggelassen.`);
+      if (k.art !== "abstrakt" && !istI && abstrakteMethode) aus.push("// Hinweis: Die Klasse enthält abstrakte Methoden und ist deshalb abstrakt.");
+      aus.push(kopf + " {");
+      const attr = zeilen(k.attribute).map(z => Mitglied.lies(z));
+      const vorhanden = new Set(attr.map(a => a.name));
+      attr.forEach(a => {
+        if (!a.name) { aus.push(`    // ${a.roh}`); return; }
+        const s = this.sicht[a.sicht] ?? "private";
+        const [typ, ...rest] = (a.typ || "Object").split("="), init = rest.join("=").trim();
+        if (istI) { aus.push(`    public static final ${typ.trim()} ${a.name.toUpperCase()} = ${init || "/* Wert */ null"};   // Interfaces haben nur Konstanten`); return; }
+        aus.push(`    ${s ? s + " " : ""}${typ.trim()} ${a.name}${init ? " = " + init : ""};`);
+      });
+      // Referenzattribute aus gerichteten Beziehungen (Rollenname an der Linie)
+      m.beziehungen.filter(b => b.von === k.id && ["gerichtet", "aggregation", "komposition"].includes(b.art) && b.beschriftung).forEach(b => {
+        const n = b.beschriftung.replace(/^[+\-#~]\s*/, "").trim();
+        if (!/^[A-Za-z_]\w*$/.test(n) || vorhanden.has(n)) return;
+        const s = this.sicht[(b.beschriftung.trim()[0] || "")] ?? "private";
+        aus.push(`    ${s ? s + " " : ""}${this.vielfach(b.kardNach) ? `List<${name(b.nach)}>` : name(b.nach)} ${n};`);
+      });
+      const meth = zeilen(k.methoden).map(z => Mitglied.lies(z));
+      if (aus.length > aus.indexOf(kopf + " {") + 1 && meth.length) aus.push("");
+      meth.forEach((mm, i) => {
+        if (!mm.name) { aus.push(`    // ${mm.roh}`); return; }
+        const p = Mitglied.params(mm.params).map(x => `${x.typ || "Object"} ${x.name}`).join(", ");
+        const konstruktor = mm.name === grund(k.name);
+        const s = this.sicht[mm.sicht] ?? "public";
+        const typ = konstruktor ? "" : (mm.typ || "void") + " ";
+        if (istI) { aus.push(`    ${typ}${mm.name}(${p});`); return; }
+        if (mm.abstrakt) { aus.push(`    ${s ? s + " " : ""}abstract ${typ}${mm.name}(${p});`); return; }
+        aus.push(`    ${s ? s + " " : ""}${typ}${mm.name}(${p}) {`);
+        if (!konstruktor && mm.typ && mm.typ !== "void") aus.push(`        return ${this.standard(mm.typ)};`);
+        aus.push("    }");
+        if (i < meth.length - 1) aus.push("");
+      });
+      aus.push("}");
+      return aus.join("\n");
+    }).join("\n\n");
+  }
+};
+
+/* ------------------------------------------------------------------ Beispiele */
+const K = (id, name, x, y, attribute = "", methoden = "", art = "klasse") => ({ id, name, x, y, art, attribute, methoden });
+const B = (id, von, nach, art, beschriftung = "", kardVon = "", kardNach = "") => ({ id, von, nach, art, beschriftung, kardVon, kardNach });
+const BEISPIELE = {
+  praxis: { titel: "Arztpraxis mit Warteschlange", klassen: [
+      K("k1", "Arztpraxis", 60, 80, "", "+ Arztpraxis()\n+ patientKommt(pName: String): void\n+ naechsterPatient(): String"),
+      K("k2", "Queue<Patient>", 420, 70, "", "+ Queue()\n+ isEmpty(): boolean\n+ enqueue(pContent: Patient): void\n+ dequeue(): void\n+ front(): Patient"),
+      K("k3", "Patient", 470, 330, "- name: String\n- ankunft: int", "+ Patient(pName: String, pAnkunft: int)\n+ getName(): String\n+ getAnkunft(): int")],
+    beziehungen: [B("b1", "k1", "k2", "gerichtet", "-warteschlange", "", "1"), B("b2", "k2", "k3", "gerichtet", "", "", "*")] },
+  fahrzeuge: { titel: "Vererbung", klassen: [
+      K("k1", "Fahrzeug", 250, 60, "- kennzeichen: String\n- raeder: int", "+ Fahrzeug(pKennzeichen: String)\n+ getKennzeichen(): String\n+ fahre(pKm: double): void {abstract}", "abstrakt"),
+      K("k2", "Auto", 100, 300, "- tankinhalt: double", "+ Auto(pKennzeichen: String)\n+ fahre(pKm: double): void\n+ tanke(pLiter: double): void"),
+      K("k3", "Fahrrad", 420, 300, "- gaenge: int", "+ Fahrrad(pKennzeichen: String)\n+ fahre(pKm: double): void")],
+    beziehungen: [B("b1", "k2", "k1", "vererbung"), B("b2", "k3", "k1", "vererbung")] },
+  bibliothek: { titel: "Bibliothek", klassen: [
+      K("k1", "Bibliothek", 60, 100, "- name: String", "+ Bibliothek(pName: String)\n+ fuegeHinzu(pBuch: Buch): void\n+ sucheTitel(pTitel: String): Buch"),
+      K("k2", "Buch", 460, 100, "- titel: String\n- autor: String\n- isbn: String\n- ausgeliehen: boolean", "+ Buch(pTitel: String, pAutor: String, pIsbn: String)\n+ getTitel(): String\n+ istAusgeliehen(): boolean\n+ setAusgeliehen(pWert: boolean): void")],
+    beziehungen: [B("b1", "k1", "k2", "aggregation", "-buecher", "1", "*")] }
+};
+
+/* ------------------------------------------------------------------ Anwendung */
+const App = {
+  m: leer(), auswahl: null, modus: "auswahl", neueArt: "gerichtet",
+
+  init() {
+    Kern.design("btn-design");
+    this.verlauf = new Kern.Verlauf(() => JSON.stringify(this.m), s => { this.m = JSON.parse(s); this.pruefeAuswahl(); this.aktualisiere(); });
+    const g = Kern.speicher.lies(SPEICHER);
+    if (g && (g.format === FORMAT || g.format === ALT_FORMAT)) this.m = this.vervollstaendige(g);
+    this.flaeche = new Kern.Flaeche($("zeichnung"), {
+      modus: () => this.modus,
+      onKlick: z => this.waehle(z ? z.id : null),
+      onDoppel: (z, p) => {
+        if (!z) { this.neueKlasse(p.x, p.y); return; }
+        this.waehle(z.id); const f = $("eigenschaften").querySelector("input,textarea"); if (f) { f.focus(); f.select(); }
+      },
+      onZiehStart: () => this.verlauf.merke(),
+      onZiehen: (z, dx, dy) => { const k = this.klasse(z.id); if (k) { k.x += dx; k.y += dy; this.zeichneNur(); } },
+      onZiehEnde: () => { this.m.klassen.forEach(k => { k.x = Math.round(k.x / 5) * 5; k.y = Math.round(k.y / 5) * 5; }); this.zeichneNur(); this.speichere(); this.knoepfe(); },
+      onVerbinde: (von, nach) => this.verbinde(von, nach),
+      onVerbindeStart: () => this.zeichneNur(),
+      beschreibe: zid => {
+        const k = this.klasse(zid);
+        if (k) return `${k.art === "interface" ? "Interface" : k.art === "abstrakt" ? "Abstrakte Klasse" : "Klasse"} ${k.name || "ohne Namen"}`;
+        const b = this.beziehung(zid), n = id => (this.m.klassen.find(x => x.id === id) || {}).name || "?";
+        return b ? `${(ARTEN[b.art] || ARTEN.assoziation).name.replace(/ \(.*\)$/, "")} von ${n(b.von)} zu ${n(b.nach)}` : "";
+      },
+      onZoom: () => { if (this.auswahl && this.auswahl.startsWith("k:")) this.zeichneNur(); }
+    });
+    this.binde();
+    this.aktualisiere();
+    requestAnimationFrame(() => this.flaeche.einpassen());
+    this.ladeAusLink();
+    window.addEventListener("hashchange", () => this.ladeAusLink());   // Link in schon geöffnetem Tab
+  },
+  vervollstaendige(d) {                         // Daten von außen streng prüfen (Dateien, Links, Speicher)
+    const P = Kern.pruefe, m = leer();
+    d = d && typeof d === "object" ? d : {};
+    m.titel = P.text(d.titel).slice(0, 200); m.ansicht = P.wahl(d.ansicht, ["implementation", "entwurf"], "implementation");
+    const ids = new Set();
+    m.klassen = P.liste(d.klassen).filter(k => P.id(k.id) && !ids.has(k.id) && ids.add(k.id)).slice(0, 300)
+      .map(k => ({ id: k.id, name: P.text(k.name).slice(0, 120), x: P.zahl(k.x), y: P.zahl(k.y), art: P.wahl(k.art, ["klasse", "abstrakt", "interface"], "klasse"),
+        attribute: P.text(k.attribute), methoden: P.text(k.methoden) }));
+    const bids = new Set();
+    m.beziehungen = P.liste(d.beziehungen).filter(b => P.id(b.id) && !bids.has(b.id) && bids.add(b.id) && ids.has(b.von) && ids.has(b.nach)).slice(0, 1000)
+      .map(b => ({ id: b.id, von: b.von, nach: b.nach, art: P.wahl(b.art, Object.keys(ARTEN), "assoziation"),
+        beschriftung: P.text(b.beschriftung).slice(0, 80), kardVon: P.text(b.kardVon).slice(0, 20), kardNach: P.text(b.kardNach).slice(0, 20) }));
+    return m;
+  },
+  klasse(zid) { return zid && zid.startsWith("k:") ? this.m.klassen.find(k => k.id === zid.slice(2)) : null; },
+  beziehung(zid) { return zid && zid.startsWith("b:") ? this.m.beziehungen.find(b => b.id === zid.slice(2)) : null; },
+  neueId(p, l) { let n = 1; while (l.some(x => x.id === p + n)) n++; return p + n; },
+  pruefeAuswahl() { if (this.auswahl && !this.klasse(this.auswahl) && !this.beziehung(this.auswahl)) this.auswahl = null; },
+  aendere(f) { this.verlauf.merke(); f(); this.aktualisiere(); },
+  speichere() { Kern.speicher.schreib(SPEICHER, this.m); },
+
+  zeichneNur() {
+    this.flaeche.inhalt(zeichne(this.m, { auswahl: this.auswahl, verbindeVon: this.flaeche.verbindeVon ? this.flaeche.verbindeVon.id : null, skala: this.flaeche.s }));
+    $("modus-hinweis").hidden = this.modus !== "verbinden" && !this.flaeche.verbindeVon;
+    $("modus-hinweis").textContent = this.flaeche.verbindeVon ? "Jetzt die Zielklasse antippen" : `${ARTEN[this.neueArt].name}: von Klasse zu Klasse ziehen oder nacheinander antippen`;
+  },
+  aktualisiere() { this.zeichneNur(); this.zeigeEigenschaften(); this.zeigeCode(); this.knoepfe(); this.speichere(); },
+  knoepfe() {
+    $("btn-loeschen").disabled = !this.auswahl;
+    $("btn-rueck").disabled = !this.verlauf.zurueck.length;
+    $("btn-vor").disabled = !this.verlauf.vor.length;
+    $("btn-verbinden").classList.toggle("aktiv", this.modus === "verbinden");
+  },
+  waehle(zid) { this.auswahl = zid; this.zeichneNur(); this.zeigeEigenschaften(); this.knoepfe(); },
+
+  /* ---------- Bearbeiten */
+  freierPlatz() {                                 // freie Stelle im sichtbaren Bereich suchen
+    const mi = this.flaeche.mitte();
+    const belegt = (x, y) => this.m.klassen.some(k => { const g = kasten(k, this.m.ansicht); return x < k.x + g.w + 30 && x + 170 > k.x - 30 && y < k.y + g.h + 30 && y + 120 > k.y - 30; });
+    for (let ring = 0; ring < 12; ring++)
+      for (let i = 0; i < Math.max(1, ring * 8); i++) {
+        const w = i / Math.max(1, ring * 8) * 2 * Math.PI, x = Math.round((mi.x - 85 + Math.cos(w) * ring * 90) / 5) * 5, y = Math.round((mi.y - 60 + Math.sin(w) * ring * 70) / 5) * 5;
+        if (!belegt(x, y)) return [x, y];
+      }
+    let x = Math.round(mi.x - 70), y = Math.round(mi.y - 50);
+    while (this.m.klassen.some(k => Math.abs(k.x - x) < 60 && Math.abs(k.y - y) < 40)) { x += 40; y += 40; }
+    return [x, y];
+  },
+  neueKlasse(x, y, vorlage) {
+    if (x === undefined) [x, y] = this.freierPlatz();
+    let n = 1; while (this.m.klassen.some(k => k.name === "Klasse" + n)) n++;
+    const k = Object.assign({ id: this.neueId("k", this.m.klassen), name: "Klasse" + n, x: Math.round(x), y: Math.round(y), art: "klasse", attribute: "", methoden: "" }, vorlage || {});
+    this.aendere(() => { this.m.klassen.push(k); this.auswahl = "k:" + k.id; });
+    if (!vorlage) { const f = $("eigenschaften").querySelector("input"); if (f) { f.focus(); f.select(); } }
+  },
+  abiturklasse(name) {
+    const v = ABI[name]; if (!v) return;
+    const [x, y] = this.freierPlatz();
+    this.neueKlasse(x, y, { name, attribute: v[0], methoden: v[1], art: v[2] || "klasse" });
+    Kern.meldung(`${name.replace(/<.*/, "")} eingefügt (nach der Dokumentation der NRW-Abiturklassen).`);
+  },
+  verbinde(von, nach) {
+    this.modus = "auswahl";                       // Verbinden gilt nur für einen Übergang
+    const a = this.klasse(von), b = this.klasse(nach); if (!a || !b) return;
+    const bz = { id: this.neueId("b", this.m.beziehungen), von: a.id, nach: b.id, art: this.neueArt, beschriftung: "", kardVon: "", kardNach: "" };
+    this.aendere(() => { this.m.beziehungen.push(bz); this.auswahl = "b:" + bz.id; });
+  },
+  loesche() {
+    const k = this.klasse(this.auswahl), b = this.beziehung(this.auswahl); if (!k && !b) return;
+    this.aendere(() => {
+      if (k) { this.m.klassen = this.m.klassen.filter(x => x !== k); this.m.beziehungen = this.m.beziehungen.filter(x => x.von !== k.id && x.nach !== k.id); }
+      if (b) this.m.beziehungen = this.m.beziehungen.filter(x => x !== b);
+      this.auswahl = null;
+    });
+  },
+
+  /* ---------- Eigenschaften */
+  feld(text, wert, setzen, hinweis = "", art = "input", zeilenzahl = 4) {
+    const h = document.createElement("div"); h.className = "feld";
+    const id = "f" + Math.random().toString(36).slice(2, 8);
+    h.innerHTML = `<label for="${id}">${esc(text)}</label>${art === "textarea" ? `<textarea id="${id}" rows="${zeilenzahl}" spellcheck="false" wrap="off"></textarea>` : `<input id="${id}" type="text" spellcheck="false" autocomplete="off">`}${hinweis ? `<small class="dezent">${hinweis}</small>` : ""}`;
+    const e = h.querySelector("input,textarea"); e.value = wert || "";
+    let gemerkt = false;
+    e.addEventListener("focus", () => { gemerkt = false; });
+    e.addEventListener("input", () => { if (!gemerkt) { this.verlauf.merke(); gemerkt = true; } setzen(e.value); this.zeichneNur(); this.zeigeCode(); this.knoepfe(); this.speichere(); });
+    if (art === "input") e.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); e.blur(); } });
+    return h;
+  },
+  auswahlFeld(text, wert, optionen, setzen) {
+    const h = document.createElement("div"); h.className = "feld";
+    const id = "f" + Math.random().toString(36).slice(2, 8);
+    h.innerHTML = `<label for="${id}">${esc(text)}</label><select id="${id}"></select>`;
+    const s = h.querySelector("select");
+    optionen.forEach(([w, t]) => s.add(new Option(t, w, false, w === wert)));
+    s.addEventListener("change", () => this.aendere(() => setzen(s.value)));
+    return h;
+  },
+  knopf(text, aktion) { const b = document.createElement("button"); b.type = "button"; b.textContent = text; b.addEventListener("click", aktion); return b; },
+
+  zeigeEigenschaften() {
+    const p = $("eigenschaften"); p.innerHTML = "";
+    const h = document.createElement("h2"); p.appendChild(h);
+    const k = this.klasse(this.auswahl), b = this.beziehung(this.auswahl);
+    if (k) {
+      h.textContent = "Klasse";
+      p.appendChild(this.feld("Name", k.name, v => { k.name = v; }, "Generische Klassen z. B. List&lt;Schueler&gt;"));
+      p.appendChild(this.auswahlFeld("Art", k.art, [["klasse", "Klasse"], ["abstrakt", "Abstrakte Klasse"], ["interface", "Interface"]], v => { k.art = v; }));
+      p.appendChild(this.feld("Attribute (eins pro Zeile)", k.attribute, v => { k.attribute = v; }, "z. B. - name: String", "textarea", 4));
+      p.appendChild(this.feld("Methoden (eine pro Zeile)", k.methoden, v => { k.methoden = v; }, "z. B. + getName(): String · abstrakt: … {abstract}", "textarea", 6));
+      const z = document.createElement("div"); z.className = "zeile";
+      z.appendChild(this.knopf("Beziehung von hier …", () => { this.flaeche.setzeVerbindeVon({ id: "k:" + k.id }); this.knoepfe(); this.zeichneNur(); }));
+      z.appendChild(this.knopf("Löschen", () => this.loesche()));
+      p.appendChild(z);
+    } else if (b) {
+      const n = id => (this.m.klassen.find(x => x.id === id) || {}).name;
+      h.textContent = `${n(b.von)} → ${n(b.nach)}`;
+      p.appendChild(this.auswahlFeld("Art", b.art, Object.entries(ARTEN).map(([w, a]) => [w, a.name]), v => { b.art = v; }));
+      p.appendChild(this.feld("Beschriftung / Rollenname", b.beschriftung, v => { b.beschriftung = v; }, "Implementationsdiagramm: z. B. -schuelerliste – wird im Java-Gerüst zum Attribut"));
+      const r = document.createElement("div"); r.className = "zwei-felder";
+      r.appendChild(this.feld(`Kardinalität bei ${n(b.von)}`, b.kardVon, v => { b.kardVon = v; }));
+      r.appendChild(this.feld(`Kardinalität bei ${n(b.nach)}`, b.kardNach, v => { b.kardNach = v; }, "z. B. 1, 0..1, *"));
+      p.appendChild(r);
+      const z = document.createElement("div"); z.className = "zeile";
+      z.appendChild(this.knopf("Richtung umdrehen", () => this.aendere(() => { [b.von, b.nach] = [b.nach, b.von]; [b.kardVon, b.kardNach] = [b.kardNach, b.kardVon]; })));
+      z.appendChild(this.knopf("Löschen", () => this.loesche()));
+      p.appendChild(z);
+    } else {
+      h.textContent = "Diagramm";
+      p.appendChild(this.feld("Titel", this.m.titel, v => { this.m.titel = v; }));
+      p.appendChild(this.auswahlFeld("Darstellung", this.m.ansicht, [["implementation", "Implementationsdiagramm (mit Datentypen)"], ["entwurf", "Entwurfsdiagramm (ohne Datentypen)"]], v => { this.m.ansicht = v; }));
+      const t = document.createElement("p"); t.className = "dezent klein";
+      t.innerHTML = "Doppelt auf die Fläche tippen: neue Klasse. Klasse ziehen: verschieben. Beziehungen: Art oben wählen, Klasse antippen und am blauen Pfeil zur Zielklasse ziehen. Vererbung zeigt zur Oberklasse, Aggregation/Komposition beginnt am Ganzen.";
+      p.appendChild(t);
+    }
+  },
+
+  zeigeCode() { if ($("code-bereich").open) $("code-text").textContent = Java.erzeuge(this.m) || "// Noch keine Klassen"; },
+
+  /* ---------- Dateien */
+  exportBild() { return Kern.bildAus(zeichne(this.m, {})); },
+  neu() {
+    const los = () => this.aendere(() => { const a = this.m.ansicht; this.m = leer(); this.m.ansicht = a; this.auswahl = null; });
+    if (!this.m.klassen.length) return los();
+    Kern.dialog("Neues Diagramm", "<p>Das aktuelle Diagramm wird geleert. Mit „Rückgängig“ holen Sie es zurück.</p>", [{ text: "Abbrechen" }, { text: "Leeren", primaer: true, aktion: los }]);
+  },
+  lade(d, meldung) {
+    if (!d || (d.format !== FORMAT && d.format !== ALT_FORMAT)) throw new Error("Format");
+    const neu = this.vervollstaendige(d);
+    zeichne(neu, {});                                 // Probezeichnung: Fehler hier ändern noch nichts
+    this.aendere(() => { this.m = neu; this.auswahl = null; });
+    requestAnimationFrame(() => this.flaeche.einpassen());
+    if (meldung) Kern.meldung(meldung);
+  },
+  async ladeAusLink() {
+    const t = location.hash.match(/^#u=(.+)$/); if (!t) return;
+    history.replaceState(null, "", location.pathname + location.search);
+    let daten;
+    try { daten = await Kern.dekodiere(t[1]); } catch (e) { Kern.meldung("Der Link enthält kein lesbares Diagramm."); return; }
+    Kern.linkOeffnen(!this.m.klassen.length, () => {
+      try { this.lade(daten, "Geteiltes Diagramm geöffnet – „Rückgängig“ stellt Ihr vorheriges wieder her."); }
+      catch (e) { Kern.meldung("Der Link enthält kein lesbares Diagramm."); }
+    });
+  },
+  async teile() {
+    const link = location.origin + location.pathname + "#u=" + await Kern.kodiere(this.m);
+    const ok = await Kern.kopiere(link);
+    Kern.dialog("Link teilen", `<p>${ok ? "Der Link ist kopiert." : "Kopieren Sie den Link:"} Wer ihn öffnet, sieht dieses Diagramm.</p><textarea readonly rows="4" class="link-feld">${esc(link)}</textarea>` +
+      `<p class="dezent klein">Das Diagramm steckt im Link selbst (nach dem #) und wird nie an den Server übertragen.</p>`, [{ text: "Schließen", primaer: true }]);
+  },
+
+  binde() {
+    $("btn-klasse").addEventListener("click", () => this.neueKlasse());
+    $("btn-verbinden").addEventListener("click", () => { this.modus = this.modus === "verbinden" ? "auswahl" : "verbinden"; this.flaeche.setzeVerbindeVon(null); this.knoepfe(); this.zeichneNur(); });
+    Object.entries(ARTEN).forEach(([w, a]) => $("neue-art").add(new Option(a.name, w, false, w === this.neueArt)));
+    $("neue-art").addEventListener("change", ev => { this.neueArt = ev.target.value; this.knoepfe(); this.zeichneNur(); });
+    Object.keys(ABI).forEach(n => $("abitur").add(new Option(n.replace(/ extends .*>>$/, ">"), n)));
+    $("abitur").addEventListener("change", ev => { this.abiturklasse(ev.target.value); ev.target.value = ""; });
+    $("btn-loeschen").addEventListener("click", () => this.loesche());
+    $("btn-rueck").addEventListener("click", () => this.verlauf.rueckgaengig());
+    $("btn-vor").addEventListener("click", () => this.verlauf.wiederholen());
+    $("btn-neu").addEventListener("click", () => this.neu());
+    $("btn-oeffnen").addEventListener("click", async () => {
+      const d = await Kern.oeffneDatei(".uml,.json,application/json"); if (!d) return;
+      try { this.lade(JSON.parse(d.text), `„${d.name}“ geöffnet.`); } catch (e) { Kern.meldung("Diese Datei ist kein Diagramm dieses Editors."); }
+    });
+    $("btn-speichern").addEventListener("click", () => Kern.speichereDatei(Kern.dateiname(this.m.titel || "klassendiagramm", "uml"), JSON.stringify(this.m, null, 1), "application/json"));
+    $("beispiele").addEventListener("change", ev => {
+      const b = BEISPIELE[ev.target.value]; ev.target.value = "";
+      if (b) this.lade(JSON.parse(JSON.stringify(Object.assign(leer(), b, { ansicht: this.m.ansicht }))), "Beispiel geladen – „Rückgängig“ stellt Ihr Diagramm wieder her.");
+    });
+    $("btn-svg").addEventListener("click", () => Kern.exportiereSVG(this.exportBild().svg, Kern.dateiname(this.m.titel || "klassendiagramm", "svg")));
+    $("btn-png").addEventListener("click", async () => { const b = this.exportBild(); try { await Kern.exportierePNG(b.svg, b.breite, b.hoehe, Kern.dateiname(this.m.titel || "klassendiagramm", "png")); } catch (e) { Kern.meldung("PNG-Export war nicht möglich – bitte SVG verwenden."); } });
+    $("btn-drucken").addEventListener("click", () => { $("druck").innerHTML = this.exportBild().svg; window.print(); });
+    $("btn-teilen").addEventListener("click", () => this.teile());
+    $("zoom-plus").addEventListener("click", () => this.flaeche.zoom(1.25));
+    $("zoom-minus").addEventListener("click", () => this.flaeche.zoom(0.8));
+    $("zoom-passend").addEventListener("click", () => this.flaeche.einpassen());
+    $("code-bereich").addEventListener("toggle", () => this.zeigeCode());
+    $("btn-code-kopieren").addEventListener("click", async () => Kern.meldung(await Kern.kopiere($("code-text").textContent) ? "Code kopiert." : "Kopieren war nicht möglich."));
+    document.addEventListener("keydown", ev => {
+      const imFeld = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);
+      const strg = ev.ctrlKey || ev.metaKey;
+      if (imFeld || document.querySelector("dialog[open]")) return;
+      if (strg && ev.key.toLowerCase() === "z") { ev.preventDefault(); ev.shiftKey ? this.verlauf.wiederholen() : this.verlauf.rueckgaengig(); }
+      else if (strg && ev.key.toLowerCase() === "y") { ev.preventDefault(); this.verlauf.wiederholen(); }
+      else if (ev.key === "Delete" || ev.key === "Backspace") { if (this.auswahl) { ev.preventDefault(); this.loesche(); } }
+      else if (ev.key === "Escape") { this.modus = "auswahl"; this.flaeche.setzeVerbindeVon(null); this.waehle(null); }
+    });
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => App.init());
+</script>
+</body>
+</html>

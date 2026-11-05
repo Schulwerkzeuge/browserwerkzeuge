@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<!-- Gutachten-Generator · SPDX-License-Identifier: Apache-2.0 · © 2025–2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- eigenes Symbol, damit der Browser nicht /favicon.ico an der Wurzel der Website anfragt -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f5f99'/%3E%3Cpath d='M9 9h14M9 16h14M9 23h9' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>Gutachten-Generator</title>
+<style>
+:root{--blau:#1f5f99;--blau-hell:#e8f0f8;--rand:#d6dae0;--rand-feld:#858f9b;--text:#1f2933;--dezent:#5f6b7a;--hinter:#f3f5f8}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--hinter);color:var(--text);line-height:1.5}
+header{background:#fff;border-bottom:1px solid var(--rand);position:sticky;top:0;z-index:10}
+.kopf{max-width:1100px;margin:0 auto;padding:10px 20px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.kopf h1{font-size:1.1rem;margin:0 12px 0 0}
+.kopf h1 small{font-weight:normal;color:var(--dezent)}
+nav,.werkzeuge{display:flex;flex-wrap:wrap;gap:4px}
+.werkzeuge{margin-left:auto}
+button{font:inherit;font-size:.92rem;padding:6px 12px;border:1px solid var(--rand-feld);background:#fff;color:var(--text);border-radius:6px;cursor:pointer}
+button:hover{background:var(--blau-hell)}
+button.primaer{background:var(--blau);border-color:var(--blau);color:#fff}
+button.primaer:hover{background:#174a78}
+nav button.aktiv{background:var(--blau-hell);border-color:var(--blau);font-weight:600}
+.schloss.an{color:#1e7b45;border-color:#1e7b45}
+.schloss.aus{color:#8a5a00}
+.schloss.gesperrt{color:#fff;background:#b42318;border-color:#b42318}
+main{max-width:1100px;margin:20px auto;padding:0 20px}
+section{background:#fff;border:1px solid var(--rand);border-radius:8px;padding:20px 24px}
+[hidden]{display:none!important}
+h2{margin-top:0;font-size:1.3rem}
+label{display:block}
+input[type=text],input[type=date],input[type=number],input[type=password],select,textarea{display:block;width:100%;margin-top:4px;padding:7px 9px;font:inherit;border:1px solid var(--rand-feld);border-radius:6px;background:#fff}
+input.kurz{display:inline-block;width:80px;margin:0 6px}
+input[type=radio],input[type=checkbox]{margin-right:6px}
+textarea{resize:vertical}
+.raster{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px 20px;margin:14px 0}
+fieldset{border:1px solid var(--rand);border-radius:6px;padding:8px 14px}
+fieldset label{display:inline-block;margin-right:18px}
+.breit{margin-top:14px}
+.aktionen{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:22px}
+.gruppe{display:flex;flex-wrap:wrap;gap:6px}
+.fehler{color:#b42318;min-height:1.2em}
+.dezent{color:var(--dezent)}
+.klein{font-size:.88rem}
+.zeile-oben{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.fortschritt{height:8px;background:#e5e8ec;border-radius:4px;overflow:hidden;margin-top:10px}
+#fortschritt-balken{height:100%;width:0;background:var(--blau);transition:width .3s}
+@media (prefers-reduced-motion: reduce){#fortschritt-balken{transition:none}}
+input[type=checkbox],input[type=radio]{width:18px;height:18px}
+.kriterium{border-top:1px solid var(--rand);padding:14px 0}
+.kriterium-kopf strong{display:block}
+.kriterium-kopf .hinweis{display:block;font-size:.88rem;color:var(--dezent)}
+.noten{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.note-wahl{display:inline-flex;align-items:center;padding:4px 10px;border:1px solid var(--rand);border-radius:16px;font-size:.9rem;cursor:pointer}
+.note-wahl:has(input:checked){background:var(--blau-hell);border-color:var(--blau)}
+details summary{cursor:pointer;font-size:.9rem;color:var(--blau)}
+.hinweis-box{padding:10px 14px;border-radius:6px;margin-bottom:12px;border:1px solid}
+.hinweis-box.info{background:#eef5fc;border-color:#b9d3ec}
+.hinweis-box.warnung{background:#fff6dc;border-color:#e6c35c}
+.hinweis-box.veraltet{background:#fdecea;border-color:#f1a9a0}
+.dokument{border:1px solid var(--rand);border-radius:6px;padding:16px;max-height:60vh;overflow-y:auto;background:#fafbfc}
+.dokument h3{margin:18px 0 8px;font-size:1.05rem}
+.dokument .meta{color:var(--dezent);margin-top:-6px}
+.element{border-left:4px solid var(--rand);background:#fff;padding:6px 10px;margin-bottom:8px;border-radius:0 6px 6px 0}
+.element textarea{border:none;padding:2px 0;margin:0;overflow:hidden;resize:none;background:transparent}
+.element textarea:focus{outline:2px solid var(--blau-hell)}
+.element-leiste{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.85rem;color:var(--dezent)}
+.element-leiste select{display:inline-block;width:auto;margin:0;padding:3px 6px;font-size:.85rem}
+.element-leiste button{padding:3px 8px;font-size:.85rem}
+.marke{color:#8a5a00}
+.note-1{border-left-color:#1e7b45}.note-2{border-left-color:#1f5f99}.note-3{border-left-color:#6f42c1}
+.note-4{border-left-color:#d97706}.note-5{border-left-color:#b42318}.note-6{border-left-color:#4b5563}
+.element-beleg{border-left-style:dashed}
+.unterschrift{margin-top:24px;color:var(--dezent)}
+.unterschrift p{margin:4px 0}
+.satzbank-krit{margin-bottom:18px}
+.satzbank-krit h4{margin:12px 0 4px}
+.satzbank-krit ol{margin:2px 0 8px}
+.satzbank-krit .lw{color:var(--dezent);font-size:.82rem}
+footer{max-width:1100px;margin:0 auto 30px;padding:0 20px;color:var(--dezent);font-size:.85rem;text-align:center}
+#meldungen{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:100}
+.meldung{background:#1f2933;color:#fff;padding:10px 14px;border-radius:6px;max-width:380px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.meldung-ok{background:#1e7b45}.meldung-fehler{background:#b42318}.meldung-warnung{background:#8a5a00}
+dialog{border:1px solid var(--rand);border-radius:8px;padding:20px 24px;max-width:540px;width:calc(100% - 32px)}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+dialog h3{font-size:1rem;margin:16px 0 6px}
+#druck{display:none}
+@media print{
+  body{background:#fff}
+  body>*:not(#druck){display:none!important}
+  #druck{display:block;font-family:"Liberation Serif","Times New Roman",serif;font-size:11pt;line-height:1.45;color:#000}
+  #druck h1{font-size:16pt;margin:0 0 4pt}
+  #druck .meta{font-size:10pt;margin:0 0 14pt}
+  #druck h2{font-size:12pt;margin:14pt 0 4pt;page-break-after:avoid}
+  #druck p{text-align:justify;margin:0 0 8pt}
+  #druck .ort{margin-top:28pt}
+  #druck .linie{margin:36pt 0 2pt}
+  #druck .verfasser{margin-top:0}
+  @page{margin:2.5cm 2cm}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="kopf">
+    <h1>Gutachten-Generator</h1>
+    <a id="ruecklink" href="../" hidden style="color:inherit;text-decoration:none;font-size:.9rem;white-space:nowrap">← Übersicht</a>
+    <nav>
+      <button type="button" data-ziel="allgemein">Allgemeines</button>
+      <button type="button" data-ziel="bewertung">Bewertung</button>
+      <button type="button" data-ziel="abschluss">Abschluss</button>
+      <button type="button" data-ziel="vorschau">Vorschau</button>
+      <button type="button" data-ziel="satzbank">Satzbank</button>
+      <button type="button" data-ziel="hilfe">Hilfe</button>
+    </nav>
+    <div class="werkzeuge">
+      <button type="button" id="schloss" class="schloss aus">Unverschlüsselt</button>
+      <button type="button" id="btn-neu">Neu</button>
+      <button type="button" id="btn-sicherung">Sicherung speichern</button>
+      <button type="button" id="btn-laden">Sicherung laden</button>
+      <button type="button" id="btn-einstellungen">Einstellungen</button>
+      <input type="file" id="datei" accept=".json,application/json" hidden>
+    </div>
+  </div>
+</header>
+
+<main>
+  <p id="gesperrt-hinweis" class="hinweis-box warnung" role="status" hidden>Die gespeicherten Daten sind verschlüsselt und gesperrt. Zum Bearbeiten oben auf „Gesperrt – entsperren“ tippen – oder über „Neu“ ein neues Gutachten beginnen.</p>
+  <!-- 1. Allgemeine Angaben -->
+  <section id="s-allgemein">
+    <h2>Allgemeine Angaben</h2>
+    <form id="info-form">
+      <fieldset>
+        <legend>Anrede</legend>
+        <label><input type="radio" name="anrede" value="herr">Herr</label>
+        <label><input type="radio" name="anrede" value="frau">Frau</label>
+        <label><input type="radio" name="anrede" value="neutral">ohne Anrede (durchgehend Vor- und Nachname)</label>
+      </fieldset>
+      <div class="raster">
+        <label>Vorname<input type="text" id="vorname" autocomplete="off"></label>
+        <label>Nachname<input type="text" id="nachname" autocomplete="off"></label>
+        <label>Fach<select id="fach"><option value="">Bitte auswählen</option></select></label>
+        <label>Lerngruppe<input type="text" id="lerngruppe" placeholder="z. B. 7d oder Q1 GK" autocomplete="off"></label>
+        <label>Beurteilungszeitraum von<input type="date" id="von"></label>
+        <label>bis<input type="date" id="bis"></label>
+        <label>Besuchte Unterrichtsstunden (optional)<input type="number" id="besuche" min="0" max="99"></label>
+      </div>
+      <label class="breit">Weitere Beurteilungsgrundlagen (optional, wird als Satz in die Einleitung übernommen)
+        <textarea id="grundlagen" rows="2" placeholder="z. B.: Darüber hinaus flossen Planungsgespräche und schriftliche Unterrichtsentwürfe in die Beurteilung ein."></textarea>
+      </label>
+    </form>
+    <p id="info-fehler" class="fehler" role="alert"></p>
+    <div class="aktionen"><span></span><button type="button" id="info-weiter" class="primaer">Weiter zur Bewertung</button></div>
+  </section>
+
+  <!-- 2. Bewertung nach Handlungsfeldern -->
+  <section id="s-bewertung" hidden>
+    <div class="zeile-oben"><h2 id="feld-titel"></h2><span id="feld-zaehler" class="dezent"></span></div>
+    <p id="feld-hilfe" class="dezent"></p>
+    <div class="fortschritt"><div id="fortschritt-balken"></div></div>
+    <p id="fortschritt-text" class="dezent klein"></p>
+    <div id="kriterien-liste"></div>
+    <div class="aktionen">
+      <button type="button" id="feld-zurueck">Zurück</button>
+      <button type="button" id="feld-weiter" class="primaer">Weiter</button>
+    </div>
+  </section>
+
+  <!-- 3. Abschluss -->
+  <section id="s-abschluss" hidden>
+    <h2>Abschluss</h2>
+    <p>Durchschnitt der Einzelbewertungen: <strong id="durchschnitt"></strong><br>
+      <span class="dezent klein">Nur zur Orientierung – die Gesamtnote legen Sie selbst fest.</span></p>
+    <label>Gesamtnote
+      <select id="gesamtnote">
+        <option value="0">keine Gesamtnote ausgeben</option>
+        <option value="1">sehr gut (1)</option>
+        <option value="2">gut (2)</option>
+        <option value="3">befriedigend (3)</option>
+        <option value="4">ausreichend (4)</option>
+        <option value="5">mangelhaft (5)</option>
+        <option value="6">ungenügend (6)</option>
+      </select>
+    </label>
+    <label class="breit">Zusammenfassung (optional, freier Text)
+      <textarea id="zusammenfassung" rows="5" placeholder="z. B. besondere Stärken und Entwicklungsperspektiven"></textarea>
+    </label>
+    <div class="raster">
+      <label>Ort (optional)<input type="text" id="ort" autocomplete="off"></label>
+      <label>Datum des Gutachtens<input type="date" id="ausstellung"></label>
+      <label>Verfasserin / Verfasser (optional)<input type="text" id="verfasser" placeholder="Name, Funktion" autocomplete="off"></label>
+    </div>
+    <p class="dezent klein">Ort, Datum und Verfasser erscheinen als Unterschriftenblock am Ende des Gutachtens.</p>
+    <div class="aktionen">
+      <button type="button" id="abschluss-zurueck">Zurück</button>
+      <button type="button" id="abschluss-weiter" class="primaer">Zur Vorschau</button>
+    </div>
+  </section>
+
+  <!-- 4. Vorschau -->
+  <section id="s-vorschau" hidden>
+    <h2>Vorschau und Bearbeitung</h2>
+    <div class="hinweis-box info">Jeder Satz kann direkt im Textfeld bearbeitet werden. Über die Notenauswahl ändern Sie die Bewertung eines Kriteriums, „Neu formulieren“ wählt eine andere Variante. Der Entwurf wird nur auf Knopfdruck neu erzeugt.</div>
+    <div class="hinweis-box warnung"><strong>Wichtiger Hinweis:</strong> Dieser Text wurde automatisch aus einer Satzbank zusammengestellt und dient als Entwurf. Die Verantwortung für Inhalt und sprachliche Korrektheit liegt bei der Verfasserin bzw. dem Verfasser des Gutachtens. Bitte prüfen Sie den Text vor der Verwendung sorgfältig.</div>
+    <div id="veraltet" class="hinweis-box veraltet" hidden>Die Eingaben wurden seit der Erstellung dieses Entwurfs geändert. <button type="button" id="veraltet-erzeugen">Entwurf neu erzeugen</button></div>
+    <div id="dokument" class="dokument"></div>
+    <div class="aktionen">
+      <button type="button" id="vorschau-zurueck">Zurück</button>
+      <div class="gruppe">
+        <button type="button" id="btn-neu-erzeugen">Neu erzeugen</button>
+        <button type="button" id="btn-kopieren">Kopieren</button>
+        <button type="button" id="btn-txt">Als Text (.txt)</button>
+        <button type="button" id="btn-odt" class="primaer">Als ODT (.fodt)</button>
+        <button type="button" id="btn-drucken">Drucken / PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Satzbank -->
+  <section id="s-satzbank" hidden>
+    <h2>Satzbank</h2>
+    <p class="dezent">Alle Formulierungen zum Korrekturlesen. In eckigen Klammern steht das Leitwort, mit dem der Generator Wiederholungen vermeidet. Die Satzbank liegt in der Datei <code>saetze.js</code> und kann dort angepasst werden.</p>
+    <div id="satzbank-pruefung"></div>
+    <div id="satzbank-inhalt"></div>
+  </section>
+
+  <!-- 6. Hilfe -->
+  <section id="s-hilfe" hidden>
+    <h2>Hilfe</h2>
+    <h3>Ablauf</h3>
+    <p>Zuerst die allgemeinen Angaben ausfüllen, dann die Kriterien der fünf Handlungsfelder bewerten. Nicht bewertete Kriterien erscheinen nicht im Gutachten. Zu jedem Kriterium kann eine konkrete Beobachtung als Beleg ergänzt werden; sie wird direkt hinter den Bewertungssatz gesetzt. Im Abschluss können eine Zusammenfassung, die Gesamtnote sowie Ort, Datum und Verfasser angegeben werden. In der Vorschau lässt sich jeder Satz bearbeiten.</p>
+    <h3>Satzbank und Abwechslung</h3>
+    <p>Für jedes Kriterium und jede Note gibt es mehrere fertig formulierte Varianten. Der Generator bevorzugt Varianten, deren Leitwort im Gutachten noch nicht vorkommt, bestraft Wörter, die bereits verwendet wurden, und versucht, mehr als zwei gleiche Satzanfänge hintereinander zu vermeiden. Der Name erscheint zuerst vollständig, danach in Kurzform oder als Pronomen, ein Pronomen aber nur, wenn der vorige Satz die Person mit Namen genannt hat. Bei Notensprüngen zwischen benachbarten Kriterien wird gelegentlich eine Überleitung eingefügt.</p>
+    <p>Die Kriterien orientieren sich an den fünf Handlungsfeldern des Kerncurriculums für den Vorbereitungsdienst in NRW. Bitte gleichen Sie die Bezeichnungen mit der jeweils gültigen Fassung ab und passen Sie sie bei Bedarf in <code>saetze.js</code> an.</p>
+    <h3>Export</h3>
+    <p><strong>ODT (.fodt):</strong> öffnet direkt in LibreOffice und kann dort weiterbearbeitet oder als .odt bzw. .docx gespeichert werden; Microsoft Word kann .fodt nicht direkt öffnen. <strong>Drucken / PDF:</strong> öffnet den Druckdialog des Browsers; dort kann „Als PDF speichern“ gewählt werden. <strong>Text / Kopieren:</strong> unformatierter Text. Der Warnhinweis erscheint nur auf dem Bildschirm, nicht im exportierten Gutachten.</p>
+    <h3>Datenspeicherung</h3>
+    <p>Alle Eingaben werden ausschließlich lokal im Browser gespeichert. Das Programm lädt keine externen Ressourcen und überträgt keine Daten. Über „Sicherung speichern“ kann der Stand als Datei gesichert und auf einem anderen Gerät wieder geladen werden. Sicherungen der Version 1.x sind nicht kompatibel; noch vorhandene Daten der Version 1.x im Browser können beim ersten Start gelöscht werden.</p>
+    <h3>Verschlüsselung</h3>
+    <p>Bei aktivierter Verschlüsselung werden die Daten mit AES-256-GCM verschlüsselt; der Schlüssel wird mit PBKDF2 (SHA-256, 600.000 Iterationen) aus Ihrem Passwort abgeleitet. Das Passwort wird nicht gespeichert und muss nach jedem Neuladen der Seite erneut eingegeben werden. <strong>Ein vergessenes Passwort lässt sich nicht wiederherstellen – die Daten sind dann verloren.</strong> Die Verschlüsselung schützt vor dem Auslesen des Browserspeichers, nicht vor Schadsoftware auf dem Gerät. Um das Passwort zu ändern, die Verschlüsselung aus- und mit neuem Passwort wieder einschalten.</p>
+    <h3>Automatische Löschung und Sperre</h3>
+    <p>Die Erinnerung zum Löschen ist standardmäßig ausgeschaltet. Wird sie aktiviert und wurden die Daten länger als die eingestellte Zahl von Tagen nicht bearbeitet, fragt der Generator beim nächsten Öffnen nach: Er bietet eine Sicherungsdatei an und löscht die Daten erst, wenn Sie bestätigen. Ohne Ihre Zustimmung wird nichts gelöscht; bloßes Öffnen zählt nicht als Bearbeitung. Die automatische Sperre (nur mit Verschlüsselung) speichert bei Inaktivität den Stand, entfernt Daten und Schlüssel aus dem Arbeitsspeicher und verlangt danach das Passwort.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Gutachten-Generator Version 2.1.1 · &copy; 2025–2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<br>
+  Alle Daten bleiben lokal in Ihrem Browser. Es werden keine externen Ressourcen geladen.<!-- rechtliches --><!-- /rechtliches --></p>
+</footer>
+
+<div id="meldungen" aria-live="polite"></div>
+<div id="druck"></div>
+
+<!-- Einstellungen -->
+<dialog id="dlg-einstellungen" aria-labelledby="e-titel">
+  <h2 id="e-titel">Einstellungen</h2>
+  <h3>Verschlüsselung</h3>
+  <label><input type="checkbox" id="e-verschl">Daten im Browser verschlüsselt speichern (AES-256-GCM)</label>
+  <p id="e-krypto-hinweis" class="dezent klein" hidden>Dieser Browser stellt die Web-Crypto-Schnittstelle hier nicht zur Verfügung. Verschlüsselung ist daher nicht möglich.</p>
+  <div id="e-pw-block" hidden>
+    <label>Passwort (mindestens 8 Zeichen)<input type="password" id="e-pw1" autocomplete="new-password"></label>
+    <label>Passwort wiederholen<input type="password" id="e-pw2" autocomplete="new-password"></label>
+    <p class="hinweis-box warnung klein">Wird das Passwort vergessen, sind die Daten verloren. Es gibt keine Wiederherstellung.</p>
+  </div>
+  <h3>Automatische Löschung</h3>
+  <label>Löschen anbieten nach<input type="number" id="e-ablauf" class="kurz" min="0" max="365">Tagen ohne Bearbeitung (mit Rückfrage und Sicherung; 0 = nie, Standard)</label>
+  <h3>Automatische Sperre</h3>
+  <label>Bei Inaktivität sperren nach<input type="number" id="e-sperre" class="kurz" min="0" max="240">Minuten (0 = nie, nur mit Verschlüsselung)</label>
+  <p id="e-fehler" class="fehler"></p>
+  <div class="aktionen">
+    <button type="button" id="e-abbrechen">Abbrechen</button>
+    <button type="button" id="e-speichern" class="primaer">Speichern</button>
+  </div>
+</dialog>
+
+<!-- Passwortabfrage -->
+<dialog id="dlg-passwort" aria-labelledby="p-titel">
+  <h2 id="p-titel"></h2>
+  <p id="p-text"></p>
+  <label>Passwort<input type="password" id="p-feld" autocomplete="current-password"></label>
+  <div class="aktionen">
+    <button type="button" id="p-abbrechen">Abbrechen</button>
+    <button type="button" id="p-ok" class="primaer">OK</button>
+  </div>
+</dialog>
+
+<script src="saetze.js?v=86bcf3ef47"></script>
+<script src="lehrergutachten.js?v=ee53dc634b"></script>
+<script>
+/* Rücklink zur Übersicht – gleiche Logik wie in pwa.js (dort ändern und hierher übernehmen).
+ * Eine Übersichtsseite meldet sich selbst an (siehe README); ohne Anmeldung wird der Link entfernt. */
+(function () {
+  "use strict";
+  function ruecklink() {
+    const link = document.getElementById("ruecklink");
+    if (!link) return;
+    if (matchMedia("(display-mode: standalone), (display-mode: fullscreen)").matches || navigator.standalone === true) { link.remove(); return; }
+    const liste = new Map(), VOR = "browserwerkzeuge-uebersicht:";
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || !k.startsWith(VOR)) continue;
+        const pfad = k.slice(VOR.length), name = localStorage.getItem(k);
+        if (/^\/(?:[\w.%-]+\/)*$/.test(pfad) && !/\.\.|%2e/i.test(pfad) && typeof name === "string" && name.trim() && name.length <= 40)
+          liste.set(pfad, name.trim());
+      }
+    } catch (e) { /* ohne Speicher: kein Link */ }
+    let ziel = "";
+    const merk = "browserwerkzeuge-ruecklink:" + location.pathname;
+    try {
+      const herkunft = document.referrer ? new URL(document.referrer) : null;
+      const pfad = herkunft && herkunft.origin === location.origin ? herkunft.pathname.replace(/index\.html?$/, "") : "";
+      if (liste.has(pfad)) ziel = pfad;
+      if (ziel) sessionStorage.setItem(merk, ziel);
+      else { const s = sessionStorage.getItem(merk); if (s && liste.has(s)) ziel = s; }
+    } catch (e) { /* ohne Referrer oder Sitzungsspeicher */ }
+    if (!ziel) for (const pfad of liste.keys())
+      if (location.pathname.startsWith(pfad) && pfad.length > ziel.length) ziel = pfad;
+    if (!ziel) { link.remove(); return; }
+    const name = liste.get(ziel), feld = link.querySelector("[data-ruecklink-name]");
+    if (feld) feld.textContent = name; else link.textContent = "← " + name;   // Feld: nur der Name (Maus-/Tastaturtrainer)
+    link.href = ziel;
+    link.title = "Zurück zu " + name;
+    link.hidden = false;
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ruecklink);
+  else ruecklink();
+})();
+</script>
+</body>
+</html>

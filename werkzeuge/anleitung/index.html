@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- eigenes Symbol, damit der Browser nicht /favicon.ico an der Wurzel der Website anfragt -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f5f99'/%3E%3Cpath d='M9 9h14M9 16h14M9 23h9' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="robots" content="noindex">
+<title>Anleitung für Lehrkräfte</title>
+<style>
+:root{--hinter:#f3f5f8;--flaeche:#fff;--text:#1f2933;--dezent:#5f6b7a;--rand:#d6dae0;--akzent:#1f5f99;--akzent-hell:#e8f0f8;--gruen:#1e7b45}
+[data-design="dunkel"]{--hinter:#14181d;--flaeche:#1e242b;--text:#e6e9ed;--dezent:#9aa4b1;--rand:#343c46;--akzent:#5aa0e6;--akzent-hell:#243447;--gruen:#4fbf7f}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--hinter);color:var(--text);line-height:1.6}
+header{background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf{max-width:900px;margin:0 auto;padding:12px 20px;display:flex;gap:12px;align-items:center}
+.kopf h1{font-size:1.25rem;margin:0;flex:1}
+.kopf a{color:var(--akzent);text-decoration:none;font-size:.9rem}
+button{font:inherit;font-size:.9rem;padding:6px 12px;border:1px solid var(--rand);background:var(--flaeche);color:var(--text);border-radius:6px;cursor:pointer}
+main{max-width:900px;margin:20px auto;padding:0 20px}
+section{background:var(--flaeche);border:1px solid var(--rand);border-radius:8px;padding:18px 24px;margin:0 0 16px}
+h2{font-size:1.2rem;margin:0 0 8px;color:var(--akzent)}
+h3{font-size:1.02rem;margin:16px 0 4px}
+p{margin:6px 0}
+ol,ul{margin:6px 0;padding-left:22px}
+li{margin:3px 0}
+a{color:var(--akzent)}
+kbd{font-family:inherit;font-size:.85em;border:1px solid var(--rand);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--hinter)}
+.inhalt{columns:2;column-gap:32px;padding-left:18px}
+.hinweis{border-left:4px solid var(--gruen);background:var(--hinter);padding:8px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+.dezent{color:var(--dezent)}.klein{font-size:.9rem}
+footer{max-width:900px;margin:0 auto 24px;padding:0 20px;color:var(--dezent);font-size:.85rem;text-align:center}
+footer a{color:inherit}
+@media (max-width:600px){.inhalt{columns:1}}
+@media print{
+  :root,[data-design="dunkel"]{--hinter:#fff;--flaeche:#fff;--text:#000;--dezent:#444;--rand:#bbb;--akzent:#1f5f99;--akzent-hell:#eef3f9;--gruen:#1e7b45}
+  header button,.kopf a,footer{display:none}
+  body{background:#fff;font-size:10.5pt}
+  main{margin:0;max-width:none}
+  section{border:none;padding:0;margin:0 0 12pt;break-inside:auto}
+  h2{break-after:avoid}
+  a{color:inherit;text-decoration:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="kopf">
+    <h1>Anleitung für Lehrkräfte</h1>
+    <a id="ruecklink" href="../" hidden>← Übersicht</a>
+    <button type="button" id="btn-design">Dunkel</button>
+  </div>
+</header>
+
+<main>
+  <section>
+    <h2>Worum es geht</h2>
+    <p>Diese Anleitung beschreibt die Werkzeuge für Unterricht und Organisation: Zufall &amp; Gruppen, Tafel, Sitzplan, QR-Codes, Passwort-Generator und Gutachten-Generator. Alles läuft direkt im Browser, ohne Anmeldung und ohne Installation. Eingaben wie Klassenlisten oder Gutachtentexte werden <strong>nur im Browser des angemeldeten Benutzerkontos</strong> gespeichert und nirgendwohin übertragen.</p>
+    <div class="hinweis">
+      <strong>Drei Regeln:</strong> Die Werkzeuge nur unter der eigenen Anmeldung nutzen. Gesicherte Dateien mit Namen (Klassenlisten, Sitzpläne) gehören an einen geschützten Ort, etwa die schulische Cloud. Für private Endgeräte gelten die Regelungen der Schule.
+    </div>
+    <p>Weil die Daten im Browser liegen, sind sie auf einem anderen Gerät oder in einem anderen Browser nicht automatisch vorhanden. Dafür gibt es in den Werkzeugen jeweils eine Funktion zum <strong>Sichern als Datei</strong> und zum <strong>Laden</strong>.</p>
+    <p class="klein dezent">Inhalt:</p>
+    <ol class="inhalt klein">
+      <li><a href="#listen">Klassenlisten anlegen</a></li>
+      <li><a href="#zufall">Zufall &amp; Gruppen</a></li>
+      <li><a href="#tafel">Tafel</a></li>
+      <li><a href="#sitzplan">Sitzplan</a></li>
+      <li><a href="#qr">QR-Codes</a></li>
+      <li><a href="#passwort">Passwort-Generator</a></li>
+      <li><a href="#gutachten">Gutachten-Generator</a></li>
+      <li><a href="#fragen">Häufige Fragen</a></li>
+    </ol>
+  </section>
+
+  <section id="listen">
+    <h2>1. Klassenlisten anlegen</h2>
+    <p>Klassenlisten werden einmal in <strong>Zufall &amp; Gruppen</strong> angelegt und stehen danach auch im <strong>Sitzplan</strong> zur Verfügung.</p>
+    <ol>
+      <li><strong>Zufall &amp; Gruppen</strong> öffnen und auf <strong>Neue Liste</strong> klicken.</li>
+      <li>Einen Namen für die Liste eingeben, z. B. „6a“ oder „Q1 GK Geschichte“.</li>
+      <li>Die Namen eintragen – einen pro Zeile. <em>Oder</em> eine CSV-Datei einlesen, etwa die Teilnehmerliste aus Moodle. Das Werkzeug erkennt die Spalten selbst; bei Moodle-Kursen mit Gruppen lässt sich eine Gruppe auswählen.</li>
+      <li>Beim Einlesen das Namensformat wählen. Empfehlung: <strong>nur Vornamen</strong> (bei doppelten Vornamen wird automatisch ein Initial ergänzt).</li>
+      <li><strong>Speichern</strong>. Die heruntergeladene CSV-Datei danach löschen – sie enthält meist mehr Daten als nötig.</li>
+    </ol>
+    <p>Mit <strong>Listen sichern</strong> entsteht eine Datei, die sich auf einem anderen Gerät über <strong>Listen laden</strong> wieder einlesen lässt.</p>
+  </section>
+
+  <section id="zufall">
+    <h2>2. Zufall &amp; Gruppen</h2>
+    <h3>Wer ist dran?</h3>
+    <ul>
+      <li>Unter <strong>Anwesenheit</strong> fehlende Schülerinnen und Schüler anklicken – sie werden durchgestrichen und nicht gezogen.</li>
+      <li><strong>Ziehen</strong> wählt zufällig eine Person. Mit <strong>ohne Wiederholung</strong> kommt jede und jeder einmal dran, bevor eine neue Runde beginnt.</li>
+      <li>Statt zu klicken: <kbd>Leertaste</kbd>, <kbd>→</kbd> oder die Weiter-Taste eines Präsentations-Presenters. Für den Beamer gibt es einen Vollbildmodus.</li>
+    </ul>
+    <h3>Gruppen bilden</h3>
+    <ul>
+      <li>Entweder die <strong>Anzahl der Gruppen</strong> oder die <strong>Personen pro Gruppe</strong> vorgeben; bei Letzterem lässt sich wählen, ob übrige Personen die Gruppen eher größer oder kleiner machen.</li>
+      <li><strong>Wer soll nicht zusammenarbeiten?</strong> Pro Zeile zwei oder mehr Namen mit Komma, z. B. „Anna, Ben“. Die Angabe wird pro Liste gespeichert und gilt auch im Sitzplan.</li>
+      <li>Optional <strong>Rollen</strong> eintragen (z. B. „Zeitwächter, Protokoll, Sprecher“) – sie werden in jeder Gruppe zufällig vergeben.</li>
+      <li>Das Ergebnis lässt sich <strong>kopieren</strong> oder <strong>drucken</strong>.</li>
+    </ul>
+    <h3>Zahl &amp; Würfel</h3>
+    <p>Dieser Reiter braucht keine Klassenliste: Zufallszahlen in einem frei wählbaren Bereich (auch mehrere ohne Wiederholung, etwa für Losnummern) oder ein bis fünf animierte Würfel mit Summe.</p>
+  </section>
+
+  <section id="tafel">
+    <h2>3. Tafel</h2>
+    <p>Die Tafel zeigt Arbeitsphasen am Beamer: Restzeit, Aufgabe, Sozialform, Material als QR-Code und auf Wunsch eine Lärmampel.</p>
+    <h3>Stunde vorbereiten</h3>
+    <p>Jede Phase hat folgende Felder – nur die ausgefüllten erscheinen später an der Tafel:</p>
+    <ul>
+      <li><strong>Titel</strong> und <strong>Minuten</strong> (0 Minuten = ohne Zeitvorgabe; dann zeigt die Tafel die Uhrzeit)</li>
+      <li><strong>Sozialform</strong> (Einzel-, Partner-, Gruppenarbeit, Plenum)</li>
+      <li><strong>Lärmampel</strong> (aus, Stille, Flüstern, Zimmerlautstärke)</li>
+      <li><strong>Link zum Material</strong> – erscheint als QR-Code zum Scannen</li>
+      <li><strong>Aufgabe</strong> und optional <strong>Wenn ihr fertig seid …</strong></li>
+    </ul>
+    <p>Phasen lassen sich verschieben, kopieren und löschen. Einen fertigen Ablauf als <strong>Vorlage</strong> speichern; Vorlagen können als Datei an Kolleginnen und Kollegen weitergegeben werden.</p>
+    <h3>An der Tafel</h3>
+    <ul>
+      <li><strong>Tafel starten</strong> und über <strong>Vollbild</strong> auf den ganzen Bildschirm holen. Das Gerät geht währenddessen nicht in den Ruhezustand.</li>
+      <li><kbd>Leertaste</kbd> Pause · <kbd>→</kbd> bzw. <kbd>Bild ↓</kbd> nächste Phase · <kbd>←</kbd> bzw. <kbd>Bild ↑</kbd> vorige Phase · <kbd>+</kbd> und <kbd>−</kbd> eine Minute mehr oder weniger. Das funktioniert auch mit einem Presenter.</li>
+      <li>Die Bedienleiste unten blendet sich nach einigen Sekunden aus und erscheint bei Mausbewegung oder Berührung wieder.</li>
+      <li>In der letzten Minute wird die Uhr gelb, am Ende rot, dazu ertönt ein leiser Gong (abschaltbar). Die nächste Phase startet erst, wenn Sie weiterschalten. Nach Ablauf startet <strong>+1 min</strong> die Uhr direkt wieder.</li>
+      <li><strong>Bearbeiten</strong> führt zurück zur Planung.</li>
+    </ul>
+    <h3>Lärmampel</h3>
+    <ul>
+      <li>Beim ersten Mal fragt der Browser nach dem Mikrofon – bitte erlauben.</li>
+      <li>Danach misst die Ampel drei Sekunden lang die Grundruhe im Raum. Die Stufen richten sich danach. Mit <strong>Ruhe neu messen</strong> lässt sich das wiederholen.</li>
+      <li>Die Ampel reagiert bewusst träge: Ein kurzes Geräusch schaltet sie nicht um, anhaltendes Lautwerden schon. Reagiert sie zu streng oder zu großzügig, hilft der Regler <strong>Empfindlichkeit</strong>.</li>
+      <li>Es wird ausschließlich die Lautstärke gemessen – nichts aufgezeichnet, nichts übertragen. Die Werte sind Richtwerte, keine geeichte Messung.</li>
+    </ul>
+    <h3>Murmelglas</h3>
+    <ul>
+      <li>Unter <strong>Murmelglas</strong> für eine Lerngruppe ein Glas anlegen und festlegen: Größe, wie viele ruhige Minuten eine Murmel bringen, optional die Belohnung.</li>
+      <li>In Phasen mit Lärmampel fällt bei grüner Ampel nach der eingestellten Zeit eine Murmel ins Glas. Gelb und Rot halten das Sammeln nur an – es werden <strong>nie Murmeln abgezogen</strong>.</li>
+      <li>Mit <strong>Murmel +1</strong> und <strong>Murmel −1</strong> lässt sich von Hand belohnen oder korrigieren. Ist das Glas voll, erscheint die Belohnung; danach das Glas in der Planung leeren.</li>
+      <li>Das Glas ist an das Gerät gebunden, auf dem die Tafel läuft.</li>
+    </ul>
+  </section>
+
+  <section id="sitzplan">
+    <h2>4. Sitzplan</h2>
+    <ul>
+      <li>Eine Lerngruppe wählen – es stehen die Listen aus <em>Zufall &amp; Gruppen</em> zur Verfügung. Pro Lerngruppe sind mehrere Pläne möglich.</li>
+      <li>Tische über eine <strong>Vorlage</strong> (Reihen oder Gruppentische) anlegen oder einzeln hinzufügen: Einzel-, Zweier-, Vierer-, Sechsertisch und Pult. Tische lassen sich mit Maus, Finger oder Stift verschieben, Zweier- und Sechsertische auch drehen.</li>
+      <li>Namen <strong>zufällig verteilen</strong> lassen: Die Angaben „nicht zusammen“ werden dabei berücksichtigt – auch für benachbarte Plätze. Verbleibende Konflikte sind rot markiert.</li>
+      <li>Zwei Plätze nacheinander antippen, um die Namen zu tauschen.</li>
+      <li><kbd>Strg</kbd>+<kbd>Z</kbd> (am Mac <kbd>⌘</kbd>+<kbd>Z</kbd>) macht die letzten Schritte rückgängig.</li>
+      <li>Die <strong>Lehrersicht</strong> zeigt den Plan vom Pult aus gesehen – auch beim Drucken (A4 quer).</li>
+      <li><strong>Sichern</strong> und <strong>Laden</strong> übertragen eine Lerngruppe mit allen Plänen auf ein anderes Gerät. Die Datei enthält Namen – bitte an einem geschützten Ort ablegen.</li>
+    </ul>
+  </section>
+
+  <section id="qr">
+    <h2>5. QR-Codes</h2>
+    <ul>
+      <li><strong>Einzelner Code:</strong> Link eingeben, optional eine Beschriftung. Herunterladen als SVG (am besten für Arbeitsblätter, verlustfrei skalierbar) oder PNG, als Bild kopieren oder drucken.</li>
+      <li><strong>Zum Verteilen drucken:</strong> derselbe Code 6-, 12-, 20- oder 35-mal auf einer Seite mit Schnittlinien.</li>
+      <li><strong>Druckbogen:</strong> viele verschiedene Codes auf einmal, eine Zeile pro Code im Format „Beschriftung | Link“ – z. B. für Stationen.</li>
+      <li>Mit <code>?logo=schule</code> am Ende der Adresse ist das Schullogo bereits geladen (wenn die Schule es hinterlegt hat); es lässt sich abschalten oder durch ein eigenes ersetzen.</li>
+    </ul>
+    <p class="hinweis">Jeden Code vor dem Drucken einmal mit dem Handy testen – besonders mit Logo und bei kleinen Codes.</p>
+  </section>
+
+  <section id="passwort">
+    <h2>6. Passwort-Generator</h2>
+    <p>Erzeugt sichere Passwörter aus zufälligen Zeichen oder als merkbare Wortkette, auf Wunsch bis zu 30 auf einmal – etwa als Erstpasswörter. Eine Stärkeanzeige hilft bei der Einschätzung. Im Reiter „Passwort prüfen“ lässt sich an ausgedachten Beispielen zeigen, wie schnell Angreifer typische Muster wie Namen, Jahreszahlen oder „1234“ erraten – direkt erreichbar, wenn man an die Adresse des Passwort-Generators <code>#pruefen</code> anhängt – gut für den Unterricht. Es wird nichts gespeichert. Kopierte Passwörter können allerdings im Zwischenablage-Verlauf des Geräts landen.</p>
+  </section>
+
+  <section id="gutachten">
+    <h2>7. Gutachten-Generator</h2>
+    <p>Für Ausbildungslehrkräfte und die Schulleitung: Aus einer Einschätzung je Kriterium entsteht ein Textentwurf für Gutachten zu Lehramtsanwärterinnen und -anwärtern, gegliedert nach den Handlungsfeldern des Kerncurriculums.</p>
+    <ul>
+      <li>Der Text ist ein <strong>Entwurf</strong> – er wird in der Vorschau bearbeitet und muss in jedem Fall selbst geprüft und angepasst werden.</li>
+      <li>Export als Textdokument für LibreOffice, als Text oder über die Zwischenablage; Drucken bzw. PDF über den Browser.</li>
+      <li>Empfohlen: die <strong>Verschlüsselung</strong> einschalten. Achtung: Ein vergessenes Passwort lässt sich nicht wiederherstellen – die Daten sind dann verloren. Deshalb zusätzlich eine <strong>Sicherung</strong> als Datei anlegen.</li>
+    </ul>
+  </section>
+
+  <section id="fragen">
+    <h2>8. Häufige Fragen</h2>
+    <h3>Meine Listen oder Vorlagen sind weg.</h3>
+    <p>Meist ist ein anderes Gerät, ein anderer Browser oder ein anderes Benutzerkonto im Spiel, oder die Browserdaten wurden gelöscht. Safari auf iPad und iPhone löscht die Daten einer Website außerdem, wenn sie 7 Tage lang nicht geöffnet wurde – als App auf dem Home-Bildschirm installierte Werkzeuge sind davon nicht betroffen. Abhilfe: die Sicherungsdatei wieder laden. Deshalb wichtige Listen und Pläne gelegentlich sichern oder das Werkzeug als App installieren.</p>
+    <p>Mit „Daten löschen“ unten in jedem Werkzeug lassen sich alle Daten dieses Werkzeugs aus dem Browser entfernen, etwa am Schuljahresende oder vor der Weitergabe eines Geräts. Vorher fragt das Werkzeug nach und bietet eine Sicherung an.</p>
+    <h3>Die Lärmampel zeigt „Mikrofon nicht verfügbar“.</h3>
+    <p>Der Zugriff wurde abgelehnt oder das Gerät hat kein Mikrofon. Die Erlaubnis lässt sich in den Website-Einstellungen des Browsers (Schloss-Symbol neben der Adresse) nachträglich erteilen.</p>
+    <h3>Funktioniert das auch auf dem iPad?</h3>
+    <p>Ja, alle Werkzeuge laufen im Browser des iPads. Einzelne Funktionen wie der Vollbildmodus können dort eingeschränkt sein.</p>
+    <h3>Ich habe einen Fehler gefunden oder eine Idee.</h3>
+    <p>Gern über die <a href="https://github.com/Schulwerkzeuge/browserwerkzeuge/issues">Fehlermeldungen im Projekt</a>.</p>
+  </section>
+</main>
+
+<footer>
+  Anleitung für Lehrkräfte · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+</footer>
+
+<script>
+"use strict";
+(() => {
+  const SCHLUESSEL = "browserwerkzeuge-theme";
+  const knopf = document.getElementById("btn-design");
+  const setze = design => {
+    document.documentElement.dataset.design = design;
+    knopf.textContent = design === "dunkel" ? "Hell" : "Dunkel";
+  };
+  let gespeichert = null;
+  try { gespeichert = localStorage.getItem(SCHLUESSEL); } catch (e) { /* ohne Speicher */ }
+  setze(gespeichert ? (gespeichert === "dark" ? "dunkel" : "hell") : (matchMedia("(prefers-color-scheme: dark)").matches ? "dunkel" : "hell"));
+  knopf.addEventListener("click", () => {
+    const neu = document.documentElement.dataset.design === "dunkel" ? "hell" : "dunkel";
+    setze(neu);
+    try { localStorage.setItem(SCHLUESSEL, neu === "dunkel" ? "dark" : "light"); } catch (e) { /* ohne Folgen */ }
+  });
+})();
+</script>
+<script>
+/* Rücklink zur Übersicht – gleiche Logik wie in pwa.js (dort ändern und hierher übernehmen).
+ * Eine Übersichtsseite meldet sich selbst an (siehe README); ohne Anmeldung wird der Link entfernt. */
+(function () {
+  "use strict";
+  function ruecklink() {
+    const link = document.getElementById("ruecklink");
+    if (!link) return;
+    if (matchMedia("(display-mode: standalone), (display-mode: fullscreen)").matches || navigator.standalone === true) { link.remove(); return; }
+    const liste = new Map(), VOR = "browserwerkzeuge-uebersicht:";
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || !k.startsWith(VOR)) continue;
+        const pfad = k.slice(VOR.length), name = localStorage.getItem(k);
+        if (/^\/(?:[\w.%-]+\/)*$/.test(pfad) && !/\.\.|%2e/i.test(pfad) && typeof name === "string" && name.trim() && name.length <= 40)
+          liste.set(pfad, name.trim());
+      }
+    } catch (e) { /* ohne Speicher: kein Link */ }
+    let ziel = "";
+    const merk = "browserwerkzeuge-ruecklink:" + location.pathname;
+    try {
+      const herkunft = document.referrer ? new URL(document.referrer) : null;
+      const pfad = herkunft && herkunft.origin === location.origin ? herkunft.pathname.replace(/index\.html?$/, "") : "";
+      if (liste.has(pfad)) ziel = pfad;
+      if (ziel) sessionStorage.setItem(merk, ziel);
+      else { const s = sessionStorage.getItem(merk); if (s && liste.has(s)) ziel = s; }
+    } catch (e) { /* ohne Referrer oder Sitzungsspeicher */ }
+    if (!ziel) for (const pfad of liste.keys())
+      if (location.pathname.startsWith(pfad) && pfad.length > ziel.length) ziel = pfad;
+    if (!ziel) { link.remove(); return; }
+    const name = liste.get(ziel), feld = link.querySelector("[data-ruecklink-name]");
+    if (feld) feld.textContent = name; else link.textContent = "← " + name;   // Feld: nur der Name (Maus-/Tastaturtrainer)
+    link.href = ziel;
+    link.title = "Zurück zu " + name;
+    link.hidden = false;
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ruecklink);
+  else ruecklink();
+})();
+</script>
+</body>
+</html>

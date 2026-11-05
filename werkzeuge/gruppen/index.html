@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<!-- pwa --><script src="pwa.js?v=156b66d525" data-tool="gruppen" data-name="Zufall &amp; Gruppen" data-daten="ja" data-schluessel=""></script><!-- /pwa -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<meta name="robots" content="noindex">
+<title>Zufall &amp; Gruppen</title>
+<style>
+:root{--auf-akzent:#fff;--hinter:#f3f5f8;--flaeche:#fff;--text:#1f2933;--dezent:#5f6b7a;--rand:#d6dae0;--rand-feld:#858f9b;--akzent:#1f5f99;--akzent-hell:#e8f0f8;--abwesend:#eceef1}
+[data-design="dunkel"]{--auf-akzent:#0e131c;--hinter:#14181d;--flaeche:#1e242b;--text:#e6e9ed;--dezent:#9aa4b1;--rand:#343c46;--rand-feld:#7d8794;--akzent:#5aa0e6;--akzent-hell:#243447;--abwesend:#2a3038}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--hinter);color:var(--text);line-height:1.5}
+header{background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf{max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.kopf h1{font-size:1.15rem;margin:0;flex:1}
+.kopf a{color:var(--akzent);text-decoration:none;font-size:.9rem}
+main{max-width:1200px;margin:16px auto;padding:0 20px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+section{background:var(--flaeche);border:1px solid var(--rand);border-radius:8px;padding:16px 20px}
+h2{font-size:1.1rem;margin:0 0 10px}
+button,select,input,textarea{font:inherit;color:var(--text)}
+button{padding:6px 12px;border:1px solid var(--rand-feld);background:var(--flaeche);border-radius:6px;cursor:pointer}
+button:hover{background:var(--akzent-hell)}
+button:disabled{opacity:.5;cursor:default}
+button.primaer{background:var(--akzent);border-color:var(--akzent);color:var(--auf-akzent)}
+select,input[type=text],input[type=number],textarea{padding:6px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche)}
+textarea{width:100%;resize:vertical}
+label{display:inline-flex;gap:6px;align-items:center;max-width:100%;flex-wrap:wrap}
+input,select,textarea{max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;margin:3px}
+input[type=range]{min-height:24px}
+.zeile{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.dezent{color:var(--dezent)}.klein{font-size:.88rem}
+[hidden]{display:none!important}
+hr{border:none;border-top:1px solid var(--rand);margin:14px 0}
+details{margin:8px 0}
+summary{cursor:pointer;color:var(--akzent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{padding:4px 12px;border-radius:16px;border:1px solid var(--akzent);background:var(--akzent-hell)}
+.chip.abwesend{background:var(--abwesend);border-color:var(--rand);color:var(--dezent);text-decoration:line-through}
+.reiter{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.reiter button.aktiv{background:var(--akzent-hell);border-color:var(--akzent);font-weight:600}
+.unterreiter button{font-size:.9rem;padding:4px 10px}
+.buehne{min-height:38vh;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(2.5rem,9vw,7rem);font-weight:700;border:2px dashed var(--rand);border-radius:12px;margin:12px 0;padding:10px;word-break:break-word}
+.buehne.mehrere{font-size:clamp(1.8rem,5vw,4rem)}
+.buehne.rollt{color:var(--dezent)}
+.gruppen{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:12px}
+.gruppe{border:2px solid var(--akzent);border-radius:10px;padding:10px 14px}
+.gruppe h3{margin:0 0 6px;font-size:1rem;color:var(--akzent)}
+.gruppe ul{margin:0;padding-left:18px;font-size:1.25rem}
+.rolle{color:var(--dezent);font-size:.95rem}
+.warnung{background:#fff6dc;border:1px solid #e6c35c;color:#5c4400;padding:8px 12px;border-radius:6px;margin-top:10px}
+/* Würfel */
+.wuerfel-feld{--w:120px;display:flex;flex-wrap:wrap;gap:calc(var(--w) * .45);justify-content:center;align-items:center;min-height:38vh;border:2px dashed var(--rand);border-radius:12px;margin:12px 0;padding:40px 20px;perspective:1000px}
+.wuerfel{position:relative;width:var(--w);height:var(--w);transform-style:preserve-3d;transition:transform 1.3s cubic-bezier(.15,.75,.25,1)}
+.seite{position:absolute;inset:0;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:14%;background:#fff;border:2px solid #d0d5db;border-radius:16%;box-shadow:inset 0 0 14px rgba(0,0,0,.12);backface-visibility:hidden}
+.seite span{display:block;width:72%;height:72%;margin:auto;border-radius:50%}
+.seite span.auge{background:#1f2933}
+.s1{transform:translateZ(calc(var(--w) / 2))}
+.s6{transform:rotateY(180deg) translateZ(calc(var(--w) / 2))}
+.s2{transform:rotateY(90deg) translateZ(calc(var(--w) / 2))}
+.s5{transform:rotateY(-90deg) translateZ(calc(var(--w) / 2))}
+.s3{transform:rotateX(90deg) translateZ(calc(var(--w) / 2))}
+.s4{transform:rotateX(-90deg) translateZ(calc(var(--w) / 2))}
+#wuerfel-summe{font-size:1.4rem;font-weight:600;color:var(--text)}
+footer{max-width:1200px;margin:0 auto 24px;padding:0 20px;color:var(--dezent);font-size:.85rem;text-align:center}
+footer a{color:inherit}
+#meldung{position:fixed;right:16px;bottom:16px;background:#1f2933;color:#fff;padding:10px 14px;border-radius:6px;max-width:380px;z-index:10}
+:root:fullscreen #s-liste,:root:fullscreen #s-hinweis,:root:fullscreen footer{display:none}
+:root:fullscreen main{max-width:none}
+@media (prefers-reduced-motion:reduce){.wuerfel{transition:none}}
+@media print{
+  :root,[data-design="dunkel"]{--hinter:#fff;--flaeche:#fff;--text:#000;--dezent:#444;--rand:#bbb;--akzent:#1f5f99;--akzent-hell:#eef3f9;--abwesend:#eee}
+  header,footer,#s-liste,#s-anwesenheit,#s-hinweis,.reiter,.steuerung,#meldung{display:none!important}
+  section{border:none}
+  .gruppe{break-inside:avoid}
+}
+</style>
+<!-- pwa -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181d" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Zufall">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- /pwa -->
+</head>
+<body>
+<header>
+  <div class="kopf">
+    <h1>Zufall &amp; Gruppen</h1>
+    <a id="ruecklink" href="../" hidden>← Übersicht</a>
+    <button type="button" id="btn-vollbild">Vollbild</button>
+    <button type="button" id="btn-design">Dunkel</button>
+  </div>
+</header>
+
+<main>
+  <section id="s-liste">
+    <h2>Lerngruppe</h2>
+    <div class="zeile">
+      <select id="liste-wahl" aria-label="Lerngruppe wählen"></select>
+      <button type="button" id="btn-neu">Neue Liste</button>
+      <button type="button" id="btn-bearbeiten">Bearbeiten</button>
+      <button type="button" id="btn-loeschen">Löschen</button>
+      <span style="margin-left:auto" class="zeile">
+        <button type="button" id="btn-export">Listen sichern</button>
+        <button type="button" id="btn-import">Listen laden</button>
+      </span>
+      <input type="file" id="datei-json" accept=".json,application/json" hidden>
+    </div>
+
+    <div id="editor" hidden>
+      <hr>
+      <div class="zeile"><label>Name der Liste <input type="text" id="e-name" placeholder="z. B. 6a oder Q1 GK Geschichte"></label></div>
+      <p class="klein">Namen einfügen (einer pro Zeile) oder eine CSV-Datei einlesen, z. B. aus Moodle:</p>
+      <div class="zeile">
+        <input type="file" id="e-datei" accept=".csv,.txt,text/csv">
+        <label>Namensformat beim Einlesen
+          <select id="e-format">
+            <option value="vorname">Vorname (bei Doppelung mit Initial)</option>
+            <option value="initial">Vorname N.</option>
+            <option value="voll">Vorname Nachname</option>
+          </select>
+        </label>
+        <label id="e-gruppe-label" hidden>Moodle-Gruppe <select id="e-gruppe"></select></label>
+      </div>
+      <textarea id="e-namen" rows="10" placeholder="Anna&#10;Ben&#10;…"></textarea>
+      <p class="dezent klein" id="e-info"></p>
+      <div class="zeile">
+        <button type="button" class="primaer" id="e-speichern">Speichern</button>
+        <button type="button" id="e-abbrechen">Abbrechen</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="s-anwesenheit">
+    <h2>Anwesenheit <span class="dezent klein" id="anwesend-zahl"></span></h2>
+    <p class="dezent klein">Zum Ausschließen auf einen Namen klicken, erneut klicken zum Zurückholen.</p>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <section>
+    <div class="reiter">
+      <button type="button" data-reiter="zufall" class="aktiv">Wer ist dran?</button>
+      <button type="button" data-reiter="gruppen">Gruppen bilden</button>
+      <button type="button" data-reiter="zahl">Zahl &amp; Würfel</button>
+    </div>
+
+    <div id="p-zufall">
+      <div class="zeile steuerung">
+        <button type="button" class="primaer" id="btn-ziehen">Ziehen</button>
+        <label><input type="checkbox" id="ohne-wiederholung" checked> ohne Wiederholung</label>
+        <button type="button" id="btn-runde">Neue Runde</button>
+        <span class="dezent klein" id="rest-anzeige"></span>
+      </div>
+      <div class="buehne" id="buehne" aria-live="polite">–</div>
+      <p class="dezent klein">Bisher gezogen: <span id="verlauf">–</span><br>
+        Tipp: Leertaste, Pfeil rechts oder ein Präsentations-Presenter ziehen ebenfalls.</p>
+    </div>
+
+    <div id="p-gruppen" hidden>
+      <div class="zeile steuerung">
+        <select id="modus" aria-label="Art der Einteilung">
+          <option value="anzahl">Anzahl Gruppen</option>
+          <option value="groesse">Personen pro Gruppe</option>
+        </select>
+        <input type="number" id="zahl" min="1" max="50" value="4" style="width:80px" aria-label="Zahl">
+        <label id="rest-label" hidden>
+          <select id="rest" aria-label="Umgang mit übrigen Personen">
+            <option value="verteilen">Gruppen eher größer</option>
+            <option value="zusatz">Gruppen eher kleiner</option>
+          </select>
+        </label>
+        <button type="button" class="primaer" id="btn-gruppen">Gruppen bilden</button>
+        <button type="button" id="btn-kopieren">Kopieren</button>
+        <button type="button" id="btn-drucken">Drucken</button>
+      </div>
+      <details class="steuerung">
+        <summary>Wer soll nicht zusammenarbeiten?</summary>
+        <p class="dezent klein">Pro Zeile zwei oder mehr Namen, durch Komma getrennt – z. B. „Anna, Ben“. Wird pro Liste gespeichert und auch im Sitzplan berücksichtigt.</p>
+        <textarea id="nicht-zusammen" rows="3"></textarea>
+      </details>
+      <details class="steuerung">
+        <summary>Rollen in den Gruppen (optional)</summary>
+        <p class="dezent klein">Kommagetrennt, z. B. „Zeitwächter, Protokoll, Sprecher“. Die Rollen werden in jeder Gruppe zufällig vergeben.</p>
+        <input type="text" id="rollen" style="width:100%" placeholder="Zeitwächter, Protokoll, Sprecher">
+      </details>
+      <div id="gruppen-hinweis"></div>
+      <div class="gruppen" id="gruppen"></div>
+    </div>
+
+    <div id="p-zahl" hidden>
+      <div class="reiter unterreiter steuerung">
+        <button type="button" data-art="zahl" class="aktiv">Zufallszahl</button>
+        <button type="button" data-art="wuerfel">Würfel</button>
+      </div>
+
+      <div id="art-zahl">
+        <div class="zeile steuerung">
+          <label>von <input type="number" id="zahl-von" value="1" style="width:100px"></label>
+          <label>bis <input type="number" id="zahl-bis" value="100" style="width:100px"></label>
+          <label>Anzahl <input type="number" id="zahl-anzahl" value="1" min="1" max="50" style="width:70px"></label>
+          <label><input type="checkbox" id="zahl-ohne" checked> ohne Wiederholung</label>
+          <button type="button" class="primaer" id="btn-zahl">Erzeugen</button>
+        </div>
+        <div class="buehne" id="zahl-buehne" aria-live="polite">–</div>
+        <p class="dezent klein">Bisher: <span id="zahl-verlauf">–</span></p>
+      </div>
+
+      <div id="art-wuerfel" hidden>
+        <div class="zeile steuerung">
+          <label>Anzahl Würfel
+            <select id="wuerfel-anzahl">
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+          </label>
+          <button type="button" class="primaer" id="btn-wuerfeln">Würfeln</button>
+          <span id="wuerfel-summe" aria-live="polite"></span>
+        </div>
+        <div class="wuerfel-feld" id="wuerfel-feld"></div>
+      </div>
+      <p class="dezent klein steuerung">Tipp: Leertaste, Pfeil rechts oder ein Präsentations-Presenter lösen ebenfalls aus.</p>
+    </div>
+  </section>
+
+  <section id="s-hinweis" class="klein dezent">
+    <strong>Datenschutz:</strong> Alle Namen bleiben im Browser des angemeldeten Benutzerkontos und werden nicht übertragen. Bitte nur unter der eigenen Anmeldung nutzen. Empfehlung: nur Vornamen oder Vorname mit Initial verwenden. Die Listen stehen auch im Sitzplan zur Verfügung; „Listen sichern“ legt eine Datei an, die sich auf einem anderen Gerät wieder laden lässt.
+  </section>
+</main>
+
+<footer>
+  Zufall &amp; Gruppen · Version 1.3.3 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+</footer>
+
+<div id="meldung" role="status" hidden></div>
+
+<script>
+"use strict";
+// SPDX-License-Identifier: Apache-2.0
+
+const SPEICHER = "browserwerkzeuge-klassenlisten";   // gemeinsam mit dem Sitzplan
+const DESIGN = "browserwerkzeuge-theme";
+const ROLLEN = "browserwerkzeuge-gruppen-rollen";
+const EINSTELLUNGEN = "browserwerkzeuge-zufall-einstellungen";
+// Drehung des Würfels, damit die jeweilige Augenzahl nach vorne zeigt: [rotateX, rotateY]
+const WUERFEL_ZIEL = { 1: [0, 0], 2: [0, -90], 3: [-90, 0], 4: [90, 0], 5: [0, 90], 6: [0, -180] };
+// Augenpositionen im 3×3-Raster (1 = oben links … 9 = unten rechts)
+const AUGEN = { 1: [5], 2: [1, 9], 3: [1, 5, 9], 4: [1, 3, 7, 9], 5: [1, 3, 5, 7, 9], 6: [1, 3, 4, 6, 7, 9] };
+const $ = id => document.getElementById(id);
+// Der Browserspeicher kann gesperrt sein (z. B. Safari „Alle Cookies blockieren“) – dann ohne Speicher weiterarbeiten
+const speicher = {
+  lies(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  schreib(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+};
+
+// Klassenlisten aus Speicher oder Datei prüfen: nur Listen mit Namensfeld, Namen nur als Text.
+// Weitere Felder (z. B. Sitzpläne) bleiben unverändert erhalten – sie prüft der Sitzplan selbst.
+const VERBOTENE_NAMEN = new Set(["__proto__", "constructor", "prototype"]);
+function bereinigeListen(roh) {
+  const listen = {};
+  if (!roh || typeof roh !== "object" || Array.isArray(roh)) return listen;
+  for (const [name, l] of Object.entries(roh)) {
+    const n = String(name).trim();
+    if (!n || VERBOTENE_NAMEN.has(n) || !l || typeof l !== "object" || !Array.isArray(l.namen)) continue;
+    listen[n] = { ...l, namen: l.namen.filter(x => typeof x === "string" && x.trim()),
+                  nichtZusammen: typeof l.nichtZusammen === "string" ? l.nichtZusammen : "" };
+  }
+  return listen;
+}
+
+// Liest den gemeinsamen Listenspeicher immer frisch ein
+function liesSpeicher() {
+  try {
+    const d = JSON.parse(speicher.lies(SPEICHER));
+    if (d && d.listen && typeof d.listen === "object")
+      return { version: 1, ...d, aktiv: typeof d.aktiv === "string" ? d.aktiv : "", listen: bereinigeListen(d.listen) };
+  } catch (e) { /* beschädigte Daten ignorieren */ }
+  return { version: 1, listen: {}, aktiv: "" };
+}
+// Klassenlisten zurückschreiben. Ist der vorhandene Eintrag unlesbar (beschädigt oder aus einer
+// unbekannten Fassung), wird er vorher unter eigenem Namen aufbewahrt statt überschrieben.
+function schreibeSpeicher(d) {
+  const roh = speicher.lies(SPEICHER);
+  if (roh !== null) {
+    let lesbar = true;
+    try { const alt = JSON.parse(roh); lesbar = !!(alt && typeof alt.listen === "object"); } catch (e) { lesbar = false; }
+    if (!lesbar && !speicher.schreib(SPEICHER + "-unlesbar-" + Date.now(), roh)) return false;
+  }
+  return speicher.schreib(SPEICHER, JSON.stringify(d));
+}
+
+
+// Gleichverteilte Zufallszahl 0 … max-1 aus dem kryptografischen Zufallsgenerator
+function zufallInt(max) {
+  const grenze = Math.floor(0x100000000 / max) * max;
+  const wert = new Uint32Array(1);
+  do { crypto.getRandomValues(wert); } while (wert[0] >= grenze);
+  return wert[0] % max;
+}
+
+function mische(liste) {
+  const a = liste.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = zufallInt(i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Datei als Text lesen: zuerst UTF-8, bei ungültigen Zeichen Windows-Kodierung (z. B. Excel-CSV)
+async function leseText(datei) {
+  const puffer = await datei.arrayBuffer();
+  try {
+    return new TextDecoder("utf-8", { fatal: true }).decode(puffer);
+  } catch (e) {
+    return new TextDecoder("windows-1252").decode(puffer);
+  }
+}
+
+// CSV einlesen (Trennzeichen ; , oder Tab, Anführungszeichen werden berücksichtigt)
+function parseCsv(text) {
+  text = text.replace(/^\uFEFF/, "");
+  const ersteZeile = text.split(/\r?\n/, 1)[0];
+  const trenner = [";", ",", "\t"].map(t => [t, ersteZeile.split(t).length]).sort((a, b) => b[1] - a[1])[0][0];
+  const zeilen = [];
+  let zeile = [], feld = "", inAnfuehrung = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inAnfuehrung) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { feld += '"'; i++; } else inAnfuehrung = false;
+      } else feld += c;
+    } else if (c === '"') inAnfuehrung = true;
+    else if (c === trenner) { zeile.push(feld); feld = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      zeile.push(feld); zeilen.push(zeile); zeile = []; feld = "";
+    } else feld += c;
+  }
+  if (feld !== "" || zeile.length) { zeile.push(feld); zeilen.push(zeile); }
+  return zeilen.filter(z => z.some(f => f.trim() !== ""));
+}
+
+// "Vorname Nachname" oder "Nachname, Vorname"
+function zerlegeName(text) {
+  const t = (text || "").trim();
+  if (t.includes(",")) {
+    const [nachname, ...rest] = t.split(",");
+    return { vorname: rest.join(",").trim(), nachname: nachname.trim(), gruppen: [] };
+  }
+  const teile = t.split(/\s+/).filter(Boolean);
+  if (teile.length < 2) return { vorname: teile[0] || "", nachname: "", gruppen: [] };
+  return { vorname: teile.slice(0, -1).join(" "), nachname: teile[teile.length - 1], gruppen: [] };
+}
+
+// Erkennt Moodle-Spalten (deutsch und englisch); liefert Personen und ggf. einen Hinweis
+function leseTeilnehmende(zeilen) {
+  if (!zeilen.length) return { personen: [], hinweis: "" };
+  const kopf = zeilen[0].map(s => s.trim().toLowerCase());
+  const finde = muster => kopf.findIndex(k => muster.test(k));
+  const iVor = finde(/^(vorname|first ?name|given ?name)$/);
+  const iNach = finde(/^(nachname|last ?name|surname|family ?name|familienname)$/);
+  const iVoll = finde(/^(vollständiger name|full ?name|name)$/);
+  const iRolle = finde(/^(rollen?|roles?)$/);
+  const iGruppe = finde(/^(gruppen?|groups?)$/);
+
+  if (iVor < 0 && iVoll < 0) {
+    const zweiSpalten = zeilen.filter(z => z.length >= 2 && z[0].trim() && z[1].trim()).length > zeilen.length / 2;
+    if (zweiSpalten) {
+      return {
+        personen: zeilen.map(z => ({ vorname: (z[1] || "").trim(), nachname: (z[0] || "").trim(), gruppen: [] })).filter(p => p.vorname),
+        hinweis: "Ohne Spaltenüberschriften wurde angenommen: 1. Spalte Nachname, 2. Spalte Vorname – bitte prüfen."
+      };
+    }
+    return { personen: zeilen.map(z => zerlegeName(z[0])).filter(p => p.vorname), hinweis: "" };
+  }
+
+  const personen = zeilen.slice(1)
+    .filter(z => iRolle < 0 || !/(trainer|teacher|manager|lehr)/i.test(z[iRolle] || ""))
+    .map(z => {
+      const person = iVor >= 0
+        ? { vorname: (z[iVor] || "").trim(), nachname: iNach >= 0 ? (z[iNach] || "").trim() : "" }
+        : zerlegeName(z[iVoll]);
+      person.gruppen = iGruppe >= 0 ? (z[iGruppe] || "").split(/[,;]/).map(s => s.trim()).filter(Boolean) : [];
+      return person;
+    })
+    .filter(p => p.vorname);
+  return { personen, hinweis: "" };
+}
+
+function formatiere(personen, format) {
+  const voll = p => [p.vorname, p.nachname].filter(Boolean).join(" ");
+  const initial = p => (p.nachname ? `${p.vorname} ${p.nachname[0]}.` : p.vorname);
+  if (format === "voll") return personen.map(voll);
+  if (format === "initial") return personen.map(initial);
+  const zaehle = liste => liste.reduce((m, n) => m.set(n, (m.get(n) || 0) + 1), new Map());
+  let namen = personen.map(p => p.vorname);
+  let anzahl = zaehle(namen);
+  namen = personen.map((p, i) => (anzahl.get(namen[i]) > 1 ? initial(p) : namen[i]));
+  anzahl = zaehle(namen);
+  return personen.map((p, i) => (anzahl.get(namen[i]) > 1 ? voll(p) : namen[i]));
+}
+
+function eindeutig(namen) {
+  const gesehen = new Map();
+  return namen.map(n => {
+    const k = (gesehen.get(n) || 0) + 1;
+    gesehen.set(n, k);
+    return k === 1 ? n : `${n} (${k})`;
+  });
+}
+
+function zaehleVerstoesse(gruppen, verbote) {
+  if (!verbote.length) return 0;
+  const zuordnung = new Map();
+  gruppen.forEach((g, i) => g.forEach(n => zuordnung.set(n, i)));
+  return verbote.filter(([a, b]) => zuordnung.get(a) === zuordnung.get(b)).length;
+}
+
+function bildeGruppen(namen, anzahl, verbote) {
+  let beste = null, besteFehler = Infinity;
+  for (let versuch = 0; versuch < 2000 && besteFehler > 0; versuch++) {
+    const gruppen = Array.from({ length: anzahl }, () => []);
+    mische(namen).forEach((n, i) => gruppen[i % anzahl].push(n));
+    const fehler = zaehleVerstoesse(gruppen, verbote);
+    if (fehler < besteFehler) { beste = gruppen; besteFehler = fehler; }
+  }
+  return { gruppen: beste, fehler: besteFehler };
+}
+
+function reduzierteBewegung() {
+  return matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+const App = {
+  daten: { version: 1, listen: {}, aktiv: "" },
+  aktiv: "",
+  reiter: "zufall",
+  art: "zahl",
+  abwesend: new Set(),
+  gezogen: new Set(),
+  verlauf: [],
+  importPersonen: null,
+  importHinweis: "",
+  bearbeiteterName: null,
+  letzteGruppen: null,
+  rollt: false,
+  zahlRollt: false,
+  zahlVerlauf: [],
+  wuerfel: [],
+  wuerfelRollt: false,
+  meldungTimer: null,
+
+  init() {
+    this.daten = liesSpeicher();
+    this.aktiv = Object.hasOwn(this.daten.listen, this.daten.aktiv) ? this.daten.aktiv : (Object.keys(this.daten.listen)[0] || "");
+    this.initDesign();
+    $("rollen").value = speicher.lies(ROLLEN) || "";
+    this.ladeEinstellungen();
+    this.binde();
+    this.zeigeListe();
+    this.baueWuerfel(Number($("wuerfel-anzahl").value));
+    this.zeigeReiter(this.reiter);
+    this.zeigeArt(this.art);
+  },
+
+  // Jede Änderung: frisch lesen, nur das Nötige ändern, zurückschreiben.
+  // So bleiben Änderungen aus anderen Tabs (z. B. dem Sitzplan) erhalten.
+  aendere(aenderung) {
+    const d = liesSpeicher();
+    aenderung(d);
+    if (!schreibeSpeicher(d)) this.meldung("Speichern im Browser ist nicht möglich.");
+    this.daten = d;
+  },
+
+  aktuelleListe() { return this.daten.listen[this.aktiv] || null; },
+  anwesende() {
+    const liste = this.aktuelleListe();
+    return liste ? liste.namen.filter(n => !this.abwesend.has(n)) : [];
+  },
+
+  // ------------------------------------------------ Einstellungen
+
+  ladeEinstellungen() {
+    try {
+      const e = JSON.parse(localStorage.getItem(EINSTELLUNGEN)) || {};
+      if (["zufall", "gruppen", "zahl"].includes(e.reiter)) this.reiter = e.reiter;
+      if (e.art === "wuerfel") this.art = "wuerfel";
+      if (e.von !== undefined) $("zahl-von").value = e.von;
+      if (e.bis !== undefined) $("zahl-bis").value = e.bis;
+      if (e.anzahl !== undefined) $("zahl-anzahl").value = e.anzahl;
+      if (typeof e.ohne === "boolean") $("zahl-ohne").checked = e.ohne;
+      if (e.wuerfel) $("wuerfel-anzahl").value = e.wuerfel;
+    } catch (e) { /* Standardwerte behalten */ }
+  },
+
+  speichereEinstellungen() {
+    try {
+      localStorage.setItem(EINSTELLUNGEN, JSON.stringify({
+        reiter: this.reiter,
+        art: this.art,
+        von: $("zahl-von").value,
+        bis: $("zahl-bis").value,
+        anzahl: $("zahl-anzahl").value,
+        ohne: $("zahl-ohne").checked,
+        wuerfel: $("wuerfel-anzahl").value
+      }));
+    } catch (e) { /* ohne Folgen */ }
+  },
+
+  // ------------------------------------------------ Ereignisse
+
+  binde() {
+    $("liste-wahl").addEventListener("change", e => this.wechsleListe(e.target.value));
+    $("btn-neu").addEventListener("click", () => this.oeffneEditor(null));
+    $("btn-bearbeiten").addEventListener("click", () => { if (this.aktiv) this.oeffneEditor(this.aktiv); });
+    $("btn-loeschen").addEventListener("click", () => this.loeschen());
+    $("btn-export").addEventListener("click", () => this.exportiere());
+    $("btn-import").addEventListener("click", () => $("datei-json").click());
+    $("datei-json").addEventListener("change", e => {
+      const datei = e.target.files[0];
+      e.target.value = "";
+      if (datei) this.importiere(datei);
+    });
+
+    $("e-datei").addEventListener("change", e => { const d = e.target.files[0]; if (d) this.leseDatei(d); });
+    $("e-format").addEventListener("change", () => this.fuelleEditorNamen());
+    $("e-gruppe").addEventListener("change", () => {
+      if (!$("e-name").value.trim() && $("e-gruppe").value) $("e-name").value = $("e-gruppe").value;
+      this.fuelleEditorNamen();
+    });
+    $("e-speichern").addEventListener("click", () => this.editorSpeichern());
+    $("e-abbrechen").addEventListener("click", () => { $("editor").hidden = true; });
+
+    document.querySelectorAll("[data-reiter]").forEach(b =>
+      b.addEventListener("click", () => this.zeigeReiter(b.dataset.reiter)));
+    document.querySelectorAll("[data-art]").forEach(b =>
+      b.addEventListener("click", () => this.zeigeArt(b.dataset.art)));
+
+    $("btn-ziehen").addEventListener("click", () => this.ziehen());
+    $("btn-runde").addEventListener("click", () => this.neueRunde());
+    $("ohne-wiederholung").addEventListener("change", () => this.renderZufallStatus());
+
+    $("modus").addEventListener("change", () => { $("rest-label").hidden = $("modus").value !== "groesse"; });
+    $("btn-gruppen").addEventListener("click", () => this.gruppenBilden());
+    $("btn-kopieren").addEventListener("click", () => this.gruppenKopieren());
+    $("btn-drucken").addEventListener("click", () => window.print());
+    $("nicht-zusammen").addEventListener("input", () => {
+      const wert = $("nicht-zusammen").value, name = this.aktiv;
+      if (name) this.aendere(d => { if (d.listen[name]) d.listen[name].nichtZusammen = wert; });
+    });
+    $("rollen").addEventListener("input", () => speicher.schreib(ROLLEN, $("rollen").value));
+
+    $("btn-zahl").addEventListener("click", () => this.zieheZahl());
+    ["zahl-von", "zahl-bis", "zahl-anzahl", "zahl-ohne"].forEach(id =>
+      $(id).addEventListener("change", () => this.speichereEinstellungen()));
+    $("btn-wuerfeln").addEventListener("click", () => this.wuerfeln());
+    $("wuerfel-anzahl").addEventListener("change", () => {
+      this.baueWuerfel(Number($("wuerfel-anzahl").value));
+      this.speichereEinstellungen();
+    });
+
+    $("btn-vollbild").addEventListener("click", () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen().catch(() => this.meldung("Vollbild ist hier nicht möglich."));
+    });
+    document.addEventListener("fullscreenchange", () => {
+      $("btn-vollbild").textContent = document.fullscreenElement ? "Vollbild beenden" : "Vollbild";
+    });
+    $("btn-design").addEventListener("click", () => {
+      const neu = document.documentElement.dataset.design === "dunkel" ? "hell" : "dunkel";
+      this.setzeDesign(neu);
+      speicher.schreib(DESIGN, neu === "dunkel" ? "dark" : "light");
+    });
+
+    // Tastatur und Presenter: Leertaste, Pfeil rechts, Bild ab – löst im aktiven Reiter aus
+    document.addEventListener("keydown", e => {
+      const tag = e.target.tagName;
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
+      if (e.key === " " && tag === "BUTTON") return;
+      if (![" ", "ArrowRight", "PageDown"].includes(e.key)) return;
+      if (this.reiter === "zufall") { e.preventDefault(); this.ziehen(); }
+      else if (this.reiter === "zahl") {
+        e.preventDefault();
+        if (this.art === "wuerfel") this.wuerfeln(); else this.zieheZahl();
+      }
+    });
+
+    // Änderungen aus anderen Tabs übernehmen (z. B. neue Liste im Sitzplan)
+    window.addEventListener("storage", e => {
+      if (e.key === SPEICHER) this.uebernehmeFremdeAenderung();
+    });
+  },
+
+  zeigeReiter(name) {
+    this.reiter = name;
+    document.querySelectorAll("[data-reiter]").forEach(x => x.classList.toggle("aktiv", x.dataset.reiter === name));
+    $("p-zufall").hidden = name !== "zufall";
+    $("p-gruppen").hidden = name !== "gruppen";
+    $("p-zahl").hidden = name !== "zahl";
+    // Für Zahl & Würfel wird keine Klassenliste gebraucht
+    $("s-liste").hidden = name === "zahl";
+    $("s-anwesenheit").hidden = name === "zahl";
+    this.speichereEinstellungen();
+  },
+
+  zeigeArt(art) {
+    this.art = art;
+    document.querySelectorAll("[data-art]").forEach(x => x.classList.toggle("aktiv", x.dataset.art === art));
+    $("art-zahl").hidden = art !== "zahl";
+    $("art-wuerfel").hidden = art !== "wuerfel";
+    this.speichereEinstellungen();
+  },
+
+  uebernehmeFremdeAenderung() {
+    this.daten = liesSpeicher();
+    if (!Object.hasOwn(this.daten.listen, this.aktiv)) {
+      this.aktiv = Object.keys(this.daten.listen)[0] || "";
+      this.zeigeListe();
+      return;
+    }
+    const namen = new Set(this.aktuelleListe().namen);
+    [...this.abwesend].forEach(n => { if (!namen.has(n)) this.abwesend.delete(n); });
+    [...this.gezogen].forEach(n => { if (!namen.has(n)) this.gezogen.delete(n); });
+    if (document.activeElement !== $("nicht-zusammen")) $("nicht-zusammen").value = this.aktuelleListe().nichtZusammen || "";
+    this.renderListenwahl();
+    this.renderChips();
+    this.renderZufallStatus();
+  },
+
+  initDesign() {
+    const gespeichert = speicher.lies(DESIGN);
+    const dunkel = gespeichert ? gespeichert === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    this.setzeDesign(dunkel ? "dunkel" : "hell");
+  },
+
+  setzeDesign(design) {
+    document.documentElement.dataset.design = design;
+    $("btn-design").textContent = design === "dunkel" ? "Hell" : "Dunkel";
+  },
+
+  meldung(text) {
+    const m = $("meldung");
+    m.textContent = text;
+    m.hidden = false;
+    clearTimeout(this.meldungTimer);
+    this.meldungTimer = setTimeout(() => { m.hidden = true; }, 4500);
+  },
+
+  // ------------------------------------------------ Listen
+
+  renderListenwahl() {
+    const wahl = $("liste-wahl");
+    wahl.innerHTML = "";
+    const namen = Object.keys(this.daten.listen).sort((a, b) => a.localeCompare(b, "de", { numeric: true }));
+    if (!namen.length) wahl.add(new Option("– noch keine Liste –", ""));
+    namen.forEach(n => wahl.add(new Option(`${n} (${this.daten.listen[n].namen.length})`, n)));
+    wahl.value = this.aktiv;
+    $("btn-bearbeiten").disabled = $("btn-loeschen").disabled = !namen.length;
+  },
+
+  // Setzt die Sitzungsdaten zurück und zeigt die aktuelle Liste an (ohne zu speichern)
+  zeigeListe() {
+    this.abwesend.clear();
+    this.gezogen.clear();
+    this.verlauf = [];
+    this.letzteGruppen = null;
+    $("buehne").textContent = "–";
+    $("gruppen").innerHTML = "";
+    $("gruppen-hinweis").innerHTML = "";
+    const liste = this.aktuelleListe();
+    $("nicht-zusammen").value = liste ? (liste.nichtZusammen || "") : "";
+    this.renderListenwahl();
+    this.renderChips();
+    this.renderZufallStatus();
+  },
+
+  wechsleListe(name) {
+    this.aktiv = name;
+    this.aendere(d => { d.aktiv = name; });
+    this.zeigeListe();
+  },
+
+  loeschen() {
+    const name = this.aktiv;
+    if (!name || !confirm(`Liste „${name}“ einschließlich ihrer Sitzpläne löschen?`)) return;
+    this.aendere(d => {
+      delete d.listen[name];
+      d.aktiv = Object.keys(d.listen)[0] || "";
+    });
+    this.aktiv = this.daten.aktiv;
+    this.zeigeListe();
+  },
+
+  oeffneEditor(name) {
+    this.bearbeiteterName = name;
+    this.importPersonen = null;
+    this.importHinweis = "";
+    $("e-name").value = name || "";
+    $("e-namen").value = name && this.daten.listen[name] ? this.daten.listen[name].namen.join("\n") : "";
+    $("e-datei").value = "";
+    $("e-gruppe-label").hidden = true;
+    $("e-info").textContent = "";
+    $("editor").hidden = false;
+    $("e-name").focus();
+  },
+
+  async leseDatei(datei) {
+    const { personen, hinweis } = leseTeilnehmende(parseCsv(await leseText(datei)));
+    if (!personen.length) { this.meldung("In der Datei wurden keine Namen gefunden."); return; }
+    this.importPersonen = personen;
+    this.importHinweis = hinweis;
+    const gruppen = [...new Set(personen.flatMap(p => p.gruppen))].sort((a, b) => a.localeCompare(b, "de", { numeric: true }));
+    const wahl = $("e-gruppe");
+    wahl.innerHTML = "";
+    wahl.add(new Option("alle", ""));
+    gruppen.forEach(g => wahl.add(new Option(g, g)));
+    $("e-gruppe-label").hidden = !gruppen.length;
+    this.fuelleEditorNamen();
+  },
+
+  fuelleEditorNamen() {
+    if (!this.importPersonen) return;
+    const gruppe = $("e-gruppe").value;
+    const auswahl = this.importPersonen.filter(p => !gruppe || p.gruppen.includes(gruppe));
+    const namen = formatiere(auswahl, $("e-format").value).sort((a, b) => a.localeCompare(b, "de"));
+    $("e-namen").value = namen.join("\n");
+    $("e-info").textContent = [
+      `${namen.length} Namen übernommen.`,
+      this.importHinweis,
+      "Gespeichert werden nur die Namen oben – die heruntergeladene CSV-Datei enthält meist weitere Daten und sollte danach gelöscht werden."
+    ].filter(Boolean).join(" ");
+  },
+
+  editorSpeichern() {
+    const name = $("e-name").value.trim();
+    if (!name) { this.meldung("Bitte einen Namen für die Liste angeben."); return; }
+    const namen = eindeutig($("e-namen").value.split(/\r?\n/).map(s => s.trim()).filter(Boolean));
+    if (!namen.length) { this.meldung("Die Liste enthält keine Namen."); return; }
+    const alterName = this.bearbeiteterName;
+    if (name !== alterName && Object.hasOwn(this.daten.listen, name) &&
+        !confirm(`Eine Liste „${name}“ gibt es schon. Namen überschreiben?`)) return;
+    this.aendere(d => {
+      const alt = alterName ? d.listen[alterName] : null;
+      if (alterName && alterName !== name) delete d.listen[alterName];
+      const vorhanden = d.listen[name] || {};
+      // Weitere Felder (z. B. Sitzpläne) bleiben erhalten
+      d.listen[name] = { ...vorhanden, ...(alt || {}), namen, nichtZusammen: (alt || vorhanden).nichtZusammen || "" };
+      d.aktiv = name;
+    });
+    this.aktiv = name;
+    $("editor").hidden = true;
+    this.zeigeListe();
+    this.meldung(`Liste „${name}“ gespeichert.`);
+  },
+
+  exportiere() {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(liesSpeicher(), null, 2)], { type: "application/json" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Klassenlisten.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);   // großzügig: Safari/iPad beginnt den Download teils verzögert
+  },
+
+  async importiere(datei) {
+    try {
+      const d = JSON.parse(await leseText(datei));
+      if (!d || typeof d.listen !== "object") throw new Error("Format");
+      const neu = bereinigeListen(d.listen);
+      const doppelt = Object.keys(neu).filter(n => Object.hasOwn(this.daten.listen, n));
+      if (doppelt.length && !confirm(`Diese Listen gibt es schon und werden samt ihrer Sitzpläne durch die Fassung aus der Datei ersetzt: ${doppelt.join(", ")}. Fortfahren?`)) return;
+      this.aendere(s => Object.assign(s.listen, neu));
+      if (!this.aktiv) this.aktiv = Object.keys(neu)[0] || "";
+      this.zeigeListe();
+      this.meldung(`${Object.keys(neu).length} Liste(n) geladen.`);
+    } catch (e) {
+      this.meldung("Die Datei ist keine gültige Listen-Sicherung.");
+    }
+  },
+
+  // ------------------------------------------------ Anwesenheit
+
+  renderChips() {
+    const ziel = $("chips");
+    ziel.innerHTML = "";
+    const liste = this.aktuelleListe();
+    if (!liste) {
+      ziel.textContent = "Noch keine Liste – bitte über „Neue Liste“ anlegen.";
+      $("anwesend-zahl").textContent = "";
+      return;
+    }
+    liste.namen.forEach(n => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip" + (this.abwesend.has(n) ? " abwesend" : "");
+      b.textContent = n;
+      b.setAttribute("aria-pressed", String(!this.abwesend.has(n)));
+      b.addEventListener("click", () => {
+        if (this.abwesend.has(n)) this.abwesend.delete(n); else this.abwesend.add(n);
+        this.renderChips();
+        this.renderZufallStatus();
+      });
+      ziel.appendChild(b);
+    });
+    $("anwesend-zahl").textContent = `(${this.anwesende().length} von ${liste.namen.length} anwesend)`;
+  },
+
+  // ------------------------------------------------ Wer ist dran?
+
+  renderZufallStatus() {
+    const anwesend = this.anwesende();
+    const offen = anwesend.filter(n => !this.gezogen.has(n)).length;
+    $("rest-anzeige").textContent = $("ohne-wiederholung").checked
+      ? `noch ${offen} von ${anwesend.length}`
+      : `${anwesend.length} anwesend`;
+    $("verlauf").textContent = this.verlauf.length ? this.verlauf.join(", ") : "–";
+  },
+
+  ziehen() {
+    if (this.rollt) return;
+    const anwesend = this.anwesende();
+    if (!anwesend.length) {
+      this.meldung(this.aktuelleListe() ? "Es ist niemand als anwesend markiert." : "Bitte zuerst eine Liste anlegen.");
+      return;
+    }
+    const ohneWiederholung = $("ohne-wiederholung").checked;
+    let kandidaten = ohneWiederholung ? anwesend.filter(n => !this.gezogen.has(n)) : anwesend;
+    if (!kandidaten.length) {
+      this.gezogen.clear();
+      kandidaten = anwesend;
+      this.meldung("Alle waren dran – eine neue Runde beginnt.");
+    }
+    const gewaehlt = kandidaten[zufallInt(kandidaten.length)];
+    const buehne = $("buehne");
+    const fertig = () => {
+      this.rollt = false;
+      buehne.classList.remove("rollt");
+      buehne.textContent = gewaehlt;
+      if (ohneWiederholung) this.gezogen.add(gewaehlt);
+      this.verlauf.push(gewaehlt);
+      this.renderZufallStatus();
+    };
+    if (reduzierteBewegung() || anwesend.length < 2) { fertig(); return; }
+    this.rollt = true;
+    buehne.classList.add("rollt");
+    let schritte = 0;
+    const takt = setInterval(() => {
+      buehne.textContent = anwesend[zufallInt(anwesend.length)];
+      if (++schritte >= 14) { clearInterval(takt); fertig(); }
+    }, 60);
+  },
+
+  neueRunde() {
+    this.gezogen.clear();
+    this.verlauf = [];
+    $("buehne").textContent = "–";
+    this.renderZufallStatus();
+  },
+
+  // ------------------------------------------------ Gruppen
+
+  leseVerbote(anwesend) {
+    const liste = this.aktuelleListe();
+    const nachKlein = new Map(liste.namen.map(n => [n.toLowerCase(), n]));
+    const vorhanden = new Set(anwesend);
+    const verbote = [];
+    const unbekannt = new Set();
+    $("nicht-zusammen").value.split(/\r?\n/).forEach(zeile => {
+      const namen = zeile.split(/[,;]/).map(s => s.trim()).filter(Boolean).map(s => {
+        const treffer = nachKlein.get(s.toLowerCase());
+        if (!treffer) unbekannt.add(s);
+        return treffer;
+      }).filter(n => n && vorhanden.has(n));
+      for (let i = 0; i < namen.length; i++)
+        for (let j = i + 1; j < namen.length; j++) verbote.push([namen[i], namen[j]]);
+    });
+    return { verbote, unbekannt: [...unbekannt] };
+  },
+
+  gruppenBilden() {
+    const namen = this.anwesende();
+    if (namen.length < 2) {
+      this.meldung(this.aktuelleListe() ? "Es werden mindestens zwei anwesende Personen benötigt." : "Bitte zuerst eine Liste anlegen.");
+      return;
+    }
+    const zahl = Math.max(1, parseInt($("zahl").value, 10) || 1);
+    let anzahl;
+    if ($("modus").value === "anzahl") anzahl = zahl;
+    else if ($("rest").value === "zusatz") anzahl = Math.ceil(namen.length / zahl);
+    else anzahl = Math.max(1, Math.floor(namen.length / zahl));
+    anzahl = Math.min(anzahl, namen.length);
+
+    const { verbote, unbekannt } = this.leseVerbote(namen);
+    const { gruppen, fehler } = bildeGruppen(namen, anzahl, verbote);
+    const rollen = $("rollen").value.split(/[,;\n]/).map(s => s.trim()).filter(Boolean);
+    this.letzteGruppen = gruppen.map(g => mische(g).map((name, i) => ({ name, rolle: rollen[i] || "" })));
+
+    const hinweis = $("gruppen-hinweis");
+    hinweis.innerHTML = "";
+    const warne = text => {
+      const p = document.createElement("p");
+      p.className = "warnung";
+      p.textContent = text;
+      hinweis.appendChild(p);
+    };
+    if (unbekannt.length) warne(`Nicht in der Liste gefunden: ${unbekannt.join(", ")}`);
+    if (fehler > 0) warne(`Die Wünsche „nicht zusammen“ ließen sich nicht vollständig erfüllen (${fehler} Konflikt${fehler > 1 ? "e" : ""}). Mehr Gruppen oder weniger Einschränkungen helfen.`);
+
+    const ziel = $("gruppen");
+    ziel.innerHTML = "";
+    this.letzteGruppen.forEach((g, i) => {
+      const karte = document.createElement("div");
+      karte.className = "gruppe";
+      const h = document.createElement("h3");
+      h.textContent = `Gruppe ${i + 1}`;
+      const ul = document.createElement("ul");
+      g.forEach(({ name, rolle }) => {
+        const li = document.createElement("li");
+        li.textContent = name;
+        if (rolle) {
+          const span = document.createElement("span");
+          span.className = "rolle";
+          span.textContent = ` – ${rolle}`;
+          li.appendChild(span);
+        }
+        ul.appendChild(li);
+      });
+      karte.append(h, ul);
+      ziel.appendChild(karte);
+    });
+  },
+
+  async gruppenKopieren() {
+    if (!this.letzteGruppen) { this.meldung("Bitte zuerst Gruppen bilden."); return; }
+    const text = this.letzteGruppen
+      .map((g, i) => `Gruppe ${i + 1}: ${g.map(p => (p.rolle ? `${p.name} (${p.rolle})` : p.name)).join(", ")}`)
+      .join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      this.meldung("Gruppen in die Zwischenablage kopiert.");
+    } catch (e) {
+      const feld = document.createElement("textarea");
+      feld.value = text;
+      document.body.appendChild(feld);
+      feld.select();
+      const ok = document.execCommand("copy");
+      feld.remove();
+      this.meldung(ok ? "Gruppen in die Zwischenablage kopiert." : "Kopieren war nicht möglich.");
+    }
+  },
+
+  // ------------------------------------------------ Zufallszahl
+
+  zieheZahl() {
+    if (this.zahlRollt) return;
+    let von = parseInt($("zahl-von").value, 10);
+    let bis = parseInt($("zahl-bis").value, 10);
+    if (!Number.isFinite(von) || !Number.isFinite(bis)) { this.meldung("Bitte für „von“ und „bis“ ganze Zahlen angeben."); return; }
+    if (von > bis) [von, bis] = [bis, von];
+    const spanne = bis - von + 1;
+    if (spanne > 1e9) { this.meldung("Der Bereich ist zu groß (höchstens eine Milliarde Zahlen)."); return; }
+    let anzahl = Math.min(50, Math.max(1, parseInt($("zahl-anzahl").value, 10) || 1));
+    const ohne = $("zahl-ohne").checked;
+    if (ohne && anzahl > spanne) {
+      anzahl = spanne;
+      this.meldung(`Im Bereich gibt es nur ${spanne} verschiedene Zahlen.`);
+    }
+
+    let ergebnis;
+    if (ohne) {
+      const gezogen = new Set();
+      while (gezogen.size < anzahl) gezogen.add(von + zufallInt(spanne));
+      ergebnis = [...gezogen];
+    } else {
+      ergebnis = Array.from({ length: anzahl }, () => von + zufallInt(spanne));
+    }
+
+    const anzeige = $("zahl-buehne");
+    anzeige.classList.toggle("mehrere", anzahl > 1);
+    const fertig = () => {
+      this.zahlRollt = false;
+      anzeige.classList.remove("rollt");
+      anzeige.textContent = ergebnis.join("  ·  ");
+      this.zahlVerlauf.push(ergebnis.length > 1 ? `(${ergebnis.join(", ")})` : String(ergebnis[0]));
+      if (this.zahlVerlauf.length > 15) this.zahlVerlauf.shift();
+      $("zahl-verlauf").textContent = this.zahlVerlauf.join(" · ");
+    };
+    if (reduzierteBewegung() || spanne < 2) { fertig(); return; }
+    this.zahlRollt = true;
+    anzeige.classList.add("rollt");
+    let schritte = 0;
+    const takt = setInterval(() => {
+      anzeige.textContent = ergebnis.map(() => von + zufallInt(spanne)).join("  ·  ");
+      if (++schritte >= 12) { clearInterval(takt); fertig(); }
+    }, 60);
+  },
+
+  // ------------------------------------------------ Würfel
+
+  baueWuerfel(anzahl) {
+    const feld = $("wuerfel-feld");
+    feld.innerHTML = "";
+    feld.style.setProperty("--w", (anzahl <= 2 ? 120 : anzahl === 3 ? 100 : 84) + "px");
+    this.wuerfel = [];
+    for (let i = 0; i < anzahl; i++) {
+      const el = document.createElement("div");
+      el.className = "wuerfel";
+      el.setAttribute("role", "img");
+      el.setAttribute("aria-label", "Würfel");
+      for (let augenzahl = 1; augenzahl <= 6; augenzahl++) {
+        const seite = document.createElement("div");
+        seite.className = "seite s" + augenzahl;
+        for (let feldNr = 1; feldNr <= 9; feldNr++) {
+          const punkt = document.createElement("span");
+          if (AUGEN[augenzahl].includes(feldNr)) punkt.className = "auge";
+          seite.appendChild(punkt);
+        }
+        el.appendChild(seite);
+      }
+      el.style.transform = "rotateX(-18deg) rotateY(24deg)";
+      feld.appendChild(el);
+      this.wuerfel.push({ el, drehX: 0, drehY: 0 });
+    }
+    $("wuerfel-summe").textContent = "";
+  },
+
+  wuerfeln() {
+    if (this.wuerfelRollt || !this.wuerfel.length) return;
+    const augen = this.wuerfel.map(() => 1 + zufallInt(6));
+    this.wuerfel.forEach((w, i) => {
+      // Zwei bis vier zusätzliche volle Umdrehungen je Achse, dann Landung auf der gezogenen Seite
+      w.drehX += 2 + zufallInt(3);
+      w.drehY += 2 + zufallInt(3);
+      const [ax, ay] = WUERFEL_ZIEL[augen[i]];
+      const neigung = zufallInt(25) - 12;
+      w.el.style.transform = `rotateZ(${neigung}deg) rotateX(${w.drehX * 360 + ax}deg) rotateY(${w.drehY * 360 + ay}deg)`;
+      w.el.setAttribute("aria-label", `Würfel zeigt ${augen[i]}`);
+    });
+    this.wuerfelRollt = true;
+    $("wuerfel-summe").textContent = "…";
+    setTimeout(() => {
+      this.wuerfelRollt = false;
+      const summe = augen.reduce((a, b) => a + b, 0);
+      $("wuerfel-summe").textContent = augen.length === 1
+        ? `Gewürfelt: ${summe}`
+        : `${augen.join(" + ")} = ${summe}`;
+    }, reduzierteBewegung() ? 0 : 1350);
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => App.init());
+</script>
+</body>
+</html>

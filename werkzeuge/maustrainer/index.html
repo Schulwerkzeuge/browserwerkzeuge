@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<!--
+  Maustraining
+  Copyright 2026 St.-Antonius-Gymnasium Lüdinghausen
+  Version: 1.3.3 (2026-11-05)
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software distributed
+  under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  CONDITIONS OF ANY KIND, either express or implied.
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<!-- pwa --><script src="pwa.js?v=604590ad89" data-tool="maustrainer" data-name="Maustraining" data-daten="ja" data-schluessel=""></script><!-- /pwa -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maustraining</title>
+<meta name="version" content="1.3.3">
+<meta name="description" content="Zwölf Übungen zum sicheren Umgang mit der Computermaus: bewegen, klicken, doppelklicken, ziehen, scrollen, markieren und mehr.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%96%B1%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("browserwerkzeuge-theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t;}catch(e){}</script>
+<style>
+/* ---------- Farben & Schrift ---------- */
+:root {
+  --desk: #E7EDF6;
+  --paper: #FBFCFE;
+  --grid: #E0E8F4;
+  --margin: #EFA3AD;
+  --ink: #1B3A8C;
+  --ink-soft: #E4EAFA;
+  --text: #1E2433;
+  --muted: #566074;
+  --marker: #FFE45C;
+  --swash: #FFE45C;
+  --marker-text: #2B2300;
+  --red: #C8243A;
+  --red-soft: #FCE8EB;
+  --green: #1B7F52;
+  --green-soft: #E3F4EB;
+  --surface: #FFFFFF;
+  --line: #C6D0E1;
+  --shadow: 0 1px 0 rgba(27,58,140,.06), 0 10px 28px -14px rgba(27,58,140,.35);
+  --link: #1A5FD6;
+  --auf-akzent: #FFFFFF;
+  --link-visited: #7A3FC7;
+  --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: ui-rounded, "SF Pro Rounded", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --swash: rgba(255,228,92,.3);
+    --desk: #0E131C;
+    --paper: #151C29;
+    --grid: #1E2839;
+    --margin: #6B3440;
+    --ink: #93B1FF;
+    --ink-soft: #22304D;
+    --text: #E6EAF2;
+    --muted: #A2ABBD;
+    --marker: #FFE45C;
+    --marker-text: #2B2300;
+    --red: #FF7A8A;
+    --red-soft: #3A1E26;
+    --green: #56CF96;
+    --green-soft: #173427;
+    --surface: #1B2433;
+    --line: #34425B;
+    --shadow: 0 10px 28px -14px rgba(0,0,0,.7);
+    --link: #8AB4FF;
+    --auf-akzent: #0E131C;
+    --link-visited: #C9A2FF;
+  }
+}
+:root[data-theme="dark"] {
+    --swash: rgba(255,228,92,.3);
+    --desk: #0E131C;
+    --paper: #151C29;
+    --grid: #1E2839;
+    --margin: #6B3440;
+    --ink: #93B1FF;
+    --ink-soft: #22304D;
+    --text: #E6EAF2;
+    --muted: #A2ABBD;
+    --marker: #FFE45C;
+    --marker-text: #2B2300;
+    --red: #FF7A8A;
+    --red-soft: #3A1E26;
+    --green: #56CF96;
+    --green-soft: #173427;
+    --surface: #1B2433;
+    --line: #34425B;
+    --shadow: 0 10px 28px -14px rgba(0,0,0,.7);
+    --link: #8AB4FF;
+    --auf-akzent: #0E131C;
+    --link-visited: #C9A2FF;
+  color-scheme: dark;
+}
+:root[data-theme="light"] { color-scheme: light; }
+html.big { font-size: 118%; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--desk);
+  min-height: 100vh;
+}
+button, input { font: inherit; color: inherit; }
+a { color: var(--ink); }
+main:focus { outline: none; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
+b { font-weight: 650; }
+
+/* ---------- Kopfzeile ---------- */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .75rem clamp(1rem, 3vw, 2rem);
+}
+.brand {
+  font-family: var(--font-display); font-weight: 750; font-size: 1.25rem;
+  color: var(--text); text-decoration: none; display: flex; align-items: center; gap: .5rem;
+}
+.topbar-right { display: flex; align-items: center; gap: .9rem; font-size: .95rem; color: var(--muted); }
+.progress { width: 120px; height: 10px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.progress span { display: block; height: 100%; width: 0; background: var(--green); border-radius: 99px; transition: width .4s ease; }
+.ghost {
+  border: 2px solid var(--line); background: var(--surface); border-radius: 10px;
+  padding: .25rem .6rem; font-weight: 700; cursor: pointer;
+}
+.ghost[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); }
+
+.topbar-link { color: var(--text); text-decoration: none; font-weight: 600; padding: .3rem .6rem; border-radius: 10px; border: 2px solid transparent; white-space: nowrap; }
+.topbar-link:hover { border-color: var(--line); background: var(--surface); }
+.theme-btn { font-size: 1.05rem; line-height: 1; padding: .35rem .5rem; }
+@media (max-width: 520px) { .topbar-link .long { display: none; } }
+
+/* ---------- Fußzeile ---------- */
+.site-footer {
+  max-width: 1280px; margin: 0 auto; padding: 1.5rem clamp(1rem, 3vw, 2rem) 2.5rem;
+  color: var(--muted); font-size: .9rem; text-align: center; border-top: 1px solid var(--line);
+}
+.site-footer p { margin: .35rem 0; }
+.site-footer a { color: var(--muted); }
+.site-footer a:hover { color: var(--ink); }
+
+/* ---------- Über dieses Projekt ---------- */
+.info h1 { font-size: clamp(1.7rem, 3.5vw, 2.3rem); margin-bottom: .6rem; }
+.info h2 { font-size: 1.4rem; margin: 2rem 0 .5rem; }
+.info p { max-width: 68ch; }
+.info ul { max-width: 68ch; padding-left: 1.2rem; }
+.info li { margin: .3rem 0; }
+
+/* ---------- Grundaufbau ---------- */
+.layout {
+  display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: clamp(1rem, 2.5vw, 2rem);
+  padding: 0 clamp(1rem, 3vw, 2rem) 3rem; max-width: 1280px; margin: 0 auto;
+}
+.levels ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; position: sticky; top: 1rem; }
+.nav-link {
+  display: flex; align-items: center; gap: .65rem; padding: .45rem .6rem; border-radius: 10px;
+  text-decoration: none; color: var(--text);
+}
+.nav-link:hover { background: var(--surface); }
+.nav-link[aria-current="page"] { background: var(--surface); box-shadow: var(--shadow); font-weight: 650; }
+.nav-no {
+  flex: none; width: 1.8rem; height: 1.8rem; border-radius: 50%; display: grid; place-items: center;
+  font-size: .85rem; font-weight: 700; border: 2px solid var(--line); color: var(--muted); background: var(--paper);
+}
+.nav-link.is-done .nav-no { background: var(--green); border-color: var(--green); color: #fff; }
+.nav-sep { height: 1px; background: var(--line); margin: .5rem .6rem; }
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .levels ol { display: flex; overflow-x: auto; position: static; gap: .4rem; padding-bottom: .4rem; }
+  .nav-link { white-space: nowrap; background: var(--surface); }
+  .nav-sep { display: none; }
+  .progress, #progressText { display: none; }
+}
+
+/* ---------- Heftseite ---------- */
+.sheet {
+  position: relative;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: -1px -1px;
+  border-radius: 6px 18px 18px 6px;
+  box-shadow: var(--shadow);
+  padding: clamp(1.25rem, 3vw, 2.25rem) clamp(1.25rem, 3vw, 2.5rem) 2.5rem 5.5rem;
+  min-height: 70vh;
+}
+.sheet::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 3.5rem; width: 2px; background: var(--margin);
+}
+@media (max-width: 600px) {
+  .sheet { padding-left: 2.25rem; }
+  .sheet::before { left: 1.25rem; }
+}
+.sheet h1, .sheet h2 { font-family: var(--font-display); line-height: 1.15; margin: 0; }
+
+.level-head { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+.level-no {
+  flex: none; font-family: var(--font-display); font-weight: 800; font-size: 2.3rem; line-height: 1.1;
+  color: var(--ink); margin-left: -5.3rem; width: 2.8rem; margin-right: 1.5rem; text-align: right;
+}
+@media (max-width: 600px) { .level-no { margin-left: 0; margin-right: 0; width: auto; } }
+.level-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.3rem); margin-bottom: .35rem; }
+.lead { color: var(--muted); max-width: 62ch; margin: 0; }
+
+.task {
+  max-width: 64ch; margin: 1.25rem 0 .75rem; padding: .85rem 1.1rem;
+  background: var(--surface); border-left: 5px solid var(--ink); border-radius: 4px 12px 12px 4px;
+  font-size: 1.1rem;
+}
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem; min-height: 2.2rem; margin-bottom: 1rem; }
+.steps { display: flex; gap: 6px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); background: var(--paper); }
+.dot.done { background: var(--green); border-color: var(--green); }
+.dot.now { border-color: var(--ink); }
+.feedback { font-weight: 600; padding: .2rem .6rem; border-radius: 8px; }
+.feedback.good { color: var(--green); background: var(--green-soft); }
+.feedback.bad { color: var(--red); background: var(--red-soft); }
+.feedback:empty { padding: 0; }
+
+.stage { position: relative; user-select: none; -webkit-user-select: none; border-radius: 14px; }
+.stage.shake { animation: shake .35s; }
+@keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+
+/* ---------- Buttons allgemein ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+  padding: .7rem 1.2rem; border-radius: 12px; border: 2px solid var(--line);
+  background: var(--surface); color: var(--text); font-weight: 650; text-decoration: none; cursor: pointer;
+}
+.btn:hover { border-color: var(--ink); }
+.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.btn.primary:hover { filter: brightness(1.1); }
+.btn.danger { color: var(--red); }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: .5; pointer-events: none; }
+
+/* Textmarker: so sehen Ziele aus */
+.target, .treasure {
+  background: var(--marker) !important; color: var(--marker-text) !important; border-color: #D9B800 !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--marker) 45%, transparent);
+}
+
+/* ---------- Startseite ---------- */
+.hero-title { font-size: clamp(2.2rem, 6vw, 3.8rem); font-weight: 800; letter-spacing: -.02em; margin: .5rem 0 1rem; }
+.swash {
+  background: linear-gradient(transparent 58%, var(--swash) 58%, var(--swash) 90%, transparent 90%);
+  padding: 0 .12em; margin-left: -.12em;
+}
+.home .lead { font-size: 1.2rem; }
+.home-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1.5rem 0 2.25rem; }
+.level-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; max-width: 760px; }
+.level-row {
+  display: grid; grid-template-columns: 2.4rem 1fr auto; gap: .25rem 1rem; align-items: center;
+  padding: .7rem 1rem; background: var(--surface); border: 2px solid transparent; border-radius: 12px;
+  text-decoration: none; color: var(--text);
+}
+.level-row:hover { border-color: var(--ink); }
+.level-row .n { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; color: var(--ink); }
+.level-row .t { font-weight: 650; }
+.level-row .s { display: block; color: var(--muted); font-size: .95rem; font-weight: 400; }
+.level-row .st { font-size: .9rem; color: var(--green); font-weight: 650; white-space: nowrap; }
+.teacher { max-width: 760px; margin-top: 2rem; background: var(--surface); border-radius: 12px; padding: .8rem 1.1rem; }
+.teacher summary { cursor: pointer; font-weight: 650; }
+.teacher p { color: var(--muted); max-width: 70ch; }
+code { background: var(--ink-soft); padding: .05rem .35rem; border-radius: 5px; }
+
+.meta .restart { margin-left: auto; font-size: .85rem; font-weight: 600; }
+.crash { background: var(--red-soft); border: 2px solid var(--red); border-radius: 14px; padding: 1rem 1.25rem; max-width: 560px; }
+.crash p { margin: 0 0 .75rem; font-weight: 600; }
+.crash-detail { font-family: ui-monospace, Consolas, monospace; font-size: .85rem; font-weight: 400; color: var(--muted); word-break: break-word; }
+.crash-detail:empty { display: none; }
+
+/* ---------- Fertig-Karte ---------- */
+.done-wrap {
+  position: fixed; inset: 0; display: grid; place-items: center; padding: 1rem; overflow-y: auto;
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  border-radius: inherit; z-index: 50;
+}
+.done-card {
+  background: var(--surface); border-radius: 20px; box-shadow: var(--shadow); border: 2px solid var(--line);
+  padding: 1.75rem 2rem; max-width: 460px; width: 100%; text-align: center;
+  animation: pop .35s cubic-bezier(.2,1.4,.4,1);
+}
+.done-card h2 { font-size: 2rem; margin-bottom: .5rem; }
+.done-card p { margin: .3rem 0; }
+.done-emoji { font-size: 3rem; line-height: 1; }
+.done-actions { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; margin-top: 1.25rem; }
+@keyframes pop { from { transform: scale(.85); opacity: 0; } }
+
+/* ---------- 1 Bewegen ---------- */
+.path-canvas { display: block; width: 100%; height: 380px; touch-action: none; cursor: crosshair; border-radius: 14px; border: 2px dashed var(--line); }
+
+/* ---------- 2 Klicken ---------- */
+.btn-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .8rem; max-width: 720px; }
+.pill {
+  padding: 1.1rem .5rem; border-radius: 14px; border: 2px solid var(--line); background: var(--surface);
+  font-weight: 650; cursor: pointer; transition: transform .08s;
+}
+.pill:hover { border-color: var(--ink); }
+.pill:active { transform: scale(.96); }
+
+/* ---------- 3 Doppelklick / 4 Rechtsklick ---------- */
+.desktop {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem;
+  padding: 1.25rem; background: var(--surface); border: 2px solid var(--line); border-radius: 14px;
+  min-height: 300px; max-width: 760px; align-content: start;
+}
+.icon {
+  display: flex; flex-direction: column; align-items: center; gap: .35rem; padding: .8rem .4rem;
+  border: 2px solid transparent; border-radius: 12px; background: none; cursor: default; text-align: center;
+}
+.icon:hover { background: var(--ink-soft); }
+.icon.selected { background: var(--ink-soft); border-color: var(--ink); }
+.icon .glyph { font-size: 2.6rem; line-height: 1; }
+.icon .name { font-size: .95rem; overflow-wrap: anywhere; }
+.window {
+  position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%);
+  background: var(--surface); border: 2px solid var(--ink); border-radius: 14px; box-shadow: var(--shadow);
+  min-width: 260px; overflow: hidden; animation: pop .25s ease-out; z-index: 20;
+}
+.window-bar { background: var(--ink); color: var(--paper); padding: .4rem .8rem; font-weight: 650; }
+.window-body { padding: 1rem 1.2rem; }
+.ctx {
+  position: absolute; z-index: 30; min-width: 190px; list-style: none; margin: 0; padding: .35rem;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 12px; box-shadow: var(--shadow);
+}
+.ctx button { display: block; width: 100%; text-align: left; padding: .5rem .8rem; border: 0; background: none; border-radius: 8px; cursor: pointer; }
+.ctx button:hover { background: var(--ink-soft); color: var(--ink); }
+
+/* ---------- 5 Links ---------- */
+.article {
+  max-width: 62ch; background: var(--surface); padding: 1.25rem 1.5rem; border-radius: 14px; border: 2px solid var(--line);
+  user-select: text; -webkit-user-select: text; font-size: 1.1rem; line-height: 1.65;
+}
+.article h2 { font-size: 1.5rem; margin-bottom: .5rem; }
+.article a { color: var(--link); text-decoration-thickness: 2px; text-underline-offset: 3px; cursor: pointer; }
+.article a:hover { background: var(--ink-soft); border-radius: 4px; }
+.article a.visited { color: var(--link-visited); }
+
+/* ---------- 6 Ziehen ---------- */
+.pool { display: flex; flex-wrap: wrap; gap: .7rem; min-height: 80px; margin-bottom: 1.25rem; max-width: 760px; }
+.drag-item {
+  display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1rem; border-radius: 12px;
+  background: var(--surface); border: 2px solid var(--line); font-weight: 650; cursor: grab; touch-action: none;
+  position: relative;
+}
+.drag-item .e { font-size: 1.6rem; line-height: 1; }
+.drag-item.dragging { cursor: grabbing; z-index: 40; box-shadow: var(--shadow); border-color: var(--ink); }
+.drag-item.placed { cursor: default; border-color: var(--green); background: var(--green-soft); }
+.drag-item.back { transition: transform .25s ease; }
+.zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; max-width: 760px; }
+.zone { border: 3px dashed var(--line); border-radius: 16px; padding: 1rem; min-height: 190px; background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.zone h3 { margin: 0; font-family: var(--font-display); font-size: 1.25rem; }
+.zone p { margin: .1rem 0 .8rem; color: var(--muted); font-size: .95rem; }
+.zone.over { border-color: var(--ink); background: var(--ink-soft); }
+.zone-items { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+/* ---------- 7 Scrollen ---------- */
+.scroll-box {
+  height: 320px; max-width: 640px; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: .8rem;
+  scrollbar-width: auto; scrollbar-color: var(--muted) var(--ink-soft);
+}
+.lockers { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: .6rem; }
+.locker {
+  height: 64px; border-radius: 10px; border: 2px solid var(--line); background: var(--paper); cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 650; line-height: 1.1;
+}
+.locker small { font-size: .8rem; opacity: .6; }
+.locker:hover { border-color: var(--ink); }
+.locker.treasure { font-size: 1.8rem; }
+
+/* ---------- 8 Tabs ---------- */
+.tabs-app { max-width: 720px; }
+.tablist { display: flex; flex-wrap: wrap; gap: 4px; padding-left: .6rem; }
+.tab {
+  padding: .6rem 1.1rem; border: 2px solid var(--line); border-bottom: 0; border-radius: 12px 12px 0 0;
+  background: var(--ink-soft); cursor: pointer; font-weight: 600; position: relative; top: 2px;
+}
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { background: var(--surface); color: var(--ink); z-index: 1; }
+.tabpanel { background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 1.25rem; min-height: 230px; }
+.tabpanel h3 { margin: 0 0 .75rem; font-family: var(--font-display); }
+.tabpanel table { border-collapse: collapse; width: 100%; }
+.tabpanel th, .tabpanel td { text-align: left; padding: .35rem .5rem; border-bottom: 1px solid var(--line); }
+.tabpanel ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+.chip {
+  border: 2px solid var(--line); background: var(--paper); border-radius: 10px; padding: .3rem .7rem;
+  cursor: pointer; font-weight: 600;
+}
+.chip:hover { border-color: var(--ink); color: var(--ink); }
+
+/* ---------- 9 Menü ---------- */
+.menu-app { max-width: 720px; background: var(--surface); border: 2px solid var(--line); border-radius: 14px; }
+.menubar { display: flex; flex-wrap: wrap; gap: 2px; padding: .3rem; border-bottom: 2px solid var(--line); }
+.mtop { position: relative; }
+.mtop-btn { border: 0; background: none; padding: .45rem .9rem; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.mtop-btn:hover, .mtop.open > .mtop-btn { background: var(--ink-soft); color: var(--ink); }
+.dropdown {
+  display: none; position: absolute; top: calc(100% + 2px); left: 0; z-index: 30; min-width: 210px;
+  list-style: none; margin: 0; padding: .35rem; background: var(--surface);
+  border: 2px solid var(--line); border-radius: 12px; box-shadow: var(--shadow);
+}
+.mtop.open > .dropdown { display: block; }
+.has-sub { position: relative; }
+.dropdown.sub { top: -.5rem; left: calc(100% - 4px); }
+.has-sub:hover > .sub, .has-sub.open > .sub { display: block; }
+.mitem {
+  display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 1rem;
+  text-align: left; padding: .5rem .75rem; border: 0; background: none; border-radius: 8px; cursor: pointer;
+}
+.mitem:hover, .has-sub:hover > .mitem, .has-sub.open > .mitem { background: var(--ink-soft); color: var(--ink); }
+.doc { padding: 1.25rem 1.5rem 2rem; }
+.doc-title { font-weight: 650; margin: 0 0 1rem; }
+.doc-line { height: 10px; border-radius: 5px; background: var(--ink-soft); margin: .7rem 0; }
+
+/* ---------- 10 Pop-ups ---------- */
+.fake-page { max-width: 720px; min-height: 360px; background: var(--surface); border: 2px solid var(--line); border-radius: 14px; overflow: hidden; position: relative; }
+.fake-head { background: var(--ink); color: var(--paper); padding: .7rem 1.2rem; font-family: var(--font-display); font-weight: 750; font-size: 1.2rem; }
+.fake-body { padding: 1.1rem 1.4rem; }
+.fake-body h3 { margin: 0 0 .5rem; font-family: var(--font-display); }
+.popup-backdrop { position: absolute; inset: 0; background: rgba(10,16,30,.45); display: grid; place-items: center; padding: 1rem; z-index: 20; }
+.popup-backdrop.clear { background: transparent; align-items: end; padding: 0; }
+.popup {
+  position: relative; background: var(--surface); color: var(--text); border-radius: 16px; box-shadow: 0 20px 50px -20px rgba(0,0,0,.6);
+  padding: 1.4rem 1.5rem 1.2rem; max-width: 420px; width: 100%; animation: pop .25s ease-out;
+}
+.popup.banner { max-width: none; border-radius: 14px 14px 0 0; border-top: 3px solid var(--ink); animation: slide .3s ease-out; }
+@keyframes slide { from { transform: translateY(100%); } }
+.popup h3 { margin: 0 0 .4rem; font-family: var(--font-display); font-size: 1.3rem; padding-right: 2rem; }
+.popup p { margin: 0 0 1rem; color: var(--muted); }
+.popup .row { display: flex; flex-wrap: wrap; gap: .5rem; }
+.popup .x {
+  position: absolute; top: .45rem; right: .5rem; width: 1.9rem; height: 1.9rem; border-radius: 50%;
+  border: 0; background: none; font-size: 1.2rem; line-height: 1; cursor: pointer; color: var(--muted);
+}
+.popup .x:hover { background: var(--ink-soft); color: var(--text); }
+.popup.scam { background: linear-gradient(160deg, #FFF6C9, #FFE0EA); color: #3a1030; }
+.popup.scam p { color: #5b2a4a; }
+.popup .quiet { background: none; border: 0; color: inherit; opacity: .6; font-size: .85rem; text-decoration: underline; cursor: pointer; padding: .7rem .4rem; }
+.popup .scambig { background: #E0115F; border-color: #E0115F; color: #fff; font-size: 1.1rem; }
+
+/* ---------- 11 Markieren ---------- */
+.select-text {
+  max-width: 60ch; background: var(--surface); padding: 1.25rem 1.5rem; border-radius: 14px; border: 2px solid var(--line);
+  font-size: 1.25rem; line-height: 1.8; user-select: text; -webkit-user-select: text; cursor: text; margin: 0;
+}
+.select-text::selection { background: var(--marker); color: var(--marker-text); }
+
+/* ---------- 12 Memory ---------- */
+.memory { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; max-width: 560px; }
+.card { aspect-ratio: 1; border: 0; padding: 0; background: none; cursor: pointer; perspective: 600px; }
+.card-inner { position: relative; display: block; width: 100%; height: 100%; transition: transform .35s; transform-style: preserve-3d; }
+.card.flipped .card-inner { transform: rotateY(180deg); }
+.card-back, .card-front {
+  position: absolute; inset: 0; display: grid; place-items: center; border-radius: 14px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.card-back {
+  background-color: var(--ink);
+  background-image: radial-gradient(color-mix(in srgb, var(--paper) 30%, transparent) 2px, transparent 2.5px);
+  background-size: 16px 16px;
+}
+.card-front { background: var(--surface); border: 2px solid var(--line); transform: rotateY(180deg); font-size: clamp(1.8rem, 6vw, 3rem); }
+.card.matched .card-front { border-color: var(--green); background: var(--green-soft); }
+.card:hover .card-back { filter: brightness(1.15); }
+
+/* ---------- Urkunde ---------- */
+.cert-controls { display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; margin-bottom: 1.5rem; }
+.cert-controls label { display: grid; gap: .25rem; font-weight: 600; }
+.cert-controls input { padding: .6rem .8rem; border-radius: 10px; border: 2px solid var(--line); background: var(--surface); min-width: 260px; }
+.certificate {
+  max-width: 720px; background: var(--surface); border: 3px double var(--ink); border-radius: 12px;
+  padding: 2.5rem 2rem; text-align: center;
+}
+.certificate h2 { font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 800; margin-bottom: 1rem; }
+.cert-name { font-family: var(--font-display); font-size: 2rem; font-weight: 750; border-bottom: 2px solid var(--line); display: inline-block; min-width: 60%; padding: 0 1rem .2rem; margin: .5rem 0 1rem; }
+.cert-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; margin: 1rem 0; }
+.cert-list li { background: var(--green-soft); color: var(--green); border-radius: 99px; padding: .2rem .8rem; font-weight: 600; font-size: .95rem; }
+.cert-sign { display: flex; justify-content: space-around; margin-top: 3rem; gap: 2rem; flex-wrap: wrap; }
+.cert-sign span { border-top: 1px solid var(--muted); padding-top: .3rem; min-width: 180px; color: var(--muted); font-size: .9rem; }
+
+@media print {
+  .topbar, .levels, .no-print, .site-footer { display: none !important; }
+  body, .layout { background: #fff; padding: 0; display: block; }
+  .sheet { box-shadow: none; background: #fff; padding: 0; min-height: 0; }
+  .sheet::before { display: none; }
+  .certificate { margin: 2cm auto 0; border-color: #1B3A8C; color: #000; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .stage.shake { outline: 3px solid var(--red); outline-offset: 4px; }
+}
+</style>
+<!-- pwa -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181d" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Maustraining">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- /pwa -->
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#/"><span aria-hidden="true">🖱️</span> Maustraining</a>
+  <div class="topbar-right">
+    <span id="progressText"></span>
+    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+    <button id="sizeToggle" class="ghost" type="button" aria-pressed="false" title="Größere Schrift und Schaltflächen">A+</button>
+    <button id="themeToggle" class="ghost theme-btn" type="button" aria-label="Dunkles Farbschema einschalten">🌙</button>
+    <a id="ruecklink" class="topbar-link" href="../" hidden><span aria-hidden="true">←</span> <span class="long" data-ruecklink-name>Übersicht</span></a>
+  </div>
+</header>
+<div class="layout">
+  <nav class="levels" aria-label="Übungen"><ol id="levelNav"></ol></nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<footer class="site-footer">
+  <p><b>Maustraining</b> <span id="appVersion"></span> · Freie Software unter der <a href="https://www.apache.org/licenses/LICENSE-2.0" rel="license">Apache-2.0-Lizenz</a> · <a href="#/info">Über dieses Projekt</a></p>
+  <p>Alles läuft lokal im Browser – es werden keine Daten übertragen.<!-- rechtliches --><!-- /rechtliches --></p>
+  <p>Entwickelt für den Informatikunterricht · St.-Antonius-Gymnasium Lüdinghausen</p>
+  <p>Erstellt mit KI-Unterstützung</p>
+</footer>
+<noscript><p style="padding:2rem">Das Maustraining braucht JavaScript. Bitte aktiviere JavaScript in deinem Browser.</p></noscript>
+
+<script>
+'use strict';
+const APP_VERSION = '1.3.3', APP_DATE = '2026-11-05';
+
+/* =========================================================
+   Hilfsfunktionen
+   ========================================================= */
+const $ = (s, r = document) => r.querySelector(s);
+function el(tag, attrs = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v === null || v === undefined || v === false) continue;
+    if (k === 'class') n.className = v;
+    else if (k === 'text') n.textContent = v;
+    else if (k === 'html') n.innerHTML = v;
+    else if (k.startsWith('on') && typeof v === 'function') n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v);
+  }
+  for (const c of kids) if (c !== null && c !== undefined && c !== false) n.append(c);
+  return n;
+}
+const rand = n => Math.floor(Math.random() * n);
+/* matchMedia: ältere Browser kennen nur addListener */
+function onMediaChange(mq, fn) {
+  if (mq.addEventListener) { mq.addEventListener('change', fn); return () => mq.removeEventListener('change', fn); }
+  if (mq.addListener) { mq.addListener(fn); return () => mq.removeListener(fn); }
+  return () => {};
+}
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function fmt(s) { s = Math.round(s); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+/* Fortschritt: bleibt nur in diesem Browser gespeichert */
+const STORE_KEY = 'maustraining-v2';
+let progress = {};
+try { progress = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { progress = {}; }
+function saveProgress() { try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch (e) {} }
+
+/* =========================================================
+   Übungen
+   ========================================================= */
+const LEVELS = [
+  { id: 'bewegen', title: 'Maus bewegen', short: 'Einem Weg folgen, ohne abzukommen',
+    intro: 'Die Maus steuert den Zeiger auf dem Bildschirm. Schiebe sie ruhig über den Tisch – der Zeiger macht jede Bewegung mit.', run: levelMove },
+  { id: 'klicken', title: 'Klicken', short: 'Buttons mit der linken Maustaste treffen',
+    intro: 'Ein Button ist eine Schaltfläche. Du drückst ihn mit einem kurzen Klick der linken Maustaste. Halte die Maus dabei still.', run: levelClick },
+  { id: 'doppelklick', title: 'Doppelklick', short: 'Ordner mit zwei schnellen Klicks öffnen',
+    intro: 'Ordner und Programme auf dem Desktop öffnest du mit einem Doppelklick: zweimal schnell hintereinander links klicken, ohne die Maus zu bewegen.', run: levelDouble },
+  { id: 'rechtsklick', title: 'Rechtsklick', short: 'Das Kontextmenü öffnen und etwas auswählen',
+    intro: 'Ein Klick mit der rechten Maustaste öffnet ein kleines Menü mit passenden Befehlen, das Kontextmenü. Am Touchpad tippst du dafür mit zwei Fingern.', run: levelRight },
+  { id: 'links', title: 'Links', short: 'Verlinkte Wörter in einem Text finden',
+    intro: 'Links sind anklickbare Wörter. Du erkennst sie an der Farbe und am Unterstrich. Fährst du mit der Maus darüber, wird der Zeiger zu einer Hand.', run: levelLinks },
+  { id: 'ziehen', title: 'Ziehen und Ablegen', short: 'Dinge mit gedrückter Taste verschieben',
+    intro: 'Zum Verschieben klickst du auf ein Ding, hältst die linke Maustaste gedrückt, bewegst die Maus und lässt über dem Ziel los. Das heißt auch Drag and Drop.', run: levelDrag },
+  { id: 'scrollen', title: 'Scrollen', short: 'Mit dem Mausrad durch lange Inhalte blättern',
+    intro: 'Passt nicht alles auf den Bildschirm, kannst du mit dem Rad in der Mitte der Maus nach oben und unten scrollen. Der Zeiger muss dabei über dem Bereich stehen.', run: levelScroll },
+  { id: 'tabs', title: 'Tabs', short: 'Zwischen Registerkarten wechseln',
+    intro: 'Viele Programme und Webseiten verteilen Inhalte auf Tabs, also Registerkarten wie bei einem Ordner. Ein Klick auf einen Tab zeigt seinen Inhalt.', run: levelTabs },
+  { id: 'menue', title: 'Menüs', short: 'Befehle in Menüs und Untermenüs finden',
+    intro: 'Oben in Programmen findest du die Menüleiste. Ein Klick klappt ein Menü auf. Ein kleiner Pfeil ▸ zeigt: Hier steckt noch ein Untermenü dahinter.', run: levelMenu },
+  { id: 'popups', title: 'Pop-up-Fenster', short: 'Hinweise lesen und richtig reagieren',
+    intro: 'Manche Fenster springen von selbst auf. Lies sie immer genau, bevor du klickst – der größte Button ist nicht immer der richtige.', run: levelPopups },
+  { id: 'markieren', title: 'Text markieren', short: 'Wörter und Sätze auswählen',
+    intro: 'Bevor du Text kopieren oder löschen kannst, musst du ihn markieren. Dazu ziehst du mit gedrückter linker Maustaste über den Text.', run: levelSelect, noErrors: true },
+  { id: 'memory', title: 'Memory', short: 'Zum Abschluss: Paare finden',
+    intro: 'Hier kannst du alles noch einmal in Ruhe üben: zielen, klicken und dir merken, wo welche Karte liegt.', run: levelMemory, noErrors: true }
+];
+
+/* ---------- 1 Maus bewegen ---------- */
+function levelMove(stage, api) {
+  const widths = [64, 46, 32], amps = [0.16, 0.26, 0.3], freqs = [1, 1.5, 2.5];
+  let round = 0, state = 'wait', trail = [], pts = [], W = 0, H = 0;
+  api.task('Fahre mit dem Mauszeiger in den grünen Kreis <b>Start</b>. Folge dann dem gelben Weg bis zum Kreis <b>Ziel</b>, ohne den Weg zu verlassen. Klicken musst du hier nicht.');
+  api.steps(0, 3);
+  const canvas = el('canvas', { class: 'path-canvas', role: 'img', 'aria-label': 'Weg zum Nachfahren mit der Maus' });
+  stage.append(canvas);
+  const ctx = canvas.getContext('2d');
+  let scale = 1;
+  const cw = () => widths[round] * scale;
+  const R = () => cw() * 0.75;
+
+  function build() {
+    const r = canvas.getBoundingClientRect(); W = r.width; H = r.height;
+    if (!W || !H) return;
+    scale = Math.max(0.55, Math.min(1, W / 640));
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const m = Math.max(48, cw() * 1.2), n = 240;
+    pts = [];
+    for (let i = 0; i <= n; i++) {
+      const t = i / n;
+      pts.push([m + t * (W - 2 * m), H / 2 + amps[round] * H * Math.sin(t * Math.PI * 2 * freqs[round])]);
+    }
+    state = 'wait'; trail = []; draw();
+  }
+  function line(a) { ctx.beginPath(); ctx.moveTo(a[0][0], a[0][1]); for (let i = 1; i < a.length; i++) ctx.lineTo(a[i][0], a[i][1]); ctx.stroke(); }
+  function circle(p, color, label) {
+    ctx.beginPath(); ctx.arc(p[0], p[1], R(), 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
+    ctx.fillStyle = cssVar('--text'); ctx.font = '700 15px ' + cssVar('--font');
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(label, p[0], p[1] - R() - 6);
+  }
+  function draw() {
+    if (!pts.length || round >= widths.length) return;
+    const w = cw();
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = cssVar('--line'); ctx.lineWidth = w + 6; line(pts);
+    ctx.strokeStyle = cssVar('--marker'); ctx.lineWidth = w; line(pts);
+    if (trail.length > 1) { ctx.strokeStyle = cssVar('--ink'); ctx.lineWidth = 3; line(trail); }
+    circle(pts[0], cssVar('--green'), 'Start');
+    circle(pts[pts.length - 1], cssVar('--ink'), 'Ziel');
+  }
+  function segDist(p, a, b) {
+    const dx = b[0] - a[0], dy = b[1] - a[1], l = dx * dx + dy * dy;
+    let t = l ? ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / l : 0;
+    t = Math.max(0, Math.min(1, t));
+    return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
+  }
+  function onPath(p) { const h = cw() / 2; for (let i = 0; i < pts.length - 1; i++) if (segDist(p, pts[i], pts[i + 1]) <= h) return true; return false; }
+  const near = (p, q, r) => Math.hypot(p[0] - q[0], p[1] - q[1]) <= r;
+  function fail(msg) { state = 'wait'; trail = []; api.error(msg); draw(); }
+  function reached() {
+    round++; api.steps(round, 3);
+    if (round >= widths.length) { state = 'done'; api.done(); return; }
+    api.good(round === 1 ? 'Geschafft! Der nächste Weg ist schmaler.' : 'Sehr gut! Jetzt kommt der schwierigste Weg.');
+    build();
+  }
+  canvas.addEventListener('pointermove', e => {
+    if (!pts.length || state === 'done') return;
+    const r = canvas.getBoundingClientRect(); const p = [e.clientX - r.left, e.clientY - r.top];
+    const start = pts[0], end = pts[pts.length - 1];
+    if (state === 'wait') {
+      if (near(p, start, R())) { state = 'run'; trail = [p]; api.say('Los geht’s – bleib auf dem gelben Weg!'); draw(); }
+      return;
+    }
+    // Zwischenpunkte prüfen, damit schnelles "Springen" nicht schummelt
+    const prev = trail[trail.length - 1];
+    const n = Math.max(1, Math.ceil(Math.hypot(p[0] - prev[0], p[1] - prev[1]) / 4));
+    for (let s = 1; s <= n; s++) {
+      const q = [prev[0] + (p[0] - prev[0]) * s / n, prev[1] + (p[1] - prev[1]) * s / n];
+      if (near(q, end, R())) { reached(); return; }
+      if (!near(q, start, R()) && !onPath(q)) { fail('Vom Weg abgekommen! Fahre zurück zum Start und versuch es noch einmal.'); return; }
+    }
+    trail.push(p); draw();
+  });
+  canvas.addEventListener('pointerleave', () => { if (state === 'run') fail('Der Zeiger hat das Feld verlassen. Fahre zurück zum Start.'); });
+
+  let lastW = 0, ro = null, onResize = null;
+  const rebuild = () => { const w = canvas.clientWidth; if (w && w !== lastW) { lastW = w; if (round < widths.length) build(); } };
+  rebuild();
+  if (typeof ResizeObserver === 'function') { ro = new ResizeObserver(rebuild); ro.observe(canvas); }
+  else { onResize = rebuild; window.addEventListener('resize', onResize); }
+  const redraw = () => draw();
+  const offMq = onMediaChange(matchMedia('(prefers-color-scheme: dark)'), redraw);
+  document.addEventListener('themechange', redraw);
+  return () => { if (ro) ro.disconnect(); if (onResize) window.removeEventListener('resize', onResize); offMq(); document.removeEventListener('themechange', redraw); };
+}
+
+/* ---------- 2 Klicken ---------- */
+function levelClick(stage, api) {
+  const total = 8, labels = ['Apfel', 'Birne', 'Kirsche', 'Pflaume', 'Banane', 'Mango', 'Kiwi', 'Melone', 'Zitrone', 'Traube', 'Pfirsich', 'Orange'];
+  let hits = 0, target = -1;
+  const grid = el('div', { class: 'btn-grid' });
+  const btns = labels.map((t, i) => {
+    const b = el('button', { class: 'pill', type: 'button', text: t });
+    b.addEventListener('click', () => {
+      if (i === target) {
+        hits++; api.steps(hits, total);
+        if (hits === total) { btns.forEach(x => x.classList.remove('target')); api.done(); return; }
+        api.good(hits === 4 ? 'Klasse! Ab jetzt ist nichts mehr markiert – lies genau.' : 'Getroffen!');
+        next();
+      } else api.error('Das war der falsche Button.');
+    });
+    grid.append(b); return b;
+  });
+  stage.append(grid);
+  function next() {
+    btns.forEach(b => b.classList.remove('target'));
+    let t; do { t = rand(btns.length); } while (t === target); target = t;
+    if (hits < 4) {
+      btns[t].classList.add('target');
+      api.task('Klicke mit der <b>linken Maustaste</b> auf den gelb markierten Button.');
+    } else {
+      btns.forEach(b => { b.style.order = rand(100); });
+      api.task(`Klicke auf den Button <b>»${labels[t]}«</b>.`);
+    }
+  }
+  api.steps(0, total); next();
+}
+
+/* ---------- 3 Doppelklick ---------- */
+function levelDouble(stage, api) {
+  const names = ['Hausaufgaben', 'Bilder', 'Musik', 'Referat', 'Spiele', 'Downloads'];
+  const total = 4; let round = 0, target = -1, busy = false, hintTimer = null;
+  const clearHint = () => { if (hintTimer) { clearTimeout(hintTimer); hintTimer = null; } };
+  const desk = el('div', { class: 'desktop' });
+  const icons = names.map((n, i) => {
+    const b = el('button', { type: 'button', class: 'icon' }, el('span', { class: 'glyph', 'aria-hidden': 'true', text: '📁' }), el('span', { class: 'name', text: n }));
+    b.addEventListener('click', () => {
+      if (busy) return;
+      icons.forEach(x => x.classList.remove('selected')); b.classList.add('selected');
+      clearHint();
+      if (i === target) hintTimer = setTimeout(() => api.say('Der Ordner ist nur markiert. Zum Öffnen klickst du zweimal schnell hintereinander.'), 550);
+    });
+    b.addEventListener('dblclick', () => {
+      if (busy) return;
+      clearHint();
+      if (i !== target) { api.error(`Das ist der Ordner »${n}«.`); return; }
+      busy = true; round++; api.steps(round, total);
+      const win = el('div', { class: 'window', role: 'status' },
+        el('div', { class: 'window-bar', text: '📂 ' + n }),
+        el('div', { class: 'window-body', text: `Der Ordner »${n}« ist geöffnet.` }));
+      stage.append(win);
+      api.good('Geöffnet!');
+      api.later(() => { win.remove(); busy = false; if (round >= total) api.done(); else next(); }, 1100);
+    });
+    desk.append(b); return b;
+  });
+  stage.append(desk);
+  function next() {
+    icons.forEach(x => x.classList.remove('selected'));
+    let t; do { t = rand(names.length); } while (t === target); target = t;
+    api.task(`Öffne den Ordner <b>»${names[t]}«</b> mit einem <b>Doppelklick</b>.`);
+  }
+  api.steps(0, total); next();
+  return () => clearHint();
+}
+
+/* ---------- 4 Rechtsklick ---------- */
+function levelRight(stage, api) {
+  const files = [['📄', 'Aufsatz.txt'], ['🖼️', 'Urlaub.jpg'], ['🎵', 'Lieblingslied.mp3'], ['📊', 'Noten.ods'], ['📝', 'Einkaufsliste.txt'], ['🎬', 'Klassenfahrt.mp4']];
+  const actions = ['Öffnen', 'Kopieren', 'Umbenennen', 'Löschen'];
+  const total = 4; let round = 0, tFile = -1, tAct = -1, menu = null;
+  const desk = el('div', { class: 'desktop' });
+  files.forEach(([g, n], i) => {
+    const b = el('button', { type: 'button', class: 'icon' }, el('span', { class: 'glyph', 'aria-hidden': 'true', text: g }), el('span', { class: 'name', text: n }));
+    b.addEventListener('click', () => { closeMenu(); api.say('Das war die linke Maustaste. Für das Kontextmenü brauchst du die rechte.', 'bad'); });
+    b.addEventListener('contextmenu', e => { e.preventDefault(); e.stopPropagation(); desk.querySelectorAll('.selected').forEach(x => x.classList.remove('selected')); b.classList.add('selected'); openMenu(i, e); });
+    desk.append(b);
+  });
+  desk.addEventListener('contextmenu', e => { e.preventDefault(); closeMenu(); api.say('Klicke mit rechts direkt auf die Datei.', 'bad'); });
+  stage.append(desk);
+
+  function openMenu(i, e) {
+    closeMenu();
+    const r = stage.getBoundingClientRect();
+    menu = el('ul', { class: 'ctx', role: 'menu' });
+    actions.forEach((a, k) => {
+      const btn = el('button', { type: 'button', role: 'menuitem', text: a });
+      btn.addEventListener('click', ev => { ev.stopPropagation(); choose(i, k); });
+      menu.append(el('li', {}, btn));
+    });
+    stage.append(menu);
+    const x = Math.min(e.clientX - r.left, stage.clientWidth - menu.offsetWidth - 4);
+    menu.style.left = Math.max(0, x) + 'px';
+    menu.style.top = (e.clientY - r.top) + 'px';
+  }
+  function closeMenu() { if (menu) { menu.remove(); menu = null; } }
+  function choose(i, k) {
+    closeMenu();
+    if (i === tFile && k === tAct) {
+      round++; api.steps(round, total);
+      if (round >= total) { api.done(); return; }
+      api.good(`Richtig: »${files[i][1]}« → ${actions[k]}`); next();
+    } else if (i !== tFile) api.error(`Das Menü gehörte zu »${files[i][1]}« – das ist die falsche Datei.`);
+    else api.error(`Richtige Datei, aber du hast »${actions[k]}« gewählt.`);
+  }
+  function next() {
+    let f, a; do { f = rand(files.length); a = rand(actions.length); } while (f === tFile || a === tAct);
+    tFile = f; tAct = a;
+    api.task(`Klicke mit der <b>rechten Maustaste</b> auf <b>»${files[f][1]}«</b> und wähle im Menü <b>${actions[a]}</b>.`);
+  }
+  const outside = e => { if (menu && !menu.contains(e.target)) closeMenu(); };
+  const esc = e => { if (e.key === 'Escape') closeMenu(); };
+  document.addEventListener('pointerdown', outside);
+  document.addEventListener('keydown', esc);
+  api.steps(0, total); next();
+  return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', esc); };
+}
+
+/* ---------- 5 Links ---------- */
+function levelLinks(stage, api) {
+  const art = el('article', { class: 'article' });
+  art.innerHTML =
+    '<h2>Die Computermaus</h2>' +
+    '<p>Die erste Computermaus baute ein Team um den Forscher <a href="#" data-k="Douglas Engelbart">Douglas Engelbart</a> in den 1960er-Jahren in den USA. ' +
+    'Ihr Gehäuse war aus <a href="#" data-k="Holz">Holz</a>, und sie hatte nur eine einzige Taste.</p>' +
+    '<p>Fast zur gleichen Zeit entwickelte die deutsche Firma <a href="#" data-k="Telefunken">Telefunken</a> ein ähnliches Gerät mit einer <a href="#" data-k="Kugel">Kugel</a> an der Unterseite.</p>' +
+    '<p>Heute arbeiten die meisten Mäuse <a href="#" data-k="optisch">optisch</a>: Ein kleines Licht und ein Sensor erkennen, wie die Maus über den Tisch geschoben wird. ' +
+    'Viele Mäuse sind inzwischen <a href="#" data-k="kabellos">kabellos</a>.</p>';
+  stage.append(art);
+  const order = shuffle(['Douglas Engelbart', 'Holz', 'Telefunken', 'Kugel', 'optisch', 'kabellos']).slice(0, 4);
+  let round = 0;
+  art.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (!a) { api.say('Das ist normaler Text – hier passiert beim Klicken nichts.'); return; }
+    e.preventDefault();
+    if (a.dataset.k === order[round]) {
+      a.classList.add('visited'); round++; api.steps(round, 4);
+      if (round >= 4) { api.done(); return; }
+      api.good('Richtig! Besuchte Links ändern oft ihre Farbe.'); setTask();
+    } else api.error(`Das war der Link »${a.dataset.k}«.`);
+  });
+  function setTask() { api.task(`Klicke im Text auf den Link <b>»${order[round]}«</b>.`); }
+  api.steps(0, 4); setTask();
+}
+
+/* ---------- 6 Ziehen und Ablegen ---------- */
+function levelDrag(stage, api) {
+  const items = shuffle([
+    ['⌨️', 'Tastatur', 'in'], ['🖱️', 'Maus', 'in'], ['🎙️', 'Mikrofon', 'in'], ['📷', 'Webcam', 'in'],
+    ['🖥️', 'Bildschirm', 'out'], ['🖨️', 'Drucker', 'out'], ['🔊', 'Lautsprecher', 'out'], ['🎧', 'Kopfhörer', 'out']
+  ]);
+  const total = items.length; let placed = 0, dragging = null;
+  api.task('Ziehe jedes Gerät in den richtigen Kasten: <b>Eingabegeräte</b> geben dem Computer Informationen, <b>Ausgabegeräte</b> geben Informationen vom Computer an dich weiter.');
+  const pool = el('div', { class: 'pool' });
+  const zoneIn = el('div', { class: 'zone', 'data-kind': 'in' }, el('h3', { text: 'Eingabegeräte' }), el('p', { text: 'Damit gibst du etwas in den Computer ein.' }), el('div', { class: 'zone-items' }));
+  const zoneOut = el('div', { class: 'zone', 'data-kind': 'out' }, el('h3', { text: 'Ausgabegeräte' }), el('p', { text: 'Damit gibt der Computer etwas aus.' }), el('div', { class: 'zone-items' }));
+  const zones = [zoneIn, zoneOut];
+  stage.append(pool, el('div', { class: 'zones' }, zoneIn, zoneOut));
+  const inside = (z, e) => { const r = z.getBoundingClientRect(); return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; };
+
+  items.forEach(([emo, name, kind]) => {
+    const it = el('div', { class: 'drag-item', 'data-kind': kind }, el('span', { class: 'e', 'aria-hidden': 'true', text: emo }), el('span', { text: name }));
+    pool.append(it);
+    it.addEventListener('pointerdown', e => {
+      if (e.button !== 0 || it.classList.contains('placed') || dragging) return;
+      e.preventDefault();
+      try { it.setPointerCapture(e.pointerId); } catch (err) {}
+      it.classList.remove('back'); it.classList.add('dragging');
+      const pid = e.pointerId, sx = e.clientX, sy = e.clientY;
+      let moved = 0, ended = false, lastEv = e;
+      const move = ev => {
+        if (ev.pointerId !== pid) return;
+        lastEv = ev;
+        moved = Math.max(moved, Math.hypot(ev.clientX - sx, ev.clientY - sy));
+        it.style.transform = `translate(${ev.clientX - sx}px, ${ev.clientY - sy}px)`;
+        zones.forEach(z => z.classList.toggle('over', inside(z, ev)));
+      };
+      const up = ev => {
+        if (ended || (ev.pointerId !== undefined && ev.pointerId !== pid)) return;
+        ended = true; dragging = null;
+        window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up);
+        window.removeEventListener('pointercancel', up); window.removeEventListener('blur', onBlur);
+        it.classList.remove('dragging'); zones.forEach(z => z.classList.remove('over'));
+        const z = zones.find(zz => inside(zz, ev));
+        const goBack = () => { it.classList.add('back'); it.style.transform = ''; };
+        if (!z) {
+          goBack();
+          if (moved < 6) api.say('Halte die linke Taste gedrückt und bewege dabei die Maus.');
+          else api.say('Lass die Maustaste erst über einem der beiden Kästen los.');
+          return;
+        }
+        if (z.dataset.kind === kind) {
+          it.style.transform = ''; it.classList.add('placed');
+          z.querySelector('.zone-items').append(it);
+          placed++; api.steps(placed, total);
+          if (placed === total) { api.done(); return; }
+          api.good(`Richtig: ${name} ist ein ${kind === 'in' ? 'Eingabegerät' : 'Ausgabegerät'}.`);
+        } else {
+          goBack();
+          api.error(kind === 'in' ? `Mit ${name === 'Maus' ? 'der' : 'dem'} ${name} gibst du etwas ein – versuch den anderen Kasten.` : `${name}: Hier kommt etwas aus dem Computer heraus – versuch den anderen Kasten.`);
+        }
+      };
+      const onBlur = () => up(lastEv);
+      dragging = onBlur;
+      window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+      window.addEventListener('pointercancel', up); window.addEventListener('blur', onBlur);
+    });
+  });
+  api.steps(0, total);
+  return () => { if (dragging) dragging(); };
+}
+
+/* ---------- 7 Scrollen ---------- */
+function levelScroll(stage, api) {
+  const box = el('div', { class: 'scroll-box', tabindex: '0', 'aria-label': 'Schließfächer' });
+  const grid = el('div', { class: 'lockers' });
+  box.append(grid); stage.append(box);
+  let round = 0, special = -1;
+  function build() {
+    grid.innerHTML = '';
+    if (round === 0) special = 35 + rand(12);
+    else if (round === 1) special = rand(5);
+    else special = 18 + rand(25);
+    for (let i = 0; i < 50; i++) {
+      const isTreasure = round < 2 && i === special;
+      const b = isTreasure
+        ? el('button', { type: 'button', class: 'locker treasure', 'aria-label': round === 0 ? 'Schlüssel' : 'Stern', text: round === 0 ? '🔑' : '⭐' })
+        : el('button', { type: 'button', class: 'locker' }, el('span', { 'aria-hidden': 'true', text: '🔒' }), el('span', { text: String(i + 1) }));
+      b.addEventListener('click', () => {
+        if (i === special) {
+          round++; api.steps(round, 3);
+          if (round >= 3) { api.done(); return; }
+          api.good(round === 1 ? 'Gefunden!' : 'Super, auch nach oben klappt es!'); build();
+        } else if (round === 2) api.error(`Das ist Fach ${i + 1}. Gesucht ist Fach ${special + 1}.`);
+        else api.error('Das ist ein normales Schließfach.');
+      });
+      grid.append(b);
+    }
+    if (round === 0) api.task('In diesem Kasten sind 50 Schließfächer – mehr, als auf einmal zu sehen sind. Stelle den Mauszeiger auf den Kasten und <b>drehe das Mausrad</b>, bis du den 🔑 Schlüssel findest. Klicke ihn dann an.');
+    if (round === 1) api.task('Der Kasten steht jetzt ganz unten. <b>Scrolle wieder nach oben</b> und klicke auf den ⭐ Stern.');
+    if (round === 2) api.task(`Klicke auf das Schließfach mit der Nummer <b>${special + 1}</b>. Tipp: Du kannst auch die Leiste am rechten Rand des Kastens (Bildlaufleiste) mit gedrückter Maustaste ziehen.`);
+    requestAnimationFrame(() => { box.scrollTop = round === 1 ? box.scrollHeight : 0; });
+  }
+  api.steps(0, 3); build();
+}
+
+/* ---------- 8 Tabs ---------- */
+function levelTabs(stage, api) {
+  const names = ['Start', 'Stundenplan', 'Hausaufgaben', 'Termine'];
+  const chip = (text, key) => el('button', { type: 'button', class: 'chip', 'data-a': key, text });
+  const panels = [
+    el('div', {}, el('h3', { text: 'Willkommen zurück!' }), el('p', { text: 'Du hast 2 neue Mitteilungen.' }),
+      el('div', { style: 'display:flex;gap:.5rem;flex-wrap:wrap' }, chip('Neue Mitteilungen lesen', 'start'), chip('Profil ansehen', 'x1'))),
+    (() => {
+      const rows = [['Montag', 'Deutsch', 'Mathe'], ['Dienstag', 'Informatik', 'Englisch'], ['Mittwoch', 'Mathe', 'Biologie'], ['Donnerstag', 'Englisch', 'Geschichte'], ['Freitag', 'Sport', 'Musik']];
+      const tb = el('tbody');
+      rows.forEach(([d, a, b], i) => tb.append(el('tr', {}, el('th', { text: d }), el('td', {}, chip(a, i === 1 ? 'plan' : 'p' + i + 'a')), el('td', {}, chip(b, 'p' + i + 'b')))));
+      return el('div', {}, el('h3', { text: 'Stundenplan' }), el('table', {}, el('thead', {}, el('tr', {}, el('th', { text: 'Tag' }), el('th', { text: '1. Stunde' }), el('th', { text: '2. Stunde' }))), tb));
+    })(),
+    el('div', {}, el('h3', { text: 'Hausaufgaben' }), el('ul', {},
+      el('li', {}, el('b', { text: 'Mathe: ' }), chip('Buch S. 42, Nr. 3', 'h1')),
+      el('li', {}, el('b', { text: 'Deutsch: ' }), chip('Gedicht auswendig lernen', 'haus')),
+      el('li', {}, el('b', { text: 'Englisch: ' }), chip('Vokabeln Unit 2 lernen', 'h3')))),
+    el('div', {}, el('h3', { text: 'Termine' }), el('ul', {},
+      el('li', {}, el('b', { text: 'Wandertag: ' }), chip('14. Oktober', 'termin')),
+      el('li', {}, el('b', { text: 'Elternsprechtag: ' }), chip('20. November', 't2')),
+      el('li', {}, el('b', { text: 'Weihnachtsfeier: ' }), chip('18. Dezember', 't3'))))
+  ];
+  const questions = shuffle([
+    { q: 'Welches Fach steht am <b>Dienstag in der 1. Stunde</b> auf dem Plan? Öffne den passenden Tab und klicke die Antwort an.', a: 'plan' },
+    { q: 'Was musst du in <b>Deutsch</b> als Hausaufgabe machen? Öffne den passenden Tab und klicke die Antwort an.', a: 'haus' },
+    { q: 'An welchem Tag ist der <b>Wandertag</b>? Öffne den passenden Tab und klicke das Datum an.', a: 'termin' }
+  ]).concat([{ q: 'Zum Schluss: Geh zurück auf die <b>Startseite</b> und klicke auf »Neue Mitteilungen lesen«.', a: 'start' }]);
+  let round = 0;
+  const list = el('div', { class: 'tablist', role: 'tablist' });
+  const panel = el('div', { class: 'tabpanel', role: 'tabpanel' });
+  const tabs = names.map((n, i) => {
+    const t = el('button', { type: 'button', class: 'tab', role: 'tab', 'aria-selected': 'false', text: n });
+    t.addEventListener('click', () => show(i));
+    list.append(t); return t;
+  });
+  function show(i) {
+    tabs.forEach((t, k) => t.setAttribute('aria-selected', String(k === i)));
+    panel.replaceChildren(panels[i]);
+  }
+  panel.addEventListener('click', e => {
+    const b = e.target.closest('[data-a]'); if (!b) return;
+    if (b.dataset.a === questions[round].a) {
+      round++; api.steps(round, 4);
+      if (round >= 4) { api.done(); return; }
+      api.good('Richtig gefunden!'); api.task(questions[round].q);
+    } else api.error('Das passt nicht zur Frage. Lies sie noch einmal genau.');
+  });
+  stage.append(el('div', { class: 'tabs-app' }, list, panel));
+  show(0); api.steps(0, 4); api.task(questions[0].q);
+}
+
+/* ---------- 9 Menüs ---------- */
+function levelMenu(stage, api) {
+  const MENU = [
+    { label: 'Datei', items: [{ label: 'Neu' }, { label: 'Öffnen' }, { label: 'Speichern' }, { label: 'Exportieren', items: [{ label: 'Als PDF' }, { label: 'Als Bild' }, { label: 'Als Text' }] }, { label: 'Drucken' }] },
+    { label: 'Bearbeiten', items: [{ label: 'Rückgängig' }, { label: 'Ausschneiden' }, { label: 'Kopieren' }, { label: 'Einfügen' }] },
+    { label: 'Ansicht', items: [{ label: 'Zoom', items: [{ label: '50 %' }, { label: '100 %' }, { label: '150 %' }] }, { label: 'Vollbild' }, { label: 'Lineal anzeigen' }] },
+    { label: 'Hilfe', items: [{ label: 'Anleitung' }, { label: 'Über dieses Programm' }] }
+  ];
+  const TASKS = [['Datei', 'Speichern'], ['Bearbeiten', 'Kopieren'], ['Ansicht', 'Zoom', '150 %'], ['Datei', 'Exportieren', 'Als PDF']];
+  let round = 0;
+  const bar = el('div', { class: 'menubar', role: 'menubar' });
+  const lines = el('div', {});
+  [92, 85, 97, 60, 88, 74].forEach(w => lines.append(el('div', { class: 'doc-line', style: `width:${w}%` })));
+  const doc = el('div', { class: 'doc' }, el('p', { class: 'doc-title', text: 'Unbenannt 1' }), lines);
+  stage.append(el('div', { class: 'menu-app' }, bar, doc));
+  let tops = [];
+  function closeAll() { tops.forEach(t => t.classList.remove('open')); bar.querySelectorAll('.has-sub.open').forEach(li => li.classList.remove('open')); }
+  function build(items, path, depth) {
+    const ul = el('ul', { class: depth === 1 ? 'dropdown' : 'dropdown sub', role: 'menu' });
+    items.forEach(it => {
+      const p = path.concat(it.label);
+      const li = el('li', { class: it.items ? 'has-sub' : null });
+      const b = el('button', { type: 'button', class: 'mitem', role: 'menuitem' }, el('span', { text: it.label }));
+      li.append(b);
+      if (it.items) {
+        b.append(el('span', { 'aria-hidden': 'true', text: '▸' }));
+        li.append(build(it.items, p, depth + 1));
+        b.addEventListener('click', e => { e.stopPropagation(); li.classList.toggle('open'); });
+      } else b.addEventListener('click', e => { e.stopPropagation(); choose(p); });
+      ul.append(li);
+    });
+    return ul;
+  }
+  tops = MENU.map(m => {
+    const wrap = el('div', { class: 'mtop' });
+    const b = el('button', { type: 'button', class: 'mtop-btn', text: m.label });
+    wrap.append(b, build(m.items, [m.label], 1));
+    b.addEventListener('click', e => { e.stopPropagation(); const was = wrap.classList.contains('open'); closeAll(); if (!was) wrap.classList.add('open'); });
+    b.addEventListener('mouseenter', () => { if (tops.some(t => t.classList.contains('open')) && !wrap.classList.contains('open')) { closeAll(); wrap.classList.add('open'); } });
+    bar.append(wrap); return wrap;
+  });
+  function choose(p) {
+    closeAll();
+    const want = TASKS[round];
+    if (p.join('|') === want.join('|')) {
+      round++; api.steps(round, TASKS.length);
+      if (round >= TASKS.length) { api.done(); return; }
+      api.good(`Richtig: ${p.join(' ▸ ')}`); setTask();
+    } else api.error(`Du hast »${p.join(' ▸ ')}« gewählt. Gesucht ist »${want.join(' ▸ ')}«.`);
+  }
+  function setTask() {
+    const t = TASKS[round];
+    if (t.length === 2) api.task(`Klicke oben auf <b>${t[0]}</b> und dann auf <b>${t[1]}</b>.`);
+    else api.task(`Klicke auf <b>${t[0]}</b> und fahre mit der Maus auf <b>${t[1]}</b>. Dann klappt ein weiteres Menü auf. Wähle dort <b>${t[2]}</b>.`);
+  }
+  const outside = e => { if (!bar.contains(e.target)) closeAll(); };
+  const esc = e => { if (e.key === 'Escape') closeAll(); };
+  document.addEventListener('pointerdown', outside);
+  document.addEventListener('keydown', esc);
+  api.steps(0, TASKS.length); setTask();
+  return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', esc); };
+}
+
+/* ---------- 10 Pop-up-Fenster ---------- */
+function levelPopups(stage, api) {
+  const ROUNDS = [
+    { task: 'Beim Öffnen der Seite erscheint ein Cookie-Hinweis. Wähle die Möglichkeit, bei der die Webseite <b>am wenigsten Daten</b> über dich sammelt.',
+      banner: true, title: 'Wir verwenden Cookies 🍪', text: 'Mit Cookies merkt sich eine Webseite Dinge über dich. Manche sind für die Seite nötig, andere dienen nur der Werbung.',
+      buttons: [['Alle akzeptieren', 'btn primary', false], ['Einstellungen', 'btn', false], ['Nur notwendige', 'btn', true]],
+      ok: 'Richtig! Mit »Nur notwendige« gibst du am wenigsten Daten preis.', bad: 'Damit erlaubst du der Webseite mehr als nötig. Such die sparsamste Möglichkeit.' },
+    { task: 'Jetzt möchte die Seite, dass du einen Newsletter bestellst. Du willst das nicht. <b>Schließe das Fenster mit dem × oben rechts.</b>',
+      x: true, title: 'Verpasse nichts mehr!', text: 'Trag deine E-Mail-Adresse ein und bekomme jede Woche die neuesten Artikel.',
+      buttons: [['Ja, ich will den Newsletter!', 'btn primary', false]],
+      ok: 'Gut gemacht – Fenster zu, nichts bestellt.', bad: 'Damit hättest du den Newsletter bestellt. Nimm das kleine × oben rechts.' },
+    { task: 'Schon wieder springt ein Fenster auf. <b>Lies es genau</b> und entscheide dann richtig.',
+      scam: true, x: true, title: '🎉 Glückwunsch!', text: 'Du bist unser 1.000.000. Besucher und hast ein neues Smartphone gewonnen! Das Angebot gilt nur noch 2 Minuten.',
+      buttons: [['Jetzt Gewinn abholen!', 'btn scambig', false], ['Nein danke, schließen', 'quiet', true]],
+      ok: 'Gut aufgepasst! Solche Gewinnmeldungen sind ein Trick, um an deine Daten zu kommen.', bad: 'Vorsicht! Solche Gewinnmeldungen sind fast immer Betrug. Schließe das Fenster lieber.' },
+    { task: 'Du hast an deinem Referat gearbeitet und willst das Programm schließen. <b>Deine Arbeit soll erhalten bleiben.</b>',
+      title: 'Änderungen speichern?', text: 'Möchtest du die Änderungen an »Referat.odt« speichern, bevor das Programm geschlossen wird?',
+      buttons: [['Speichern', 'btn primary', true], ['Nicht speichern', 'btn', false], ['Abbrechen', 'btn', false]],
+      ok: 'Richtig – dein Referat ist gespeichert.', bad: 'Lies die Buttons genau: Welcher bewahrt deine Arbeit auf?' }
+  ];
+  const page = el('div', { class: 'fake-page' },
+    el('div', { class: 'fake-head', text: 'Die Schülerzeitung' }),
+    el('div', { class: 'fake-body' }, el('h3', { text: 'Neues Klettergerüst auf dem Schulhof' }),
+      el('p', { text: 'Nach den Ferien können sich alle auf ein neues Klettergerüst freuen. Die SV hat lange dafür gesammelt – beim Schulfest kamen die letzten Euro zusammen.' }),
+      el('p', { text: 'Wann genau es eröffnet wird, lest ihr in der nächsten Ausgabe.' })));
+  stage.append(page);
+  let round = 0, current = null, locked = false;
+  function show() {
+    const R = ROUNDS[round];
+    api.task(R.task);
+    api.later(() => {
+      const box = el('div', { class: 'popup' + (R.banner ? ' banner' : '') + (R.scam ? ' scam' : ''), role: 'dialog', 'aria-modal': 'true', 'aria-label': R.title });
+      box.append(el('h3', { text: R.title }), el('p', { text: R.text }));
+      if (R.x) box.append(el('button', { type: 'button', class: 'x', 'aria-label': 'Schließen', text: '×', onclick: () => answer(true) }));
+      const row = el('div', { class: 'row' });
+      R.buttons.forEach(([t, cls, ok]) => row.append(el('button', { type: 'button', class: cls, text: t, onclick: () => answer(ok) })));
+      box.append(row);
+      const back = el('div', { class: 'popup-backdrop' + (R.banner ? ' clear' : '') }, box);
+      back.addEventListener('click', e => { if (e.target === back) api.say('Das Fenster liegt im Vordergrund. Kümmere dich zuerst darum.'); });
+      page.append(back); current = back;
+    }, 600);
+  }
+  function answer(ok) {
+    if (locked) return;
+    const R = ROUNDS[round];
+    if (!ok) { api.error(R.bad); return; }
+    locked = true; api.later(() => { locked = false; }, 400);
+    if (current) { current.remove(); current = null; }
+    round++; api.steps(round, ROUNDS.length); api.good(R.ok);
+    if (round >= ROUNDS.length) { api.later(() => api.done(), 1800); return; }
+    api.later(show, 1400);
+  }
+  api.steps(0, ROUNDS.length); show();
+}
+
+/* ---------- 11 Text markieren ---------- */
+function levelSelect(stage, api) {
+  const text = 'Mit der Maus kannst du auch Text markieren. Halte dazu die linke Maustaste gedrückt und ziehe über die Wörter. Markierter Text kann danach kopiert, gelöscht oder formatiert werden. Ein Doppelklick markiert übrigens ein ganzes Wort auf einmal.';
+  const TARGETS = [
+    { t: 'Maustaste', task: 'Markiere das Wort <b>»Maustaste«</b>. Tipp: Ein Doppelklick auf das Wort geht am schnellsten.' },
+    { t: 'kopiert, gelöscht oder formatiert', task: 'Markiere die Wörter <b>»kopiert, gelöscht oder formatiert«</b>. Halte die linke Maustaste gedrückt und ziehe vom ersten bis zum letzten Wort.' },
+    { t: 'Halte dazu die linke Maustaste gedrückt und ziehe über die Wörter.', task: 'Markiere den ganzen zweiten Satz, von <b>»Halte«</b> bis <b>»Wörter.«</b>' }
+  ];
+  const p = el('p', { class: 'select-text', text });
+  stage.append(p);
+  let round = 0, busy = false, selT = null;
+  const norm = s => s.replace(/\s+/g, ' ').trim().replace(/^[\s.,;:!?]+|[\s.,;:!?]+$/g, '').toLowerCase();
+  function check(showFail) {
+    if (busy || round >= TARGETS.length) return;
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.rangeCount) return;
+    if (!p.contains(sel.anchorNode) && !p.contains(sel.focusNode)) return;
+    const s = sel.toString();
+    if (norm(s) === norm(TARGETS[round].t)) {
+      busy = true; round++; api.steps(round, TARGETS.length); api.good('Genau richtig markiert!');
+      api.later(() => {
+        sel.removeAllRanges(); busy = false;
+        if (round >= TARGETS.length) api.done(); else api.task(TARGETS[round].task);
+      }, 900);
+    } else if (showFail) {
+      const shown = s.trim().length > 40 ? s.trim().slice(0, 40) + ' …' : s.trim();
+      api.say(`Markiert ist »${shown}«. Das passt noch nicht ganz – versuch es noch einmal.`, 'bad');
+    }
+  }
+  const onUp = () => setTimeout(() => check(true), 0);
+  const onSel = () => { clearTimeout(selT); selT = setTimeout(() => check(false), 350); };
+  document.addEventListener('mouseup', onUp);
+  document.addEventListener('selectionchange', onSel);
+  api.steps(0, TARGETS.length); api.task(TARGETS[0].task);
+  return () => { document.removeEventListener('mouseup', onUp); document.removeEventListener('selectionchange', onSel); clearTimeout(selT); };
+}
+
+/* ---------- 12 Memory ---------- */
+function levelMemory(stage, api) {
+  const sym = [['🖱️', 'Maus'], ['⌨️', 'Tastatur'], ['🖥️', 'Bildschirm'], ['🖨️', 'Drucker'], ['💾', 'Diskette'], ['🎧', 'Kopfhörer']];
+  const deck = shuffle(sym.concat(sym));
+  let first = null, lock = false, found = 0, moves = 0;
+  const grid = el('div', { class: 'memory' });
+  deck.forEach(([s, name]) => {
+    const c = el('button', { type: 'button', class: 'card', 'aria-label': 'Verdeckte Karte' },
+      el('span', { class: 'card-inner' }, el('span', { class: 'card-back', 'aria-hidden': 'true' }), el('span', { class: 'card-front', 'aria-hidden': 'true', text: s })));
+    c.addEventListener('click', () => {
+      if (lock || c.classList.contains('flipped')) return;
+      c.classList.add('flipped'); c.setAttribute('aria-label', name);
+      if (!first) { first = c; return; }
+      moves++; api.say(`Züge: ${moves}`);
+      if (first.getAttribute('aria-label') === name) {
+        first.classList.add('matched'); c.classList.add('matched'); first = null;
+        found++; api.steps(found, sym.length);
+        if (found === sym.length) api.later(() => api.done(`Du hast ${moves} Züge gebraucht.`), 700);
+      } else {
+        lock = true; const a = first; first = null;
+        api.later(() => { [a, c].forEach(x => { x.classList.remove('flipped'); x.setAttribute('aria-label', 'Verdeckte Karte'); }); lock = false; }, 950);
+      }
+    });
+    grid.append(c);
+  });
+  stage.append(grid);
+  api.task('Decke mit einem Klick immer zwei Karten auf. Zeigen beide dasselbe Bild, bleiben sie offen. Finde alle sechs Paare.');
+  api.steps(0, sym.length);
+}
+
+/* =========================================================
+   Ablauf, Navigation, Seiten
+   ========================================================= */
+const main = $('#main');
+let cleanup = null, timers = [], currentView = null;
+
+function stopLevel() {
+  if (cleanup) { try { cleanup(); } catch (e) {} cleanup = null; }
+  timers.forEach(clearTimeout); timers = [];
+}
+
+function runLevel(idx) {
+  const L = LEVELS[idx];
+  currentView = idx;
+  document.title = `${idx + 1}. ${L.title} – Maustraining`;
+  const task = el('p', { class: 'task', 'aria-live': 'polite' });
+  const steps = el('div', { class: 'steps', 'aria-hidden': 'true' });
+  const feedback = el('span', { class: 'feedback', role: 'status', 'aria-live': 'polite' });
+  const stage = el('div', { class: 'stage' });
+  const sheet = el('section', { class: 'sheet' },
+    el('div', { class: 'level-head' }, el('span', { class: 'level-no', 'aria-hidden': 'true', text: String(idx + 1) }),
+      el('div', {}, el('h1', { text: L.title }), el('p', { class: 'lead', text: L.intro }))),
+    task, el('div', { class: 'meta' }, steps, feedback,
+      el('button', { type: 'button', class: 'ghost restart', title: 'Diese Übung von vorn beginnen', text: '↻ Neu starten', onclick: () => route() })), stage);
+  main.replaceChildren(sheet);
+
+  const t0 = performance.now();
+  let errors = 0, finished = false;
+  const api = {
+    task(html) { task.innerHTML = html; },
+    steps(cur, total) {
+      steps.replaceChildren();
+      for (let i = 0; i < total; i++) steps.append(el('span', { class: 'dot' + (i < cur ? ' done' : i === cur ? ' now' : '') }));
+    },
+    say(t, kind) { feedback.textContent = t; feedback.className = 'feedback' + (kind ? ' ' + kind : ''); },
+    good(t) { api.say(t, 'good'); },
+    error(t) {
+      if (finished) return;
+      errors++; api.say(t || 'Nicht ganz – versuch es noch einmal.', 'bad');
+      stage.classList.remove('shake'); void stage.offsetWidth; stage.classList.add('shake');
+    },
+    later(fn, ms) { const id = setTimeout(fn, ms); timers.push(id); return id; },
+    done(extra) {
+      if (finished) return; finished = true;
+      const secs = (performance.now() - t0) / 1000;
+      /* Die Weiter-Schaltfläche hat Vorrang: erst die Karte, dann Speichern und Seitenleiste */
+      showDone(sheet, idx, secs, errors, extra);
+      try {
+        const prev = progress[L.id];
+        progress[L.id] = { best: prev ? Math.min(prev.best, secs) : secs, errors };
+        saveProgress(); renderNav();
+      } catch (err) { console.error(err); }
+    }
+  };
+  try {
+    cleanup = L.run(stage, api) || null;
+  } catch (err) {
+    console.error('Fehler in Übung ' + L.id, err, err && err.stack);
+    cleanup = null;
+    showTrouble(stage, err);
+  }
+}
+
+function showDone(sheet, idx, secs, errors, extra) {
+  const L = LEVELS[idx], last = idx === LEVELS.length - 1;
+  const primary = el('a', { class: 'btn primary', href: last ? '#/urkunde' : '#/' + (idx + 2), text: last ? 'Zur Urkunde' : `Weiter: ${LEVELS[idx + 1].title}` });
+  const card = el('div', { class: 'done-card', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'doneTitle' },
+    el('p', { class: 'done-emoji', 'aria-hidden': 'true', text: '🎉' }),
+    el('h2', { id: 'doneTitle', text: 'Geschafft!' }),
+    el('p', { text: `Du hast »${L.title}« in ${fmt(secs)} Minuten gelöst.` }),
+    L.noErrors ? null : el('p', { text: errors === 0 ? 'Und das ganz ohne Fehlversuch!' : `Fehlversuche: ${errors}` }),
+    extra ? el('p', { text: extra }) : null,
+    el('div', { class: 'done-actions' }, el('button', { type: 'button', class: 'btn', text: 'Noch einmal', onclick: () => route() }), primary));
+  sheet.append(el('div', { class: 'done-wrap' }, card));
+  primary.focus();
+}
+
+function renderNav() {
+  const ol = $('#levelNav'); ol.replaceChildren();
+  LEVELS.forEach((L, i) => {
+    const a = el('a', { href: '#/' + (i + 1), class: 'nav-link' + (progress[L.id] ? ' is-done' : '') },
+      el('span', { class: 'nav-no', text: progress[L.id] ? '✓' : String(i + 1) }), el('span', { text: L.title }));
+    if (progress[L.id]) a.setAttribute('aria-label', `${i + 1}. ${L.title}, geschafft`);
+    if (currentView === i) a.setAttribute('aria-current', 'page');
+    ol.append(el('li', {}, a));
+  });
+  ol.append(el('li', { class: 'nav-sep', 'aria-hidden': 'true' }));
+  const cert = el('a', { href: '#/urkunde', class: 'nav-link' }, el('span', { class: 'nav-no', 'aria-hidden': 'true', text: '★' }), el('span', { text: 'Urkunde' }));
+  if (currentView === 'urkunde') cert.setAttribute('aria-current', 'page');
+  ol.append(el('li', {}, cert));
+  const n = LEVELS.filter(L => progress[L.id]).length;
+  const pt = $('#progressText'), pb = $('#progressBar');
+  if (pt) pt.textContent = `${n} von ${LEVELS.length} geschafft`;
+  if (pb) pb.style.width = (n / LEVELS.length * 100) + '%';
+}
+
+function renderHome() {
+  currentView = 'home';
+  document.title = 'Maustraining';
+  const doneCount = LEVELS.filter(L => progress[L.id]).length;
+  const next = LEVELS.findIndex(L => !progress[L.id]);
+  const cta = next === -1
+    ? el('a', { class: 'btn primary', href: '#/urkunde', text: 'Alle Übungen geschafft! Zur Urkunde' })
+    : el('a', { class: 'btn primary', href: '#/' + (next + 1), text: doneCount ? `Weiter mit Übung ${next + 1}: ${LEVELS[next].title}` : 'Mit Übung 1 starten' });
+  const list = el('ol', { class: 'level-list' });
+  LEVELS.forEach((L, i) => {
+    const p = progress[L.id];
+    list.append(el('li', {}, el('a', { class: 'level-row', href: '#/' + (i + 1) },
+      el('span', { class: 'n', text: String(i + 1) }),
+      el('span', { class: 't' }, L.title, el('span', { class: 's', text: L.short })),
+      el('span', { class: 'st', text: p ? '✓ ' + fmt(p.best) : '' }))));
+  });
+  const reset = el('button', { type: 'button', class: 'btn danger', text: 'Fortschritt löschen', disabled: doneCount ? null : 'disabled',
+    onclick: () => { if (confirm('Soll der gesamte Fortschritt auf diesem Gerät gelöscht werden?')) { progress = {}; saveProgress(); route(); } } });
+  const teacher = el('details', { class: 'teacher' }, el('summary', { text: 'Hinweise für Lehrkräfte' }));
+  teacher.insertAdjacentHTML('beforeend',
+    '<p>Jede Übung hat eine eigene Adresse, zum Beispiel <code>#/6</code> für »Ziehen und Ablegen«. So lassen sich einzelne Übungen direkt verlinken.</p>' +
+    '<p>Der Fortschritt wird nur im Browser des jeweiligen Geräts gespeichert (localStorage). Es werden keine Daten übertragen, und die Seite lädt keine externen Schriften, Skripte oder Bilder. Namen auf der Urkunde werden nicht gespeichert.</p>' +
+    '<p>Mehr zu Entstehung, Lizenz und Datenschutz steht unter <a href="#/info">Über dieses Projekt</a>.</p>' +
+    '<p>Auf gemeinsam genutzten Rechnern können die Schülerinnen und Schüler ihren Stand am Ende mit »Fortschritt löschen« zurücksetzen. Die Schaltfläche »A+« oben vergrößert alle Schaltflächen und Texte.</p>');
+  main.replaceChildren(el('section', { class: 'sheet home' },
+    el('h1', { class: 'hero-title' }, el('span', { class: 'swash', text: 'Maustraining' })),
+    el('p', { class: 'lead', text: 'Zwölf kurze Übungen, mit denen du die Maus sicher bedienen lernst: bewegen, klicken, ziehen, scrollen und vieles mehr. Mach sie der Reihe nach oder such dir eine aus.' }),
+    el('div', { class: 'home-actions' }, cta, reset),
+    list, teacher));
+}
+
+function renderCertificate() {
+  currentView = 'urkunde';
+  document.title = 'Urkunde – Maustraining';
+  const done = LEVELS.filter(L => progress[L.id]);
+  const sheet = el('section', { class: 'sheet' });
+  if (!done.length) {
+    sheet.append(el('h1', { text: 'Urkunde' }), el('p', { class: 'lead', text: 'Sobald du die erste Übung geschafft hast, kannst du hier deine Urkunde ausdrucken.' }),
+      el('p', {}, el('a', { class: 'btn primary', href: '#/1', text: 'Mit Übung 1 starten' })));
+    main.replaceChildren(sheet); return;
+  }
+  const date = new Date().toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
+  const nameOut = el('span', { class: 'cert-name', text: '\u00A0' });
+  const input = el('input', { type: 'text', id: 'certName', autocomplete: 'off', maxlength: '60' });
+  input.addEventListener('input', () => { nameOut.textContent = input.value.trim() || '\u00A0'; });
+  const all = done.length === LEVELS.length;
+  sheet.append(
+    el('div', { class: 'cert-controls no-print' },
+      el('label', { for: 'certName' }, 'Dein Name', input),
+      el('button', { type: 'button', class: 'btn primary', text: 'Urkunde drucken', onclick: () => window.print() })),
+    el('div', { class: 'certificate' },
+      el('h2', { text: 'Urkunde' }),
+      el('p', { text: 'Hiermit wird bestätigt, dass' }),
+      nameOut,
+      el('p', { text: `am ${date} beim Maustraining ${done.length} von ${LEVELS.length} Übungen erfolgreich geschafft hat:` }),
+      el('ul', { class: 'cert-list' }, ...done.map(L => el('li', { text: '✓ ' + L.title }))),
+      all ? el('p', {}, el('b', { text: 'Herzlichen Glückwunsch – du bist jetzt ein echter Maus-Profi!' })) : null,
+      el('div', { class: 'cert-sign' }, el('span', { text: 'Datum' }), el('span', { text: 'Unterschrift' }))));
+  main.replaceChildren(sheet);
+  input.focus();
+}
+
+function renderInfo() {
+  currentView = 'info';
+  document.title = 'Über dieses Projekt – Maustraining';
+  const sheet = el('section', { class: 'sheet info' });
+  sheet.innerHTML =
+    '<h1>Über dieses Projekt</h1>' +
+    '<p class="lead">Das Maustraining ist eine Sammlung kurzer Übungen, mit denen Schülerinnen und Schüler den sicheren Umgang mit der Computermaus lernen.</p>' +
+    '<h2>🛠 Wie diese Seite entstanden ist</h2>' +
+    '<p>Das Maustraining wurde von einer Lehrkraft am St.-Antonius-Gymnasium Lüdinghausen für den Informatikunterricht entwickelt – mit <b>KI-Unterstützung</b>. Die KI hat Code geschrieben, Texte formuliert und Designentscheidungen umgesetzt; alle inhaltlichen Entscheidungen, pädagogischen Überlegungen und das finale Ergebnis liegen beim Menschen.</p>' +
+    '<p>Als Vorbild diente das frühere Maustraining des ZAWiW der Universität Ulm, das nicht mehr funktioniert. Der Code hier ist eine vollständige Neuentwicklung.</p>' +
+    '<h2>🟢 Freie Software</h2>' +
+    '<p>Das Maustraining steht unter der <a href="https://www.apache.org/licenses/LICENSE-2.0" rel="license">Apache-2.0-Lizenz</a>. Du darfst den Quellcode frei lesen, verwenden, verändern und weitergeben – auch für den eigenen Unterricht oder auf einem eigenen Server. Einzige Bedingung: Der Copyright- und Lizenzhinweis muss erhalten bleiben.</p>' +
+    '<p>Die Seite kommt ohne fremde Bibliotheken aus. Alles Wesentliche steckt in einer einzigen HTML-Datei (dazu kommen nur kleine Dateien, damit es sich als App installieren lässt); den Quellcode siehst du im Browser über »Seitenquelltext anzeigen«.</p>' +
+    '<h2>🔒 Datenschutz</h2>' +
+    '<ul>' +
+    '<li>Es werden keine Daten an einen Server übertragen, und es gibt keine Anmeldung.</li>' +
+    '<li>Die Seite lädt keine externen Schriften, Skripte oder Bilder und setzt keine Cookies.</li>' +
+    '<li>Im Speicher des Browsers (localStorage) werden nur der Übungsfortschritt sowie die Einstellungen für Schriftgröße und Farbschema abgelegt, damit sie beim nächsten Besuch noch da sind. Mit »Fortschritt löschen« auf der Startseite lässt sich das jederzeit entfernen.</li>' +
+    '<li>Der Name auf der Urkunde wird nirgends gespeichert.</li>' +
+    '</ul>' +
+    '<p>Weitere Informationen stehen in der Datenschutzerklärung der Schule, die dieses Angebot bereitstellt.</p>' +
+    '<p><a class="btn primary" href="#/">Zur Übersicht</a></p>';
+  main.replaceChildren(sheet);
+}
+
+function showTrouble(where, err) {
+  where.append(el('div', { class: 'crash' },
+    el('p', { text: 'Diese Übung hat sich verhakt. Meistens hilft ein Neustart.' }),
+    el('p', { class: 'crash-detail', text: err ? String(err && err.message ? err.message : err) : '' }),
+    el('div', { class: 'done-actions' },
+      el('button', { type: 'button', class: 'btn primary', text: 'Übung neu starten', onclick: () => route() }),
+      el('a', { class: 'btn', href: '#/', text: 'Zur Übersicht' }))));
+}
+
+function route() {
+  try { routeInner(); } catch (err) { console.error(err); }
+}
+
+function routeInner() {
+  stopLevel();
+  const h = location.hash.replace(/^#\/?/, '');
+  if (h === 'urkunde') renderCertificate();
+  else if (h === 'info') renderInfo();
+  else if (/^\d+$/.test(h) && +h >= 1 && +h <= LEVELS.length) runLevel(+h - 1);
+  else renderHome();
+  renderNav();
+  window.scrollTo(0, 0);
+  main.focus({ preventScroll: true });
+}
+
+/* Große Ansicht */
+const sizeBtn = $('#sizeToggle');
+function applySize(on) { document.documentElement.classList.toggle('big', on); sizeBtn.setAttribute('aria-pressed', String(on)); }
+try { applySize(localStorage.getItem('maustraining-gross') === '1'); } catch (e) {}
+sizeBtn.addEventListener('click', () => {
+  const on = !document.documentElement.classList.contains('big'); applySize(on);
+  try { localStorage.setItem('maustraining-gross', on ? '1' : '0'); } catch (e) {}
+});
+
+/* Farbschema: folgt dem System, bis man selbst umschaltet */
+const themeBtn = $('#themeToggle');
+const darkMq = matchMedia('(prefers-color-scheme: dark)');
+function effectiveTheme() { return document.documentElement.dataset.theme || (darkMq.matches ? 'dark' : 'light'); }
+function updateThemeBtn() {
+  const dark = effectiveTheme() === 'dark';
+  themeBtn.textContent = dark ? '☀️' : '🌙';
+  themeBtn.setAttribute('aria-label', dark ? 'Helles Farbschema einschalten' : 'Dunkles Farbschema einschalten');
+  themeBtn.title = themeBtn.getAttribute('aria-label');
+}
+themeBtn.addEventListener('click', () => {
+  const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('browserwerkzeuge-theme', next); } catch (e) {}
+  updateThemeBtn();
+  document.dispatchEvent(new Event('themechange'));
+});
+onMediaChange(darkMq, updateThemeBtn);
+updateThemeBtn();
+
+window.addEventListener('hashchange', route);
+route();
+/* Versionsanzeige: zeigt in der Fußzeile und in der Konsole, welcher Stand online ist */
+(function () {
+  var v = document.getElementById('appVersion');
+  if (v) v.textContent = 'v' + APP_VERSION;
+  v = document.querySelector('meta[name="version"]');
+  if (v) v.setAttribute('content', APP_VERSION);
+  console.log('Maustraining v' + APP_VERSION + ' (' + APP_DATE + ')');
+})();
+</script>
+</body>
+</html>

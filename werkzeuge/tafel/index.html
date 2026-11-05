@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<!-- pwa --><script src="pwa.js?v=ac4f7f99c2" data-tool="tafel" data-name="Tafel" data-daten="ja" data-schluessel=""></script><!-- /pwa -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<meta name="robots" content="noindex">
+<title>Tafel</title>
+<link rel="stylesheet" href="tafel.css?v=d223788753">
+<!-- pwa -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181d" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tafel">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- /pwa -->
+</head>
+<body>
+
+<div id="planung">
+  <header>
+    <div class="kopf">
+      <h1>Tafel</h1>
+      <a id="ruecklink" href="../" hidden>← Übersicht</a>
+      <button type="button" id="btn-design">Dunkel</button>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="zeile">
+        <h2 class="wachsen">Ablauf der Stunde</h2>
+        <button type="button" class="primaer" id="btn-start">Tafel starten ▶</button>
+      </div>
+      <p class="dezent klein">Jede Phase erscheint an der Tafel mit ihrer Restzeit. Aufgabe, Material-Link und Lärmampel werden nur angezeigt, wenn sie ausgefüllt bzw. eingeschaltet sind. 0 Minuten bedeutet „ohne Zeitvorgabe“ – dann zeigt die Tafel die Uhrzeit.</p>
+      <div id="phasen"></div>
+      <div class="zeile">
+        <button type="button" id="btn-phase-neu">+ Phase hinzufügen</button>
+        <button type="button" id="btn-leeren">Ablauf leeren</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Murmelglas</h2>
+      <p class="dezent klein">In Phasen mit Lärmampel sammelt die Klasse Murmeln, solange es ruhig ist. Gelb und Rot halten das Sammeln nur an – es werden nie Murmeln abgezogen. Jede Lerngruppe hat ihr eigenes Glas; gespeichert werden nur ihr Name und der Füllstand.</p>
+      <div class="zeile">
+        <label>Glas an der Tafel <select id="glas-wahl"></select></label>
+        <button type="button" id="btn-glas-neu">Neues Glas</button>
+        <button type="button" id="btn-glas-loeschen">Löschen</button>
+      </div>
+      <div id="glas-einstellungen" hidden>
+        <div class="zeile">
+          <label>Größe <input type="number" id="glas-groesse" min="5" max="200" step="1" class="zahl"> Murmeln</label>
+          <label>eine Murmel je <input type="number" id="glas-minuten" min="0.5" max="10" step="0.5" class="zahl"> ruhige Minute(n)</label>
+        </div>
+        <div class="zeile">
+          <label class="wachsen">Belohnung (optional) <input type="text" id="glas-belohnung" maxlength="120" placeholder="z. B. 5 Minuten Spiel am Freitag" class="wachsen"></label>
+        </div>
+        <div class="zeile">
+          <span id="glas-stand" class="dezent wachsen"></span>
+          <button type="button" id="btn-glas-leeren">Glas leeren</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Vorlagen</h2>
+      <div class="zeile">
+        <select id="vorlage-wahl" aria-label="Vorlage wählen"></select>
+        <button type="button" id="btn-vorlage-laden">Laden</button>
+        <button type="button" id="btn-vorlage-speichern">Aktuellen Ablauf als Vorlage speichern</button>
+        <button type="button" id="btn-vorlage-loeschen">Löschen</button>
+      </div>
+      <div class="zeile">
+        <button type="button" id="btn-export">Vorlagen als Datei sichern</button>
+        <button type="button" id="btn-import">Vorlagen aus Datei laden</button>
+        <input type="file" id="datei" accept=".json,application/json" hidden>
+      </div>
+    </section>
+
+    <section>
+      <h2>Einstellungen</h2>
+      <div class="zeile">
+        <label><input type="checkbox" id="opt-gong" checked> leiser Gong, wenn die Zeit einer Phase abgelaufen ist</label>
+      </div>
+    </section>
+
+    <section class="klein dezent">
+      <strong>Bedienung an der Tafel:</strong> Leertaste Pause · Pfeil rechts bzw. Bild ab nächste Phase · Pfeil links bzw. Bild auf vorige Phase · + und − ändern die Zeit um eine Minute. Die Bedienleiste blendet sich nach einigen Sekunden aus und erscheint bei Mausbewegung oder Berührung wieder.<br>
+      <strong>Datenschutz:</strong> Abläufe, Vorlagen und Murmelgläser werden nur in diesem Browser gespeichert. Die Lärmampel misst über das Mikrofon ausschließlich die Lautstärke; es wird nichts aufgezeichnet oder übertragen.
+    </section>
+  </main>
+
+  <footer>
+    Tafel · Version 1.3.3 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+  </footer>
+</div>
+
+<div id="tafel" hidden>
+  <div class="t-kopf">
+    <div id="t-sozial" class="t-sozial"></div>
+    <div id="t-phase" class="t-phase"></div>
+    <div class="t-rechts">
+      <div id="t-ampel" class="t-ampel" hidden>
+        <span id="t-ampel-text"></span>
+        <span class="licht" data-stufe="gruen"></span>
+        <span class="licht" data-stufe="gelb"></span>
+        <span class="licht" data-stufe="rot"></span>
+      </div>
+      <div id="t-glas" class="t-glas" hidden>
+        <span id="t-glas-bild"></span>
+        <span id="t-glas-zahl"></span>
+      </div>
+    </div>
+  </div>
+
+  <div id="t-mitte" class="t-mitte">
+    <div class="t-uhr-bereich">
+      <div id="t-uhr" class="t-uhr">00:00</div>
+      <div id="t-balken-rahmen" class="t-balken"><div id="t-balken"></div></div>
+      <div id="t-rest" class="t-rest"></div>
+    </div>
+    <div id="t-inhalt" class="t-inhalt">
+      <div class="t-text">
+        <div id="t-aufgabe" class="t-aufgabe"></div>
+        <div id="t-fertig" class="t-fertig"></div>
+      </div>
+      <div id="t-qr" class="t-qr"></div>
+    </div>
+  </div>
+
+  <div id="t-leiste" class="t-leiste">
+    <button type="button" id="t-zurueck" title="Vorige Phase (Pfeil links)">◀</button>
+    <button type="button" id="t-pause" title="Pause (Leertaste)">Pause</button>
+    <button type="button" id="t-minus" title="Eine Minute weniger (−)">−1 min</button>
+    <button type="button" id="t-plus" title="Eine Minute mehr (+)">+1 min</button>
+    <button type="button" id="t-weiter" title="Nächste Phase (Pfeil rechts)">▶</button>
+    <span class="wachsen"></span>
+    <span id="t-glas-knoepfe" class="t-regler" hidden>
+      <button type="button" id="t-glas-minus" title="Eine Murmel herausnehmen">Murmel −1</button>
+      <button type="button" id="t-glas-plus" title="Eine Murmel dazugeben">Murmel +1</button>
+    </span>
+    <span id="t-ampel-regler" class="t-regler" hidden>
+      <label>Empfindlichkeit <input type="range" id="t-empfindlichkeit" min="-10" max="10" step="1"></label>
+      <button type="button" id="t-kalibrieren">Ruhe neu messen</button>
+    </span>
+    <button type="button" id="t-vollbild">Vollbild</button>
+    <button type="button" id="t-bearbeiten">Bearbeiten</button>
+  </div>
+
+  <div id="t-hinweis" class="t-hinweis" hidden></div>
+</div>
+
+<div id="meldung" role="status" hidden></div>
+
+<script src="qr-kodierung.js?v=6b02ba6db4"></script>
+<script src="tafel.js?v=faeef8357d"></script>
+</body>
+</html>

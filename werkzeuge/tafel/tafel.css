@@ -1,0 +1,96 @@
+/* SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen */
+:root{--auf-akzent:#fff;--hinter:#f3f5f8;--flaeche:#fff;--text:#1f2933;--dezent:#5f6b7a;--rand:#d6dae0;--rand-feld:#858f9b;--akzent:#1f5f99;--akzent-hell:#e8f0f8;--gruen:#1e9e5a;--gelb:#a87300;--rot:#d33b3b}
+[data-design="dunkel"]{--auf-akzent:#0e131c;--hinter:#14181d;--flaeche:#1e242b;--text:#e6e9ed;--dezent:#9aa4b1;--rand:#343c46;--rand-feld:#7d8794;--akzent:#5aa0e6;--akzent-hell:#243447;--gruen:#3fbf7f;--gelb:#f0b429;--rot:#f06060}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--hinter);color:var(--text);line-height:1.5}
+header{background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf{max-width:1100px;margin:0 auto;padding:10px 20px;display:flex;gap:10px;align-items:center}
+.kopf h1{font-size:1.15rem;margin:0;flex:1}
+.kopf a{color:var(--akzent);text-decoration:none;font-size:.9rem}
+main{max-width:1100px;margin:16px auto;padding:0 20px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+section{background:var(--flaeche);border:1px solid var(--rand);border-radius:8px;padding:16px 20px}
+h2{font-size:1.1rem;margin:0}
+button,select,input,textarea{font:inherit;color:var(--text)}
+button{padding:6px 12px;border:1px solid var(--rand-feld);background:var(--flaeche);border-radius:6px;cursor:pointer}
+button:hover{background:var(--akzent-hell)}
+button:disabled{opacity:.4;cursor:default}
+button.primaer{background:var(--akzent);border-color:var(--akzent);color:var(--auf-akzent)}
+select,input[type=text],input[type=number],textarea{padding:6px 8px;border:1px solid var(--rand-feld);border-radius:6px;background:var(--flaeche)}
+textarea{width:100%;resize:vertical}
+label{display:inline-flex;gap:6px;align-items:center;max-width:100%;flex-wrap:wrap}
+input,select,textarea{max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;margin:3px}
+input[type=range]{min-height:24px}
+.zeile{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.wachsen{flex:1}
+.dezent{color:var(--dezent)}.klein{font-size:.88rem}
+[hidden]{display:none!important}
+footer{max-width:1100px;margin:0 auto 24px;padding:0 20px;color:var(--dezent);font-size:.85rem;text-align:center}
+footer a{color:inherit}
+#meldung{position:fixed;right:16px;bottom:16px;background:#1f2933;color:#fff;padding:10px 14px;border-radius:6px;max-width:380px;z-index:20}
+
+/* Planung: Phasen */
+.phase{border:1px solid var(--rand);border-radius:8px;padding:12px 14px;margin:10px 0;background:var(--hinter)}
+.phase-kopf{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.phase-nr{font-weight:700;color:var(--akzent);min-width:1.6em}
+.phase-titel{flex:1;min-width:160px}
+.phase-minuten{width:5em}
+.phase-felder{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 14px}
+.feld{display:block;margin-top:8px}
+.feld>span{display:block;font-size:.85rem;color:var(--dezent);margin-bottom:2px}
+.feld input[type=text],.feld select{width:100%}
+
+/* Tafel */
+body.tafel-modus{overflow:hidden}
+body.ohne-zeiger{cursor:none}
+#tafel{position:fixed;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:2vh;padding:3vh 3vw 2vh;background:var(--hinter)}
+.t-kopf{display:flex;align-items:center;justify-content:space-between;gap:2vw;font-size:clamp(1rem,1.8vw,2.2rem)}
+.t-sozial{display:inline-flex;align-items:center;gap:.4em;background:var(--akzent-hell);color:var(--akzent);border-radius:.4em;padding:.25em .7em;font-weight:600}
+.t-sozial svg{width:1.5em;height:1.5em}
+.t-phase{color:var(--dezent);text-align:center;flex:1}
+.t-ampel{display:inline-flex;align-items:center;gap:.45em;color:var(--dezent)}
+.licht{width:1.2em;height:1.2em;border-radius:50%;border:2px solid var(--rand)}
+.licht.an[data-stufe="gruen"]{background:var(--gruen);border-color:var(--gruen)}
+.licht.an[data-stufe="gelb"]{background:var(--gelb);border-color:var(--gelb)}
+.licht.an[data-stufe="rot"]{background:var(--rot);border-color:var(--rot)}
+.t-mitte{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:4vw;align-items:center;min-height:0}
+.t-mitte.nur-uhr{grid-template-columns:1fr;justify-items:center;text-align:center}
+.t-mitte.nur-uhr .t-inhalt{display:none}
+.t-uhr{font-size:clamp(4rem,13vw,18rem);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.nur-uhr .t-uhr{font-size:clamp(6rem,24vw,30rem)}
+.t-uhr.gelb{color:var(--gelb)}
+.t-uhr.rot{color:var(--rot)}
+.t-balken{height:1.3vh;background:var(--rand);border-radius:1vh;margin-top:2.5vh;overflow:hidden}
+.nur-uhr .t-balken{width:60vw}
+#t-balken{height:100%;width:100%;background:var(--gruen);transition:width .3s linear}
+#t-balken.gelb{background:var(--gelb)}
+#t-balken.rot{background:var(--rot)}
+.t-rest{color:var(--dezent);margin-top:1vh;font-size:clamp(.9rem,1.5vw,1.8rem)}
+.t-inhalt{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2.5vw;align-items:start;max-height:100%;overflow:hidden}
+.t-inhalt.ohne-qr{grid-template-columns:1fr}
+.t-inhalt.ohne-text{grid-template-columns:auto;justify-content:center}
+.t-aufgabe{font-size:clamp(1.1rem,2.6vw,3.2rem);line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
+.t-fertig{margin-top:2vh;padding-top:1.5vh;border-top:1px solid var(--rand);color:var(--dezent);font-size:clamp(.9rem,1.9vw,2.2rem);white-space:pre-wrap}
+.t-fertig:empty{display:none}
+.t-qr:empty{display:none}
+.t-qr svg{display:block;width:clamp(7rem,15vw,18rem);height:auto;border-radius:.4rem}
+.t-leiste{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;font-size:clamp(.9rem,1.1vw,1.2rem);transition:opacity .4s}
+.t-leiste.leise{opacity:0;pointer-events:none}
+.t-regler{display:inline-flex;gap:.5rem;align-items:center;color:var(--dezent)}
+.t-hinweis{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:80vw;text-align:center;background:var(--flaeche);border:1px solid var(--rand);border-radius:12px;padding:1.5rem 2rem;font-size:clamp(1rem,2.2vw,2.4rem)}
+@media (prefers-reduced-motion:reduce){#t-balken,.t-leiste{transition:none}}
+
+/* Murmelglas (1.1.0) */
+.zahl{width:5.5em}
+.t-rechts{display:inline-flex;align-items:center;gap:1.5vw}
+.t-glas{display:inline-flex;align-items:center;gap:.4em;color:var(--dezent);font-variant-numeric:tabular-nums}
+.t-glas svg{display:block;height:3.6em;width:auto}
+.t-glas .glas{fill:none;stroke:var(--dezent);stroke-width:1.6}
+.t-glas .deckel{fill:var(--rand)}
+.t-glas circle.neu{animation:fallen .8s ease-in both}
+.t-glas.voll .glas{stroke:var(--gruen);stroke-width:2.4}
+@keyframes fallen{from{transform:translateY(-70px);opacity:.2}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.t-glas circle.neu{animation:none}}
+.t-hinweis{white-space:pre-line}
+/* Platz für die erste Phase freihalten, bis das Skript sie zeichnet (sonst springt die Seite beim Laden) */
+#phasen:empty{min-height:560px}
