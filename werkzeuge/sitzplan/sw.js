@@ -7,7 +7,7 @@
  */
 "use strict";
 const KENNUNG = "sitzplan";
-const STAND = "5fec326322";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
+const STAND = "3b36701708";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
 const DATEIEN = [
   "icons/apple-touch-icon.png",
   "icons/icon-192.png",
@@ -16,7 +16,7 @@ const DATEIEN = [
   "icons/icon.svg",
   "./",
   "manifest.webmanifest",
-  "pwa.js?v=5fec326322"
+  "pwa.js?v=3b36701708"
 ];
 const WARTEZEIT_MS = 3500;
 const STARTSEITE = new URL(self.registration.scope).pathname;

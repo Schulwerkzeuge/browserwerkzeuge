@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Automaten-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<!-- Automaten-Editor · Version 1.3.2 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<!-- pwa --><script src="pwa.js?v=bd128b5bc3" data-tool="automat" data-name="Automaten-Editor" data-daten="ja" data-schluessel="browserwerkzeuge-automat"></script><!-- /pwa -->
+<!-- pwa --><script src="pwa.js?v=24d8a551cd" data-tool="automat" data-name="Automaten-Editor" data-daten="ja" data-schluessel="browserwerkzeuge-automat"></script><!-- /pwa -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Automaten-Editor</title>
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
@@ -121,6 +121,7 @@ ul.liste{margin:6px 0;padding-left:20px}
 .zwei h3{font-size:.95rem;margin:4px 0}
 textarea#woerter{width:100%;font-family:ui-monospace,monospace;padding:6px;border:1px solid var(--rand);border-radius:6px;background:var(--flaeche)}
 </style>
+<style id="quellcode-druck">@media print{a.quellcode::after{content:" (github.com/Schulwerkzeuge/browserwerkzeuge)"}}</style>
 <!-- pwa -->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -229,7 +230,7 @@ textarea#woerter{width:100%;font-family:ui-monospace,monospace;padding:6px;borde
 </main>
 
 <footer>
-  Automaten-Editor · Version 1.3.1 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+  Automaten-Editor · Version 1.3.2 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · <a class="quellcode" href="https://github.com/Schulwerkzeuge/browserwerkzeuge" target="_blank" rel="noopener">Quellcode auf GitHub</a> · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
 </footer>
 
 <div id="druck"></div>
@@ -882,7 +883,7 @@ const Kern = (() => {
 /* ==== diagramm-kern: Ende ==== */
 </script>
 <script>
-/* Automaten-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
+/* Automaten-Editor · Version 1.3.2 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
  * Endliche Automaten (DEA/NEA) zeichnen, Wörter Schritt für Schritt prüfen, Übergangstabelle,
  * Eigenschaften, reguläre Grammatik und Umwandlung NEA → DEA. Alles bleibt im Browser.
  */

@@ -1,6 +1,6 @@
 "use strict";
 /*
- * Gutachten-Generator (Lehrergutachten) – Version 2.1.1
+ * Gutachten-Generator (Lehrergutachten) – Version 2.1.2
  * © 2025–2026 St.-Antonius-Gymnasium Lüdinghausen – Apache License 2.0 (SPDX-License-Identifier: Apache-2.0)
  * Benötigt saetze.js (Satzbank), die vor dieser Datei geladen wird.
  */

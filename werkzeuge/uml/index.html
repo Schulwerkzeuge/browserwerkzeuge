@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- UML-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<!-- UML-Editor · Version 1.3.2 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<!-- pwa --><script src="pwa.js?v=9ce5e9a97b" data-tool="uml" data-name="UML-Editor" data-daten="ja" data-schluessel="browserwerkzeuge-uml"></script><!-- /pwa -->
+<!-- pwa --><script src="pwa.js?v=ed9acd5190" data-tool="uml" data-name="UML-Editor" data-daten="ja" data-schluessel="browserwerkzeuge-uml"></script><!-- /pwa -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UML-Editor</title>
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
@@ -108,6 +108,7 @@ svg.zeichnung polygon.markiert{stroke:var(--akzent)}
 .feld textarea{white-space:pre;overflow-x:auto}
 .code-leiste{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:10px 0}
 </style>
+<style id="quellcode-druck">@media print{a.quellcode::after{content:" (github.com/Schulwerkzeuge/browserwerkzeuge)"}}</style>
 <!-- pwa -->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -191,7 +192,7 @@ svg.zeichnung polygon.markiert{stroke:var(--akzent)}
 </main>
 
 <footer>
-  UML-Editor · Version 1.3.1 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+  UML-Editor · Version 1.3.2 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · <a class="quellcode" href="https://github.com/Schulwerkzeuge/browserwerkzeuge" target="_blank" rel="noopener">Quellcode auf GitHub</a> · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
 </footer>
 
 <div id="druck"></div>
@@ -844,7 +845,7 @@ const Kern = (() => {
 /* ==== diagramm-kern: Ende ==== */
 </script>
 <script>
-/* UML-Editor · Version 1.3.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
+/* UML-Editor · Version 1.3.2 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
  * UML-Klassendiagramme als Entwurfs- oder Implementationsdiagramm zeichnen, Abiturklassen (NRW) als Vorlagen,
  * Export als SVG/PNG und Java-Gerüst. Alles bleibt im Browser.
  */

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Schaltungs-Editor · Version 1.4.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
+<!-- Schaltungs-Editor · Version 1.4.2 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<!-- pwa --><script src="pwa.js?v=92bedb254e" data-tool="schaltung" data-name="Schaltungs-Editor" data-daten="ja" data-schluessel="browserwerkzeuge-schaltung"></script><!-- /pwa -->
+<!-- pwa --><script src="pwa.js?v=52eb58e961" data-tool="schaltung" data-name="Schaltungs-Editor" data-daten="ja" data-schluessel="browserwerkzeuge-schaltung"></script><!-- /pwa -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Schaltungs-Editor</title>
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
@@ -141,6 +141,7 @@ button.bit.eins{background:#ffd6d6;border-color:#d62828;color:#7a1010;font-weigh
 .code-leiste label{display:inline-flex;gap:6px;align-items:center;font-size:.9rem}
 .druck-terme{font-family:Arial,sans-serif;margin-top:16px;color:#000}
 </style>
+<style id="quellcode-druck">@media print{a.quellcode::after{content:" (github.com/Schulwerkzeuge/browserwerkzeuge)"}}</style>
 <!-- pwa -->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -258,7 +259,7 @@ button.bit.eins{background:#ffd6d6;border-color:#d62828;color:#7a1010;font-weigh
 </main>
 
 <footer>
-  Schaltungs-Editor · Version 1.4.1 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+  Schaltungs-Editor · Version 1.4.2 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · <a class="quellcode" href="https://github.com/Schulwerkzeuge/browserwerkzeuge" target="_blank" rel="noopener">Quellcode auf GitHub</a> · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
 </footer>
 
 <div id="druck"></div>
@@ -911,7 +912,7 @@ const Kern = (() => {
 /* ==== diagramm-kern: Ende ==== */
 </script>
 <script>
-/* Schaltungs-Editor · Version 1.4.1 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
+/* Schaltungs-Editor · Version 1.4.2 · SPDX-License-Identifier: Apache-2.0 · © 2026 St.-Antonius-Gymnasium Lüdinghausen
  * Logische Schaltungen erstellen und simulieren – Schaltzeichen wahlweise nach ANSI/IEEE Std 91 (amerikanisch)
  * oder DIN EN 60617-12 (europäisch, rechteckig):
  * Wahrheitstabelle, Schaltterme, Schaltung aus Wahrheitstabelle (DNF), eigene Bausteine (z. B. Halb-/Volladdierer).

@@ -7,7 +7,7 @@
  */
 "use strict";
 const KENNUNG = "maustrainer";
-const STAND = "604590ad89";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
+const STAND = "bfcc597dde";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
 const DATEIEN = [
   "icons/apple-touch-icon.png",
   "icons/icon-192.png",
@@ -16,7 +16,7 @@ const DATEIEN = [
   "icons/icon.svg",
   "./",
   "manifest.webmanifest",
-  "pwa.js?v=604590ad89"
+  "pwa.js?v=bfcc597dde"
 ];
 const WARTEZEIT_MS = 3500;
 const STARTSEITE = new URL(self.registration.scope).pathname;

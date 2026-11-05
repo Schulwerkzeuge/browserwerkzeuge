@@ -7,7 +7,7 @@
  */
 "use strict";
 const KENNUNG = "tastaturtrainer";
-const STAND = "b0a6eb3365";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
+const STAND = "4465945e03";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
 const DATEIEN = [
   "icons/apple-touch-icon.png",
   "icons/icon-192.png",
@@ -16,7 +16,7 @@ const DATEIEN = [
   "icons/icon.svg",
   "./",
   "manifest.webmanifest",
-  "pwa.js?v=b0a6eb3365"
+  "pwa.js?v=4465945e03"
 ];
 const WARTEZEIT_MS = 3500;
 const STARTSEITE = new URL(self.registration.scope).pathname;

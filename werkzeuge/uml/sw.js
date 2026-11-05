@@ -7,7 +7,7 @@
  */
 "use strict";
 const KENNUNG = "uml";
-const STAND = "9ce5e9a97b";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
+const STAND = "ed9acd5190";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
 const DATEIEN = [
   "icons/apple-touch-icon.png",
   "icons/icon-192.png",
@@ -16,7 +16,7 @@ const DATEIEN = [
   "icons/icon.svg",
   "./",
   "manifest.webmanifest",
-  "pwa.js?v=9ce5e9a97b"
+  "pwa.js?v=ed9acd5190"
 ];
 const WARTEZEIT_MS = 3500;
 const STARTSEITE = new URL(self.registration.scope).pathname;

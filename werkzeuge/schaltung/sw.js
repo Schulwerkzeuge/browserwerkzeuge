@@ -7,7 +7,7 @@
  */
 "use strict";
 const KENNUNG = "schaltung";
-const STAND = "92bedb254e";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
+const STAND = "52eb58e961";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
 const DATEIEN = [
   "icons/apple-touch-icon.png",
   "icons/icon-192.png",
@@ -16,7 +16,7 @@ const DATEIEN = [
   "icons/icon.svg",
   "./",
   "manifest.webmanifest",
-  "pwa.js?v=92bedb254e"
+  "pwa.js?v=52eb58e961"
 ];
 const WARTEZEIT_MS = 3500;
 const STARTSEITE = new URL(self.registration.scope).pathname;

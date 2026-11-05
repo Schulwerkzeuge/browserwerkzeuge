@@ -1,17 +1,21 @@
 # Änderungen
 
+## 5. November 2026
+
+- Jede Fußzeile verweist einheitlich auf den Quellcode bei GitHub (beim Drucken mit Adresse).
+
 ## November 2026 – erste Veröffentlichung
 
 Werkzeuge und Versionen:
 
 | Werkzeug | Version |
 |---|---|
-| Maustraining, Tastaturtrainer | 1.3.3 |
-| Passwort-Generator, QR-Code-Generator, Zufall & Gruppen, Tafel | 1.3.3 |
-| Struktogramm-, Automaten-, UML- und ER-Editor | 1.3.1 |
-| Schaltungs-Editor | 1.4.1 |
-| Sitzplan | 1.4.1 |
-| Gutachten-Generator | 2.1.1 |
+| Maustraining, Tastaturtrainer | 1.3.4 |
+| Passwort-Generator, QR-Code-Generator, Zufall & Gruppen, Tafel | 1.3.4 |
+| Struktogramm-, Automaten-, UML- und ER-Editor | 1.3.2 |
+| Schaltungs-Editor | 1.4.2 |
+| Sitzplan | 1.4.2 |
+| Gutachten-Generator | 2.1.2 |
 | Anleitung für Lehrkräfte | – |
 
 Stand dieser Fassung:

@@ -7,7 +7,7 @@
  */
 "use strict";
 const KENNUNG = "struktogramm";
-const STAND = "500a4b260f";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
+const STAND = "5b8c89d717";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
 const DATEIEN = [
   "icons/apple-touch-icon.png",
   "icons/icon-192.png",
@@ -16,7 +16,7 @@ const DATEIEN = [
   "icons/icon.svg",
   "./",
   "manifest.webmanifest",
-  "pwa.js?v=500a4b260f"
+  "pwa.js?v=5b8c89d717"
 ];
 const WARTEZEIT_MS = 3500;
 const STARTSEITE = new URL(self.registration.scope).pathname;

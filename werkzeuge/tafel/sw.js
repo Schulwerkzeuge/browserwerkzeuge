@@ -7,7 +7,7 @@
  */
 "use strict";
 const KENNUNG = "tafel";
-const STAND = "ac4f7f99c2";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
+const STAND = "047848ca45";                            // Prüfsumme über alle Dateien – ändert sich mit jeder neuen Fassung
 const DATEIEN = [
   "icons/apple-touch-icon.png",
   "icons/icon-192.png",
@@ -16,7 +16,7 @@ const DATEIEN = [
   "icons/icon.svg",
   "./",
   "manifest.webmanifest",
-  "pwa.js?v=ac4f7f99c2",
+  "pwa.js?v=047848ca45",
   "qr-kodierung.js?v=6b02ba6db4",
   "tafel.css?v=d223788753",
   "tafel.js?v=faeef8357d"

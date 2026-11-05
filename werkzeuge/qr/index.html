@@ -3,7 +3,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<!-- pwa --><script src="pwa.js?v=7f97737c4f" data-tool="qr" data-name="QR-Code-Generator" data-daten="nein" data-schluessel=""></script><!-- /pwa -->
+<!-- pwa --><script src="pwa.js?v=9ca036599e" data-tool="qr" data-name="QR-Code-Generator" data-daten="nein" data-schluessel=""></script><!-- /pwa -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <title>QR-Code-Generator</title>
@@ -69,6 +69,7 @@ footer a{color:inherit}
   body[data-druck="mehrfach"] #mehrfach-druck{display:block}
 }
 </style>
+<style id="quellcode-druck">@media print{a.quellcode::after{content:" (github.com/Schulwerkzeuge/browserwerkzeuge)"}}</style>
 <!-- pwa -->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -193,7 +194,7 @@ footer a{color:inherit}
 </main>
 
 <footer>
-  QR-Code-Generator · Version 1.3.3 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
+  QR-Code-Generator · Version 1.3.4 · © 2026 St.-Antonius-Gymnasium Lüdinghausen · Apache License 2.0 · <a class="quellcode" href="https://github.com/Schulwerkzeuge/browserwerkzeuge" target="_blank" rel="noopener">Quellcode auf GitHub</a> · Erstellt mit KI-Unterstützung<!-- rechtliches --><!-- /rechtliches -->
 </footer>
 
 <div id="meldung" role="status" hidden></div>
